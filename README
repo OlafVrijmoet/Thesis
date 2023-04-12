@@ -1,0 +1,10 @@
+
+# data
+
+## process
+### adding datasets
+- add the paths to constants in dir ./data
+- in ./data/all_to_csv.py : 
+    - if xml file, create a new instantce of the Xml_Data_Info class for the dataset and add it to datasets. The data must have the same structure as that of beetle and sciEntsBank! Else, generalize existing function or create new custom one.
+    - if tsv, no custom function built, just add it at the bottom.
+
