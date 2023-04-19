@@ -11,7 +11,6 @@ TEXAS_RAW = "data/raw/data/Texas.csv"
 
 
 # stages
-PHASE = "standardize"
 CHAPTER_1 = "Import datasets"
 CHAPTER_2 = "Load datasets into class"
 CHAPTER_3 = "Standardize datasets"

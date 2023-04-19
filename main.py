@@ -1,13 +1,18 @@
 
-# data processing
-from data.raw.all_to_csv import all_to_csv
-from data.standardized.standardize import standardize
+# services
+from services.run_phase import run_phase
+
+# constants
+from constants import *
 
 def main():
 
-    # all_to_csv()
+    # raw data
+    run_phase(RAW_PHASE)
 
-    standardize()
+    # standardize data
+    run_phase(STANDARDIZE_PHASE)
+
 
 if __name__ == "__main__":
 

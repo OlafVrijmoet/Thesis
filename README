@@ -8,3 +8,17 @@
     - if xml file, create a new instantce of the Xml_Data_Info class for the dataset and add it to datasets. The data must have the same structure as that of beetle and sciEntsBank! Else, generalize existing function or create new custom one.
     - if tsv, no custom function built, just add it at the bottom.
 
+### adding datasets
+
+## what happens in each folder
+### raw
+This is a place where all raw datasets are stored. If a raw dataset is not in csv format it is converted to csv here.
+
+### standardized
+Here all raw csv datasets are standardized to contain the same columns. Best estimate for missing values are added in this phase for cirtial data for the models.
+
+### processed
+The text of all the standardized datasets are pre-processed and saved at different staged for the experminets on text pre-processing. The stages are:
+- Raw text
+- Lower & tokenize & get rid of punctuation
+- Stem & lemitize

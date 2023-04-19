@@ -10,15 +10,12 @@ from data.standardized.classes.Relevant_data import Relevant_data
 from data.standardized.services.retrieve_relevant_columns import retrieve_relevant_columns
 
 # print
-from services.printing.print_phase import print_sub_phase_start, print_sub_phase_end
 from services.printing.print_chapter import print_sub_chapter_start, print_sub_chapter_end
 
 # constants
 from data.standardized.constants import *
 
 def standardize():
-
-    print_sub_phase_start(PHASE)
 
     print_sub_chapter_start(CHAPTER_1)
 
@@ -140,9 +137,8 @@ def standardize():
     )
     
     print_sub_chapter_end(CHAPTER_2)
-
     print_sub_chapter_start(CHAPTER_3)
-    
+
     # standardize & save datasets
     ASAP_sas_class.standardize_df()
     beetle_class.standardize_df()
@@ -151,6 +147,3 @@ def standardize():
     texas_class.standardize_df()
 
     print_sub_chapter_end(CHAPTER_3)
-
-    print_sub_phase_end(PHASE)
-
