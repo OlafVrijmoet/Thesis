@@ -10,11 +10,11 @@ from classes.Phase_Settings import Phase_Settings
 RAW_PHASE = Phase_Settings(
     name="Raw", 
     function=all_to_csv,
-    run=True
+    run=False
 )
 
 STANDARDIZE_PHASE = Phase_Settings(
     name="Standardize", 
     function=standardize,
-    run=True
+    run=False
 )

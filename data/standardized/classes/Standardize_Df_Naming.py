@@ -231,17 +231,18 @@ class Standardize_Df_Naming:
             return text
 
         # pre-process answers
-        self.df["student_answer_processed"] = self.df["student_answer"].apply(preprocess)
+        df_full_points["student_answer_processed"] = df_full_points["student_answer"].apply(preprocess)
 
         # make sure indexes align
+        df_full_points = df_full_points.reset_index(drop=True)
         self.df = self.df.reset_index(drop=True)
 
         # Convert all student answers to vectors
         vectorizer = TfidfVectorizer()
-        answer_vectors = vectorizer.fit_transform(self.df["student_answer_processed"])
+        answer_vectors = vectorizer.fit_transform(df_full_points["student_answer_processed"])
 
         # group on question_id and get range of indexes for each group
-        index_ranges = self.df.groupby('question_id').apply(lambda x: range(x.index.min(), x.index.max()+1))
+        index_ranges = df_full_points.groupby('question_id').apply(lambda x: range(x.index.min(), x.index.max()+1))
 
         # save the index ranges for each question_id
         question_id_index = {
@@ -277,21 +278,21 @@ class Standardize_Df_Naming:
             
             question_avg_answer_vectors[key] = (sum(value) / len(value))
         
-        self.df["Q_A_similarity"] = None
+        df_full_points["Q_A_similarity"] = None
 
         # for every row in df get the similarity score of the mean question vector
-        for index, row in self.df.iterrows():
+        for index, row in df_full_points.iterrows():
             
             # get student answer vector
             answer_vec = answer_vectors[index]
             
             # add similarity score (comparing answer vec with average answer vec for the related question) to answer ASAP_df
-            self.df.loc[index, "Q_A_similarity"] = cosine_similarity(answer_vec, question_avg_answer_vectors[row["question_id"]])[0][0]
-
+            df_full_points.loc[index, "Q_A_similarity"] = cosine_similarity(answer_vec, question_avg_answer_vectors[row["question_id"]])[0][0]
+        
         # make Q_A_similarity float values
-        self.df["Q_A_similarity"] = self.df["Q_A_similarity"].astype(float)
+        df_full_points["Q_A_similarity"] = df_full_points["Q_A_similarity"].astype(float)
 
-        max_rows = self.df.groupby('question_id').apply(lambda x: x.loc[x['Q_A_similarity'].idxmax()])
+        max_rows = df_full_points.groupby('question_id').apply(lambda x: x.loc[x['Q_A_similarity'].idxmax()])
 
         # for every row in df add reference answer
         for index, row in self.df.iterrows():
@@ -301,9 +302,6 @@ class Standardize_Df_Naming:
             
             # add similarity score (comparing answer vec with average answer vec for the related question) to answer ASAP_df
             self.df.loc[index, "reference_answer"] = reference_row["student_answer"].values[0]
-
-        # drop columns made in this function
-        self.df = self.df.drop(["student_answer_processed", "Q_A_similarity"], axis=1)
 
     def save_df(self):
 
