@@ -13,6 +13,8 @@ def main():
     # standardize data
     run_phase(STANDARDIZE_PHASE)
 
+    # process text
+    run_phase(PROCESS_TEXT_PHASE)
 
 if __name__ == "__main__":
 
