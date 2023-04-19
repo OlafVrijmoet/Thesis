@@ -67,4 +67,3 @@ def process_text():
     texas_class.process_text()
 
     print_sub_chapter_end(CHAPTER_3)
-

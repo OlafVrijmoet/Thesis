@@ -14,6 +14,8 @@
 ### raw
 This is a place where all raw datasets are stored. If a raw dataset is not in csv format it is converted to csv here.
 
+Make sure there are no Null values in columns that exist in the dataset and are not student answers, reference answers or questions!
+
 ### standardized
 Here all raw csv datasets are standardized to contain the same columns. Best estimate for missing values are added in this phase for cirtial data for the models.
 

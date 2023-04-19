@@ -1,19 +1,52 @@
 
 #%%
+import os
 import pandas as pd
-import nltk
 
-# create two identical DataFrames
-df1 = pd.DataFrame({'student_answer': ['The quick brown fox', 'Jumped over the lazy dog']})
-df2 = df1.copy()
+# specify the path to the folder containing CSV files
+folder_path = "./data/raw_data"
 
-# tokenize the 'student_answer' column in df1
-for index, row in df1.iterrows():
-    tokens = nltk.word_tokenize(row['student_answer'])
-    df2.loc[index, 'student_answer'] = tokens
+# create an empty list to hold dataframes
+dfs = []
 
-# print the results
-print(df1)
-print(df2)
+# iterate over all files in the folder
+for file_name in os.listdir(folder_path):
+    # check if the file is a CSV file
+    if file_name.endswith(".csv"):
+        # read the CSV file into a dataframe
+        file_path = os.path.join(folder_path, file_name)
+        df = pd.read_csv(file_path)
+        # append the dataframe to the list
+        dfs.append(df)
+
+# concatenate all dataframes into a single dataframe
+merged_df = pd.concat(dfs)
+
+# print the merged dataframe
+merged_df.dropna()
+
+
+# %%
+unique_domains = merged_df['domain'].unique()
+print(unique_domains)
+
+value_count = merged_df['domain'].value_counts()
+value_count
+
+# %%
+import pandas as pd
+
+# create a sample dataframe
+df = pd.DataFrame({'Name': ['Alice', 'Bob', 'Charlie', 'Alice', 'David'], 
+                   'Score': [90, 85, 75, 92, 80]})
+
+# create a dictionary of dataframes for each unique value in the 'Name' column
+domain_dfs = {}
+for name, group in merged_df.groupby('domain'):
+    domain_dfs[name] = group
+
+# print the dataframes for each unique value in the 'Name' column
+for name, df_name in domain_dfs.items():
+    print(f"Dataframe for {name}:")
 
 # %%

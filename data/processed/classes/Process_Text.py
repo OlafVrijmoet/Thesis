@@ -1,4 +1,6 @@
 
+import os
+
 # libaries
 import nltk
 import string
@@ -37,7 +39,6 @@ class Process_Text:
         self.save()
 
         print_sub_section_end(f"Saving: {self.name}")
-
 
     def itter_rows(self):
 
@@ -111,12 +112,20 @@ class Process_Text:
         self.df_lemmitized["question"] = lemmatized_questions
 
     def save(self):
+        if not os.path.exists(DF_RAW):
+            os.makedirs(DF_RAW)
 
-        self.df_raw.to_csv(f"{SAVE_PROCESSED}/raw_data/{self.name}.csv", index=False)
+        if not os.path.exists(DF_STEMMED):
+            os.makedirs(DF_STEMMED)
 
-        self.df_stemmed.to_csv(f"{SAVE_PROCESSED}/stemmed_data/{self.name}.csv", index=False)
+        if not os.path.exists(DF_LEMMITIZED):
+            os.makedirs(DF_LEMMITIZED)
+        
+        self.df_raw.to_csv(f"{DF_RAW}/{self.name}.csv", index=False)
 
-        self.df_lemmitized.to_csv(f"{SAVE_PROCESSED}/lemmitized_data/{self.name}.csv", index=False)
+        self.df_stemmed.to_csv(f"{DF_STEMMED}/{self.name}.csv", index=False)
+
+        self.df_lemmitized.to_csv(f"{DF_LEMMITIZED}/{self.name}.csv", index=False)
 
     # sevice functions
 
