@@ -34,7 +34,7 @@ def xml_to_csv(datasets, path_save):
                     root = tree.getroot()
 
                     # read xml data
-                    read_xml(root, column_data, df_info, "sciEntsBank")
+                    read_xml(root, column_data, df_info, None)
 
         # create df
         data = pd.DataFrame(vars(column_data))
