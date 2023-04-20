@@ -16,6 +16,9 @@ def main():
     # process text
     run_phase(PROCESS_TEXT_PHASE)
 
+    # create datasets splits, example: based on domains
+    run_phase(SPLIT_DATA)
+
 if __name__ == "__main__":
 
     main()

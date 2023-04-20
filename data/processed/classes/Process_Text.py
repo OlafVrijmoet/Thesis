@@ -7,6 +7,9 @@ import string
 from nltk.stem.snowball import SnowballStemmer
 from nltk.stem import WordNetLemmatizer
 
+# services
+from services.save import save
+
 # print
 from services.printing.print_section import print_sub_section_start, print_sub_section_end
 
@@ -111,22 +114,6 @@ class Process_Text:
         self.df_lemmitized["reference_answer"] = lemmatized_reference_answers
         self.df_lemmitized["question"] = lemmatized_questions
 
-    def save(self):
-        if not os.path.exists(DF_RAW):
-            os.makedirs(DF_RAW)
-
-        if not os.path.exists(DF_STEMMED):
-            os.makedirs(DF_STEMMED)
-
-        if not os.path.exists(DF_LEMMITIZED):
-            os.makedirs(DF_LEMMITIZED)
-        
-        self.df_raw.to_csv(f"{DF_RAW}/{self.name}.csv", index=False)
-
-        self.df_stemmed.to_csv(f"{DF_STEMMED}/{self.name}.csv", index=False)
-
-        self.df_lemmitized.to_csv(f"{DF_LEMMITIZED}/{self.name}.csv", index=False)
-
     # sevice functions
 
     def keep_only_text(self, text: str) -> str:
@@ -187,3 +174,26 @@ class Process_Text:
             lemmatized_text.append(stemmed_word)
 
         return lemmatized_text
+
+    def save(self):
+
+        # save raw
+        save(
+            dir=DF_RAW,
+            file_name=self.name,
+            df=self.df_raw
+        )
+
+        # save stemmed
+        save(
+            dir=DF_STEMMED,
+            file_name=self.name,
+            df=self.df_stemmed
+        )
+
+        # save lemmitized
+        save(
+            dir=DF_LEMMITIZED,
+            file_name=self.name,
+            df=self.df_lemmitized
+        )

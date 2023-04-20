@@ -2,9 +2,17 @@
 # save
 SAVE_PROCESSED = "data/processed/data"
 
-DF_RAW = f"{SAVE_PROCESSED}/raw_data/datasets"
-DF_STEMMED = f"{SAVE_PROCESSED}/stemmed_data/datasets"
-DF_LEMMITIZED = f"{SAVE_PROCESSED}/lemmitized_data/datasets"
+BASE_DIR_RAW = f"{SAVE_PROCESSED}/raw_data"
+BASE_DIR_STEMMED = f"{SAVE_PROCESSED}/stemmed_data"
+BASE_DIR_LEMMITIZED = f"{SAVE_PROCESSED}/lemmitized_data"
+
+DF_RAW = f"{BASE_DIR_RAW}/datasets"
+DF_STEMMED = f"{BASE_DIR_STEMMED}/datasets"
+DF_LEMMITIZED = f"{BASE_DIR_LEMMITIZED}/datasets"
+
+DOMAIN_DF_RAW = f"{BASE_DIR_RAW}/domain"
+DOMAIN_DF_STEMMED = f"{BASE_DIR_STEMMED}/domain"
+DOMAIN_DF_LEMMITIZED = f"{BASE_DIR_LEMMITIZED}/domain"
 
 # the standardized csv datasets
 ASAP_SAS_STANDARDIZED = "data/standardized/data/ASAP_sas.csv"

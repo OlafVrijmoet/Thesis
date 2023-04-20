@@ -68,13 +68,10 @@ class Standardize_Df_Naming:
 
         self.fix_missing_after()
 
+        # add name dataset
+        self.df["dataset_name"] = self.df_name
+
         print_sub_section_end(f"Standardizing: {self.df_name}")
-        print_sub_section_start(f"Saving Standardized: {self.df_name}")
-
-        # save
-        self.save_df()
-
-        print_sub_section_end(f"Saving Standardized: {self.df_name}")
     
     # add missing values before standardization
     def fix_missing_before(self):
@@ -302,6 +299,28 @@ class Standardize_Df_Naming:
             
             # add similarity score (comparing answer vec with average answer vec for the related question) to answer ASAP_df
             self.df.loc[index, "reference_answer"] = reference_row["student_answer"].values[0]
+
+    def reset_question_id(self, count):
+        # reset former id to none every new dataset
+        former_Q_Id_value = None
+
+        # loop through all student answers
+        for index, row in self.df.iterrows():
+            current_Q_Id_value = row["question_id"]
+            
+            # check if question_id changed
+            if former_Q_Id_value == current_Q_Id_value:
+                self.df.loc[index, "question_id"] = count
+            else:
+                count = count + 1
+                self.df.loc[index, "question_id"] = count
+            
+            former_Q_Id_value = current_Q_Id_value
+
+        # ensure question id has type int
+        self.df["question_id"] = self.df["question_id"].astype(int)
+
+        return count
 
     def save_df(self):
 
