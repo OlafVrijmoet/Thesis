@@ -19,6 +19,9 @@ def main():
     # create datasets splits, example: based on domains
     run_phase(SPLIT_DATA)
 
+    # embed words
+    run_phase(EMBED_WORDS)
+
 if __name__ == "__main__":
 
     main()
