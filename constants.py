@@ -25,13 +25,13 @@ STANDARDIZE_PHASE = Phase_Settings(
 PROCESS_TEXT_PHASE = Phase_Settings(
     name="Process text", 
     function=process_text,
-    run=False
+    run=True
 )
 
 SPLIT_DATA = Phase_Settings(
     name="Split data", 
     function=split_data,
-    run=False
+    run=True
 )
 
 EMBED_WORDS = Phase_Settings(
@@ -41,15 +41,15 @@ EMBED_WORDS = Phase_Settings(
 )
 
 # paths
-LEMMITIZED = "data/lemmitized_data"
-RAW = "data/raw_data"
-STEMMED = "data/stemmed_data"
+# LEMMITIZED = "data/lemmitized_data"
+# RAW = "data/raw_data"
+# STEMMED = "data/stemmed_data"
 
-LEMMITIZED_DATASETS = f"{LEMMITIZED}/datasets"
-LEMMITIZED_DOMAIN = f"{LEMMITIZED}/domain"
+# LEMMITIZED_DATASETS = f"{LEMMITIZED}/datasets"
+# LEMMITIZED_DOMAIN = f"{LEMMITIZED}/domain"
 
-RAW_DATASETS = f"{RAW}/datasets"
-RAW_DOMAIN = f"{RAW}/domain"
+# RAW_DATASETS = f"{RAW}/datasets"
+# RAW_DOMAIN = f"{RAW}/domain"
 
-STEMMED_DATASETS = f"{STEMMED}/datasets"
-STEMMED_DOMAIN = f"{STEMMED}/domain"
+# STEMMED_DATASETS = f"{STEMMED}/datasets"
+# STEMMED_DOMAIN = f"{STEMMED}/domain"

@@ -6,6 +6,7 @@ import nltk
 import string
 from nltk.stem.snowball import SnowballStemmer
 from nltk.stem import WordNetLemmatizer
+from spellchecker import SpellChecker
 
 # services
 from services.save import save
@@ -84,6 +85,11 @@ class Process_Text:
             reference_answer = self.tokenize_words(reference_answer)
             question = self.tokenize_words(question)
 
+            # spelling check
+            student_answer = self.correctSpelling(student_answer)
+            reference_answer = self.correctSpelling(reference_answer)
+            question = self.correctSpelling(question)
+
             # stem
             stemmed_student_answer = self.stem(student_answer)
             stemmed_reference_answer = self.stem(reference_answer)
@@ -131,6 +137,11 @@ class Process_Text:
         tokens = nltk.tokenize.word_tokenize(text)
         return tokens
 
+    def correctSpelling(self, text):
+        # Initialize the spell checker
+        spell = SpellChecker()
+        return [spell.correction(token) if spell.correction(token) is not None else token for token in text]
+
     def strip_punctuation(self, text: str) -> str:
 
         # remove punctuation
@@ -143,7 +154,6 @@ class Process_Text:
         stemmer = SnowballStemmer("english")
 
         stemmed_text = []
-
         # loop through words and get sem
         for word in tokenized_text:
             if word.isalpha():

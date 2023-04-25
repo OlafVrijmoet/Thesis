@@ -20,9 +20,6 @@ from word_embedding.constants import WORD_EMBEDDING, WORD_EMBEDDING_DATA, CHAPTE
 
 def embed_words():
 
-    print("data/lemmitized_data/datasets")
-    # LEMMITIZED_DATASETS
-
     print_sub_chapter_start(CHAPTER_1)
 
     fasttext = EmbeddingModel(
@@ -32,6 +29,8 @@ def embed_words():
         save_func=gensim_save,
         load_func=gensim_load
     )
+
+    fasttext.load_model()
 
     # neural
     nerual = Embed_Words(

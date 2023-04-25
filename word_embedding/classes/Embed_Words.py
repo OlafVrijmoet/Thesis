@@ -1,4 +1,6 @@
 
+from ast import literal_eval
+
 # classes
 from word_embedding.classes.Embed_Word_Params import Embed_Word_Params
 
@@ -30,13 +32,13 @@ class Embed_Words:
         embedded_student_answers = []
         
         for index, row in self.df.iterrows():
-            
+
             # embed reference answer
-            embedded_ref = self.embed_text(row[REFERENCE_ANSWER])
+            embedded_ref = self.embed_text(literal_eval(row[REFERENCE_ANSWER]))
             embedded_reference_answers.append(embedded_ref)
 
             # embed student answer
-            embedded_ans = self.embed_text(row[STUDENT_ANSWER])
+            embedded_ans = self.embed_text(literal_eval(row[STUDENT_ANSWER]))
             embedded_student_answers.append(embedded_ans)
 
     def embed_text(self, text):
@@ -46,7 +48,7 @@ class Embed_Words:
         for word in text:
 
             # embed word using own model and given embed function
-            embedded_word = self.embed_word(Embed_Word_Params(self.model, word))
+            embedded_word = self.embed_word(Embed_Word_Params(self.model.model, word))
 
             # add embeded word to embedded text
             embedded_text.append(embedded_word)
