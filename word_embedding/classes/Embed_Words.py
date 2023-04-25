@@ -10,7 +10,7 @@ from constants_dir.column_constants import *
 
 class Embed_Words:
 
-    def __init__(self, name_df, name_model, df, model, embed_word, save_path):
+    def __init__(self, name_df, name_model, df, model, embed_word, path_save_model, save_path):
         
         self.name_df = name_df
         self.name_model = name_model
@@ -21,6 +21,7 @@ class Embed_Words:
         # custom function for model that embeds word
         self.embed_word = embed_word
 
+        self.path_save_model = path_save_model
         self.save_path = save_path
 
     def embed_df(self):
