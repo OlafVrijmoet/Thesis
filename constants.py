@@ -25,13 +25,13 @@ STANDARDIZE_PHASE = Phase_Settings(
 PROCESS_TEXT_PHASE = Phase_Settings(
     name="Process text", 
     function=process_text,
-    run=True
+    run=False
 )
 
 SPLIT_DATA = Phase_Settings(
     name="Split data", 
     function=split_data,
-    run=True
+    run=False
 )
 
 EMBED_WORDS = Phase_Settings(

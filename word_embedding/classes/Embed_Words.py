@@ -1,5 +1,6 @@
 
 from ast import literal_eval
+from tqdm import tqdm
 
 # classes
 from word_embedding.classes.Embed_Word_Params import Embed_Word_Params
@@ -31,7 +32,7 @@ class Embed_Words:
         embedded_reference_answers = []
         embedded_student_answers = []
         
-        for index, row in self.df.iterrows():
+        for index, row in tqdm(self.df.iterrows(), total=self.df.shape[0]):
 
             # embed reference answer
             embedded_ref = self.embed_text(literal_eval(row[REFERENCE_ANSWER]))
@@ -41,6 +42,9 @@ class Embed_Words:
             embedded_ans = self.embed_text(literal_eval(row[STUDENT_ANSWER]))
             embedded_student_answers.append(embedded_ans)
 
+        self.df["reference_answer"] = embedded_reference_answers
+        self.df["student_answer"] = embedded_student_answers
+    
     def embed_text(self, text):
 
         embedded_text = []
@@ -60,6 +64,6 @@ class Embed_Words:
         # save raw
         save(
             dir=self.save_path,
-            file_name=self.name,
+            file_name=self.name_df,
             df=self.df
         )

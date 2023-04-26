@@ -1,5 +1,6 @@
 
 # libaries
+import os
 import pandas as pd
 import gensim.downloader as gensim_api
 
@@ -30,7 +31,34 @@ def embed_words():
         load_func=gensim_load
     )
 
+    glove = EmbeddingModel(
+        model_name="glove",
+        download_link="glove-wiki-gigaword-300",
+        download_func=gensim_download,
+        save_func=gensim_save,
+        load_func=gensim_load
+    )
+
+    word2vec = EmbeddingModel(
+        model_name="word2vec",
+        download_link="word2vec-google-news-300",
+        download_func=gensim_download,
+        save_func=gensim_save,
+        load_func=gensim_load
+    )
+
+    conceptnet = EmbeddingModel(
+        model_name="conceptnet",
+        download_link="conceptnet-numberbatch-17-06-300",
+        download_func=gensim_download,
+        save_func=gensim_save,
+        load_func=gensim_load
+    )
+
     fasttext.load_model()
+    glove.load_model()
+    word2vec.load_model()
+    conceptnet.load_model()
 
     # neural
     nerual = Embed_Words(
@@ -44,7 +72,7 @@ def embed_words():
         embed_word=embed_text_gensim,
 
         path_save_model=f"",
-        save_path=f"{WORD_EMBEDDING_DATA}/{LEMMITIZED_DATASETS}",
+        save_path=f"{WORD_EMBEDDING}/{LEMMITIZED_DATASETS}",
 
     )
 

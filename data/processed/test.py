@@ -50,3 +50,11 @@ for name, df_name in domain_dfs.items():
     print(f"Dataframe for {name}:")
 
 # %%
+from spellchecker import SpellChecker
+
+spell = SpellChecker()
+text = ["Proces", "how", "are", "you", "doing"]
+text_checked = [spell.correction(token) if spell.correction(token) is not None else token for token in text]
+print(text)
+print(text_checked)
+# %%

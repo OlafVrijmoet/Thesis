@@ -1,6 +1,11 @@
 
+import numpy as np
+
 def embed_text_gensim(params):
 
-    print(params.word)
-
-    return params.model.get_vector(params.word, norm=True)
+    try:
+        vector = params.model.get_vector(params.word, norm=True)
+    except:
+        vector = np.zeros((params.model.vector_size,))
+    
+    return vector
