@@ -1,5 +1,8 @@
 
 # paths
+PROCESSED = "data/processed"
+EMBED_WORDS = "word_embedding"
+
 LEMMITIZED = "data/lemmitized_data"
 RAW = "data/raw_data"
 STEMMED = "data/stemmed_data"

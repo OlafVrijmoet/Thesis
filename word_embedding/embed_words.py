@@ -16,8 +16,8 @@ from word_embedding.models.classes.EmbeddingModel import EmbeddingModel
 from services.printing.print_chapter import print_sub_chapter_start, print_sub_chapter_end
 
 # constants
-from constants_dir.path_constants import LEMMITIZED_DATASETS
-from word_embedding.constants import WORD_EMBEDDING, WORD_EMBEDDING_DATA, CHAPTER_1, CHAPTER_2
+from constants_dir.path_constants import PROCESSED, STEMMED
+from word_embedding.constants import WORD_EMBEDDING, CHAPTER_1, CHAPTER_2
 
 def embed_words():
 
@@ -39,13 +39,13 @@ def embed_words():
         load_func=gensim_load
     )
 
-    word2vec = EmbeddingModel(
-        model_name="word2vec",
-        download_link="word2vec-google-news-300",
-        download_func=gensim_download,
-        save_func=gensim_save,
-        load_func=gensim_load
-    )
+    # word2vec = EmbeddingModel(
+    #     model_name="word2vec",
+    #     download_link="word2vec-google-news-300",
+    #     download_func=gensim_download,
+    #     save_func=gensim_save,
+    #     load_func=gensim_load
+    # )
 
     conceptnet = EmbeddingModel(
         model_name="conceptnet",
@@ -57,29 +57,49 @@ def embed_words():
 
     fasttext.load_model()
     glove.load_model()
-    word2vec.load_model()
+    # word2vec.load_model()
     conceptnet.load_model()
 
-    # neural
-    nerual = Embed_Words(
-        name_df="neural_course",
-        name_model="fasttext",
+    # word2vec
+    models = [fasttext, glove, conceptnet]
 
-        df = pd.read_csv("./data/processed/data/lemmitized_data/domain/neural_networks.csv"),
+    print("start loop")
 
-        model=fasttext,
+    # loop through embedding models
+    for model in models:
 
-        embed_word=embed_text_gensim,
+        # loop through stemmed datasets
+        for root, dirs, files in os.walk(f"{PROCESSED}/{STEMMED}"):
 
-        path_save_model=f"",
-        save_path=f"{WORD_EMBEDDING}/{LEMMITIZED_DATASETS}",
+            for file in files:
+                if file.endswith(".csv"):
 
-    )
+                    print_sub_chapter_start(CHAPTER_1)
 
-    print_sub_chapter_end(CHAPTER_1)
-    print_sub_chapter_start(CHAPTER_2)
+                    file_path = os.path.join(root, file)
+                    file_name, _ = os.path.splitext(file)
 
-    nerual.embed_df()
-    nerual.save()
+                    print(f"Processing CSV file: {file_name}")
 
-    print_sub_chapter_end(CHAPTER_2)
+                    embed_df = Embed_Words(
+
+                        name_df=file_name,
+                        name_model=model.model_name,
+
+                        df = pd.read_csv(file_path),
+
+                        model=model,
+
+                        embed_word=embed_text_gensim,
+
+                        save_path=f"{WORD_EMBEDDING}/{STEMMED}",
+
+                    )
+                    
+                    print_sub_chapter_end(CHAPTER_1)
+                    print_sub_chapter_start(CHAPTER_2)
+                    embed_df.embed_df()
+                    print(f"save {file_name}")
+                    embed_df.save()
+                    print(f"save {file_name} done")
+                    print_sub_chapter_end(CHAPTER_2)
