@@ -3,8 +3,11 @@
 from data.raw.all_to_csv import all_to_csv
 from data.standardized.standardize import standardize
 from data.processed.process_text import process_text
-from data.split.split_data import split_data
+from data.splits.split_data import split_data
 from word_embedding.embed_words import embed_words
+
+# data processing for models
+from run_models.gensim.gensim import gensim
 
 # classes
 from classes.Phase_Settings import Phase_Settings
@@ -34,10 +37,17 @@ SPLIT_DATA = Phase_Settings(
     run=True
 )
 
+# delete
 EMBED_WORDS = Phase_Settings(
     name="Embed words", 
     function=embed_words,
     run=False
+)
+
+GENSIM = Phase_Settings(
+    name="sensim_models", 
+    function=gensim,
+    run=True
 )
 
 # paths

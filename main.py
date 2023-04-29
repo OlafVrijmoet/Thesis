@@ -13,7 +13,7 @@ def main():
     # standardize data
     run_phase(STANDARDIZE_PHASE)
 
-    # process text
+    # process text - !!!OUTDATED!!!
     run_phase(PROCESS_TEXT_PHASE)
 
     # create datasets splits, example: based on domains
@@ -21,6 +21,9 @@ def main():
 
     # embed words
     run_phase(EMBED_WORDS)
+
+    # reun Gensim models
+    run_phase(GENSIM)
 
 if __name__ == "__main__":
 
