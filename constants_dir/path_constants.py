@@ -1,4 +1,10 @@
 
+# paths data_stages
+DATA_STAGES = "data_stages"
+BASIC_PROCCESSED = f"{DATA_STAGES}/basic_processed"
+
+DATA_SPLIT = "data/split/data"
+
 # paths
 PROCESSED = "data/processed"
 EMBED_WORDS = "word_embedding"

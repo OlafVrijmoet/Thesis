@@ -3,7 +3,7 @@
 from data.raw.all_to_csv import all_to_csv
 from data.standardized.standardize import standardize
 from data.processed.process_text import process_text
-from data.processed.split_data import split_data
+from data.split.split_data import split_data
 from word_embedding.embed_words import embed_words
 
 # classes
@@ -31,13 +31,13 @@ PROCESS_TEXT_PHASE = Phase_Settings(
 SPLIT_DATA = Phase_Settings(
     name="Split data", 
     function=split_data,
-    run=False
+    run=True
 )
 
 EMBED_WORDS = Phase_Settings(
     name="Embed words", 
     function=embed_words,
-    run=True
+    run=False
 )
 
 # paths

@@ -15,6 +15,8 @@ DOMAIN_DF_STEMMED = f"{BASE_DIR_STEMMED}/domain"
 DOMAIN_DF_LEMMITIZED = f"{BASE_DIR_LEMMITIZED}/domain"
 
 # the standardized csv datasets
+STANDARDIZED_BASE = "data/standardized/data"
+
 ASAP_SAS_STANDARDIZED = "data/standardized/data/ASAP_sas.csv"
 BEETLE_STANDARDIZED = "data/standardized/data/beetle.csv"
 NN_COURSE_STANDARDIZED = "data/standardized/data/neural_course.csv"

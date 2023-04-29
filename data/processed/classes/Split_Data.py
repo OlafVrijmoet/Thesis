@@ -9,11 +9,13 @@ from services.save import save
 
 class Split_Data:
 
-    def __init__(self, datasets_base_dir, dir_datasets, dir_new_datasets):
+    def __init__(self, datasets_base_dir, dir_datasets, dir_new_datasets, save_existing=False):
 
         self.concatenated_datasets = {}
         self.existing_datasets = {}
         self.newly_split_datasets = {}
+
+        self.save_existing = save_existing
 
         self.datasets_base_dir = datasets_base_dir # where the concatinated datasets are stored
         self.dir_datasets = dir_datasets # where the datasets to use are
@@ -23,6 +25,10 @@ class Split_Data:
         
         # import dfs
         self.import_datasets()
+
+        # if indicate save existing datasets at location of base dir
+        if self.save_existing == True:
+            self.save_all_in_dict(dict=self.existing_datasets, dir=self.datasets_base_dir)
 
         # concate all datasets
         self.concatenated_datasets["concatenated_datasets"] = pd.concat(self.existing_datasets.values())
