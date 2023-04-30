@@ -17,7 +17,7 @@ class EmbeddingModel:
         # Create the directory if it doesn't exist
         os.makedirs(MODEL_DIR, exist_ok=True)
 
-        model_file = os.path.join(MODEL_DIR, f"{self.model_name}.bin")
+        model_file = os.path.join(f"{MODEL_DIR}/{self.model_name}", f"{self.model_name}.bin")
 
         # Download and save the model if it's not already downloaded
         if not os.path.isfile(model_file):

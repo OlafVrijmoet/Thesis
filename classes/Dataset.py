@@ -5,10 +5,12 @@ import pandas as pd
 
 # libaries
 import nltk
-import string
-from nltk.stem.snowball import SnowballStemmer
+from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+
+from nltk.stem.snowball import SnowballStemmer
 from spellchecker import SpellChecker
+import string
 
 from tqdm import tqdm
 
@@ -20,25 +22,35 @@ from classes.Process_Stages import Process_Stages
 
 # constants
 from data.splits.constants import *
+from run_models.gensim.constants import GENSIM_DATA
 
 class Dataset:
 
-    def __init__(self, df_name, model_name) -> None:
+    # =Process_Stages(
+        #     lower=True, 
+        #     only_text=True, 
+        #     strip_extra_whitespace=True, 
+        #     spelling_check=True,
+        #     strip_punctuation=True,
+        #     gensim_remove_stop_words=False,
+        #     gensim_tokenization=False,
+        #     gensim_lemmatize=False
+        # )
+
+    def __init__(self, df_name, model_name, language, process_stages) -> None:
 
         self.df_name = df_name
         self.model_name = model_name
 
         self.basic_processed_df = None
 
-        self.process_stages = Process_Stages(
-            lower=True, 
-            only_text=True, 
-            strip_extra_whitespace=True, 
-            spelling_check=True,
-            strip_punctuation=True
-        )
+        self.language = language
+
+        self.process_stages = process_stages
 
         self.spell = SpellChecker()
+        self.stop_words = set(stopwords.words(language))
+        self.lemmatizer = WordNetLemmatizer()
 
     def get_dataset(self):
 
@@ -60,6 +72,12 @@ class Dataset:
             self.process_stages.spelling_check = False
 
     def processed_dataset(self) -> bool:
+
+        if self.process_stages.gensim_remove_stop_words == True:
+            nltk.download('stopwords')
+
+        if self.process_stages.gensim_lemmatize == True:
+            nltk.download('wordnet')
 
         # check if basic processing already done, located at data_saved/basic_processed/df_name
         if os.path.exists(f"data_saved/basic_processed/{self.df_name}.csv"):
@@ -108,14 +126,32 @@ class Dataset:
             row["student_answer"] = self.correctSpelling(row["student_answer"])
             row["reference_answer"] = self.correctSpelling(row["reference_answer"])
 
+        if self.process_stages.gensim_tokenization == True:
+            row["student_answer"] = nltk.word_tokenize(row["student_answer"])
+            row["reference_answer"] = nltk.word_tokenize(row["reference_answer"])
+
+        if self.process_stages.gensim_remove_stop_words == True:
+            row["student_answer"] = self.remove_stop_words(row["student_answer"])
+            row["reference_answer"] = self.remove_stop_words(row["reference_answer"])
+
+        if self.process_stages.gensim_lemmatize == True:
+            row["student_answer"] = self.lemmatize_tokens(row["student_answer"])
+            row["reference_answer"] = self.lemmatize_tokens(row["reference_answer"])
+
+        # Remove empty tokens that may have been created during preprocessing
+        if self.process_stages.gensim_tokenization == True:
+            tokens = [token for token in tokens if token]
+
         return row
 
     def save(self):
-
+        path = "data_saved/basic_processed"
+        if self.process_stages.gensim_tokenization == True:
+            path = GENSIM_DATA
         # save basic_processed_df at data_saved/basic_processed/df_name, create dir if it doesn't exist yet
-        if not os.path.exists("data_saved/basic_processed"):
-            os.makedirs("data_saved/basic_processed")
-        self.basic_processed_df.to_csv(f"data_saved/basic_processed/{self.df_name}.csv", index=False)
+        if not os.path.exists(path):
+            os.makedirs(path)
+        self.basic_processed_df.to_csv(f"{path}/{self.df_name}.csv", index=False)
 
     def keep_only_text(self, text: str) -> str:
 
@@ -146,3 +182,12 @@ class Dataset:
 
         # Initialize the spell checker
         return corrected_sentence
+
+    def remove_stop_words(self, tokens):
+        tokens = [token for token in tokens if token not in self.stop_words]
+
+        return tokens
+    
+    def lemmatize_tokens(self, tokens):
+
+        tokens = [self.lemmatizer.lemmatize(token) for token in tokens]

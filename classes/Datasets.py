@@ -10,7 +10,7 @@ from classes.Dataset import Dataset
 
 class Datasets:
 
-    def __init__(self, force_re_run, base_dir, model_name, progress_stages) -> None:
+    def __init__(self, force_re_run, base_dir, model_name, progress_stages, language) -> None:
 
         self.force_re_run = force_re_run # this forces the entire pre-processing to be re-run if true even though there is already a dataset processed for a stage
 
@@ -21,6 +21,8 @@ class Datasets:
         self.progress_stages = progress_stages # detimes what needs to be run in the loop
 
         self.datasets = {}
+
+        language=language
 
     def get_datasets(self):
 
@@ -36,13 +38,17 @@ class Datasets:
             print(df_name)
             self.datasets[df_name] = Dataset(
                 df_name=df_name,
-                model_name=self.model_name
+                model_name=self.model_name,
+
+                language="english",
+
+                process_stages=self.progress_stages
             )
 
             self.datasets[df_name].get_dataset()
         
             self.datasets[df_name].process_dataset()
-
+            
             self.datasets[df_name].save()
 
 # what do I need for all datasets
