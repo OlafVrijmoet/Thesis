@@ -74,7 +74,7 @@ def gensim():
 
     }
 
-        # loop through embedding models
+    # loop through embedding models
     for model in models:
 
         # loop through stemmed datasets
@@ -88,6 +88,7 @@ def gensim():
 
                     print(f"Processing CSV file: {file_name}")
 
+                    # load data into class for embedding
                     embed_df = Embed_Words(
 
                         name_df=file_name,
@@ -105,9 +106,9 @@ def gensim():
                     
                     print_sub_chapter_start(f"Embed {file_name}")
 
+                    # embed the data inside the dataset
                     embed_df.embed_df()
 
                     print_sub_chapter_end(f"Embed {file_name}")
 
-                    
-
+                    # train, test and validate model

@@ -24,6 +24,7 @@ from classes.Process_Stages import Process_Stages
 from data.splits.constants import *
 from run_models.gensim.constants import GENSIM_DATA
 
+# dataset porcessing
 class Dataset:
 
     # =Process_Stages(
@@ -125,15 +126,18 @@ class Dataset:
         if self.process_stages.spelling_check == True:
             row["student_answer"] = self.correctSpelling(row["student_answer"])
             row["reference_answer"] = self.correctSpelling(row["reference_answer"])
-
+        
+        # NOW PART OF Dataset_Gensim
         if self.process_stages.gensim_tokenization == True:
             row["student_answer"] = nltk.word_tokenize(row["student_answer"])
             row["reference_answer"] = nltk.word_tokenize(row["reference_answer"])
 
+        # NOW PART OF Dataset_Gensim
         if self.process_stages.gensim_remove_stop_words == True:
             row["student_answer"] = self.remove_stop_words(row["student_answer"])
             row["reference_answer"] = self.remove_stop_words(row["reference_answer"])
 
+        # NOW PART OF Dataset_Gensim
         if self.process_stages.gensim_lemmatize == True:
             row["student_answer"] = self.lemmatize_tokens(row["student_answer"])
             row["reference_answer"] = self.lemmatize_tokens(row["reference_answer"])
@@ -144,6 +148,7 @@ class Dataset:
 
         return row
 
+    # THIS COULD BE DONE WITHOUT THE gensim_tokenization! THIS IS NOW HANDLED IN Dataset_Gensim
     def save(self):
         path = "data_saved/basic_processed"
         if self.process_stages.gensim_tokenization == True:
