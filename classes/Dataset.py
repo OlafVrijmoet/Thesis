@@ -43,7 +43,7 @@ class Dataset:
         self.df_name = df_name
         self.model_name = model_name
 
-        self.basic_processed_df = None
+        self.df = None
 
         self.language = language
 
@@ -60,10 +60,10 @@ class Dataset:
 
         if processed_dataset_exists == False:
             # fetch base dataset from data/splits/self.df_name
-            self.basic_processed_df = pd.read_csv(f"{SPLITS}/{self.df_name}.csv")
+            self.df = pd.read_csv(f"{SPLITS}/{self.df_name}.csv")
 
             # replace Nan answers with emty string
-            self.basic_processed_df[["student_answer", "reference_answer", "question"]] = self.basic_processed_df[["student_answer", "reference_answer", "question"]].fillna('')
+            self.df[["student_answer", "reference_answer", "question"]] = self.df[["student_answer", "reference_answer", "question"]].fillna('')
 
         else:
             # make sure no basic process stuff is done
@@ -82,8 +82,8 @@ class Dataset:
 
         # check if basic processing already done, located at data_saved/basic_processed/df_name
         if os.path.exists(f"data_saved/basic_processed/{self.df_name}.csv"):
-            # fetch data and save it to self.basic_processed_df
-            self.basic_processed_df = pd.read_csv(f"data_saved/basic_processed/{self.df_name}.csv")
+            # fetch data and save it to self.df
+            self.df = pd.read_csv(f"data_saved/basic_processed/{self.df_name}.csv")
             return True
         else:
             return False
@@ -93,12 +93,12 @@ class Dataset:
         # ensure there is soemthing to be updated in the df
         if self.process_stages.all_true() == True:
 
-            # itterate rows of basic_processed_df
-            for index, row in tqdm(self.basic_processed_df.iterrows(), total=self.basic_processed_df.shape[0]):
+            # itterate rows of df
+            for index, row in tqdm(self.df.iterrows(), total=self.df.shape[0]):
 
                 # process row
                 processed_row = self.process_row(row)
-                self.basic_processed_df.loc[index] = processed_row
+                self.df.loc[index] = processed_row
 
     def process_row(self, row):
 
@@ -153,10 +153,10 @@ class Dataset:
         path = "data_saved/basic_processed"
         if self.process_stages.gensim_tokenization == True:
             path = GENSIM_DATA
-        # save basic_processed_df at data_saved/basic_processed/df_name, create dir if it doesn't exist yet
+        # save df at data_saved/basic_processed/df_name, create dir if it doesn't exist yet
         if not os.path.exists(path):
             os.makedirs(path)
-        self.basic_processed_df.to_csv(f"{path}/{self.df_name}.csv", index=False)
+        self.df.to_csv(f"{path}/{self.df_name}.csv", index=False)
 
     def keep_only_text(self, text: str) -> str:
 

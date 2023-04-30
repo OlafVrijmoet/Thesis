@@ -10,6 +10,7 @@ from word_embedding.models.services.gensim.embed_text_gensim import embed_text_g
 from classes.Datasets import Datasets
 from classes.Process_Stages import Process_Stages
 from word_embedding.models.classes.EmbeddingModel import EmbeddingModel
+from run_models.gensim.classes.Dataset_Gensim import Dataset_Gensim
 
 # services
 from run_models.gensim.services.gensim_services import gensim_download, gensim_save, gensim_load
@@ -24,27 +25,65 @@ from run_models.gensim.constants import GENSIM_DATA
 
 def gensim():
 
-    gensim_dataset = Datasets(
-        force_re_run = False,
+    datasets = {}
+    df_names = []
 
-        base_dir=SPLITS,
-        model_name="gensim",
+    # get all file names in a dir
+    for file in os.listdir(SPLITS):
+        filename, file_extension = os.path.splitext(file)
+        df_names.append(filename)
 
-        progress_stages=Process_Stages(
-            lower=True, 
-            only_text=True, 
-            strip_extra_whitespace=True, 
-            spelling_check=True,
-            strip_punctuation=True,
-            gensim_remove_stop_words=True,
-            gensim_tokenization=True,
-            gensim_lemmatize=True,
-        ),
+    # move datasets into DatasetClass
+    for df_name in df_names:
+        print(df_name)
+        datasets[df_name] = Dataset_Gensim(
+            df_name=df_name,
+            model_name="gensim",
 
-        language="english"
-    )
+            language="english",
 
-    gensim_dataset.get_datasets()
+            process_stages=Process_Stages(
+                lower=True, 
+                only_text=True, 
+                strip_extra_whitespace=True, 
+                spelling_check=True,
+                strip_punctuation=True,
+                gensim_remove_stop_words=True,
+                gensim_tokenization=True,
+                gensim_lemmatize=True,
+            )
+        )
+
+        # get dataset
+        datasets[df_name].get_dataset()
+
+        # process dataset based on process_stages
+        datasets[df_name].process_dataset()
+        
+        # save dataset based on df_name at and stage
+        datasets[df_name].save()
+
+    # gensim_dataset = Datasets(
+    #     force_re_run = False,
+
+    #     base_dir=SPLITS,
+    #     model_name="gensim",
+
+    #     progress_stages=Process_Stages(
+    #         lower=True, 
+    #         only_text=True, 
+    #         strip_extra_whitespace=True, 
+    #         spelling_check=True,
+    #         strip_punctuation=True,
+    #         gensim_remove_stop_words=True,
+    #         gensim_tokenization=True,
+    #         gensim_lemmatize=True,
+    #     ),
+
+    #     language="english"
+    # )
+
+    # gensim_dataset.get_datasets()
 
     # models
     models = {
