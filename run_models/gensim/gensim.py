@@ -8,7 +8,7 @@ import pd
 from word_embedding.classes.Embed_Words import Embed_Words
 from word_embedding.models.services.gensim.embed_text_gensim import embed_text_gensim
 from classes.Datasets import Datasets
-from classes.Process_Stages import Process_Stages
+from run_models.gensim.classes.Process_Stages_Gensim import Process_Stages_Gensim
 from word_embedding.models.classes.EmbeddingModel import EmbeddingModel
 from run_models.gensim.classes.Dataset_Gensim import Dataset_Gensim
 
@@ -42,7 +42,7 @@ def gensim():
 
             language="english",
 
-            process_stages=Process_Stages(
+            process_stages=Process_Stages_Gensim(
                 lower=True, 
                 only_text=True, 
                 strip_extra_whitespace=True, 

@@ -1,7 +1,9 @@
 
 # paths data_stages
 DATA_STAGES = "data_saved"
+GENSIM_STAGE = "gensim"
 BASIC_PROCCESSED = f"{DATA_STAGES}/basic_processed"
+GENSIM_PROCESSED = f"{DATA_STAGES}/{GENSIM_STAGE}"
 
 DATA_SPLIT = "data/split/data"
 

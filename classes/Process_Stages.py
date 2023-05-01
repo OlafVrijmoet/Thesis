@@ -1,18 +1,15 @@
 
 class Process_Stages:
 
-    def __init__(self, lower, only_text, strip_extra_whitespace, spelling_check, strip_punctuation, gensim_remove_stop_words, gensim_tokenization, gensim_lemmatize) -> None:
+    def __init__(self, basic_processed) -> None:
         # part of basic_processed
-        self.lower = lower
-        self.only_text = only_text
-        self.strip_extra_whitespace = strip_extra_whitespace
-        self.spelling_check = spelling_check
-        self.strip_punctuation = strip_punctuation
+        self.basic_processed = basic_processed
+    
+    def __getitem__(self, key):
+        return getattr(self, key)
 
-        # Gensim
-        self.gensim_remove_stop_words = gensim_remove_stop_words
-        self.gensim_tokenization = gensim_tokenization
-        self.gensim_lemmatize = gensim_lemmatize
-
-    def all_basic_processing_true(self):
-        return all([self.lower, self.only_text, self.strip_extra_whitespace, self.spelling_check, self.strip_punctuation])
+    def __setitem__(self, key, value):
+        setattr(self, key, value)
+    
+    def any_process_stages_true(self):
+        return any(getattr(self, attr) for attr in self.__dict__)
