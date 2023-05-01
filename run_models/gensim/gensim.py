@@ -38,7 +38,7 @@ def gensim():
         print(df_name)
         datasets[df_name] = Dataset_Gensim(
             df_name=df_name,
-            model_name="gensim",
+            model_name="gensim", # used for dir name inside data_saved
 
             language="english",
 
@@ -51,7 +51,7 @@ def gensim():
                 gensim_remove_stop_words=True,
                 gensim_tokenization=True,
                 gensim_lemmatize=True,
-            )
+            ) # all this must be done for the Gensim model
         )
 
         # get dataset
@@ -119,6 +119,20 @@ def gensim():
         # loop through stemmed datasets
         for root, dirs, files in os.walk(GENSIM_DATA):
 
+            for key, dataset in datasets.items():
+
+                # embed dfs
+                dataset.embed_sentence_add()
+
+                # add cosine similatiry
+                dataset.add_cosine_similarity_column()
+
+                # create dataseplits using DatasetSplits class
+
+                # run experiments!
+            
+
+            # delete
             for file in files:
                 if file.endswith(".csv"):
 
@@ -127,7 +141,7 @@ def gensim():
 
                     print(f"Processing CSV file: {file_name}")
 
-                    # load data into class for embedding
+                    # !!! IS NOW INSIDE Dataset_Gensim !!! - load data into class for embedding
                     embed_df = Embed_Words(
 
                         name_df=file_name,

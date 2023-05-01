@@ -16,6 +16,7 @@ from tqdm import tqdm
 
 # services
 from services.import_csvs_from_dir import import_csvs_from_dir
+from services.save import save
 
 # classes
 from classes.Process_Stages import Process_Stages
@@ -23,20 +24,10 @@ from classes.Process_Stages import Process_Stages
 # constants
 from data.splits.constants import *
 from run_models.gensim.constants import GENSIM_DATA
+from constants_dir.path_constants import BASIC_PROCCESSED
 
 # dataset porcessing
 class Dataset:
-
-    # =Process_Stages(
-        #     lower=True, 
-        #     only_text=True, 
-        #     strip_extra_whitespace=True, 
-        #     spelling_check=True,
-        #     strip_punctuation=True,
-        #     gensim_remove_stop_words=False,
-        #     gensim_tokenization=False,
-        #     gensim_lemmatize=False
-        # )
 
     def __init__(self, df_name, model_name, language, process_stages) -> None:
 
@@ -53,6 +44,9 @@ class Dataset:
         self.stop_words = set(stopwords.words(language))
         self.lemmatizer = WordNetLemmatizer()
 
+        self.former_stage_dir = f"{SPLITS}"
+        self.next_stage_dir = f"{BASIC_PROCCESSED}"
+
     def get_dataset(self):
 
         # check if there is already a dataset that has been processed before
@@ -60,7 +54,7 @@ class Dataset:
 
         if processed_dataset_exists == False:
             # fetch base dataset from data/splits/self.df_name
-            self.df = pd.read_csv(f"{SPLITS}/{self.df_name}.csv")
+            self.df = pd.read_csv(f"{self.former_stage_dir}/{self.df_name}.csv")
 
             # replace Nan answers with emty string
             self.df[["student_answer", "reference_answer", "question"]] = self.df[["student_answer", "reference_answer", "question"]].fillna('')
@@ -74,24 +68,27 @@ class Dataset:
 
     def processed_dataset(self) -> bool:
 
-        if self.process_stages.gensim_remove_stop_words == True:
-            nltk.download('stopwords')
+        # if self.process_stages.gensim_remove_stop_words == True:
+        #     nltk.download('stopwords')
 
-        if self.process_stages.gensim_lemmatize == True:
-            nltk.download('wordnet')
+        # if self.process_stages.gensim_lemmatize == True:
+        #     nltk.download('wordnet')
 
         # check if basic processing already done, located at data_saved/basic_processed/df_name
-        if os.path.exists(f"data_saved/basic_processed/{self.df_name}.csv"):
+        if os.path.exists(f"{self.next_stage_dir}/{self.df_name}.csv"):
+            print(f"basic processing exists already for {self.df_name}")
+            
             # fetch data and save it to self.df
-            self.df = pd.read_csv(f"data_saved/basic_processed/{self.df_name}.csv")
+            self.df = pd.read_csv(f"{self.next_stage_dir}/{self.df_name}.csv")
             return True
         else:
+            print(f"basic processing does not already exist for {self.df_name}")
             return False
 
     def process_dataset(self):
 
         # ensure there is soemthing to be updated in the df
-        if self.process_stages.all_true() == True:
+        if self.process_stages.all_basic_processing_true() == True:
 
             # itterate rows of df
             for index, row in tqdm(self.df.iterrows(), total=self.df.shape[0]):
@@ -127,36 +124,26 @@ class Dataset:
             row["student_answer"] = self.correctSpelling(row["student_answer"])
             row["reference_answer"] = self.correctSpelling(row["reference_answer"])
         
-        # NOW PART OF Dataset_Gensim
-        if self.process_stages.gensim_tokenization == True:
-            row["student_answer"] = nltk.word_tokenize(row["student_answer"])
-            row["reference_answer"] = nltk.word_tokenize(row["reference_answer"])
+        # # NOW PART OF Dataset_Gensim
+        # if self.process_stages.gensim_tokenization == True:
+        #     row["student_answer"] = nltk.word_tokenize(row["student_answer"])
+        #     row["reference_answer"] = nltk.word_tokenize(row["reference_answer"])
 
-        # NOW PART OF Dataset_Gensim
-        if self.process_stages.gensim_remove_stop_words == True:
-            row["student_answer"] = self.remove_stop_words(row["student_answer"])
-            row["reference_answer"] = self.remove_stop_words(row["reference_answer"])
+        # # NOW PART OF Dataset_Gensim
+        # if self.process_stages.gensim_remove_stop_words == True:
+        #     row["student_answer"] = self.remove_stop_words(row["student_answer"])
+        #     row["reference_answer"] = self.remove_stop_words(row["reference_answer"])
 
-        # NOW PART OF Dataset_Gensim
-        if self.process_stages.gensim_lemmatize == True:
-            row["student_answer"] = self.lemmatize_tokens(row["student_answer"])
-            row["reference_answer"] = self.lemmatize_tokens(row["reference_answer"])
+        # # NOW PART OF Dataset_Gensim
+        # if self.process_stages.gensim_lemmatize == True:
+        #     row["student_answer"] = self.lemmatize_tokens(row["student_answer"])
+        #     row["reference_answer"] = self.lemmatize_tokens(row["reference_answer"])
 
-        # Remove empty tokens that may have been created during preprocessing
-        if self.process_stages.gensim_tokenization == True:
-            tokens = [token for token in tokens if token]
+        # # Remove empty tokens that may have been created during preprocessing
+        # if self.process_stages.gensim_tokenization == True:
+        #     tokens = [token for token in tokens if token]
 
         return row
-
-    # THIS COULD BE DONE WITHOUT THE gensim_tokenization! THIS IS NOW HANDLED IN Dataset_Gensim
-    def save(self):
-        path = "data_saved/basic_processed"
-        if self.process_stages.gensim_tokenization == True:
-            path = GENSIM_DATA
-        # save df at data_saved/basic_processed/df_name, create dir if it doesn't exist yet
-        if not os.path.exists(path):
-            os.makedirs(path)
-        self.df.to_csv(f"{path}/{self.df_name}.csv", index=False)
 
     def keep_only_text(self, text: str) -> str:
 
@@ -188,11 +175,25 @@ class Dataset:
         # Initialize the spell checker
         return corrected_sentence
 
-    def remove_stop_words(self, tokens):
-        tokens = [token for token in tokens if token not in self.stop_words]
+    # def remove_stop_words(self, tokens):
+    #     tokens = [token for token in tokens if token not in self.stop_words]
 
-        return tokens
+    #     return tokens
     
-    def lemmatize_tokens(self, tokens):
+    # def lemmatize_tokens(self, tokens):
 
-        tokens = [self.lemmatizer.lemmatize(token) for token in tokens]
+    #     tokens = [self.lemmatizer.lemmatize(token) for token in tokens]
+
+    # save basic processed
+    def save(self):
+
+        # check if any new basic processing is done
+        if self.process_stages.all_basic_processing_true() == True:
+            print(f"saving new basis processing: {self.df_name}")
+            save(
+                dir=self.next_stage_dir,
+                file_name=self.df_name,
+                df=self.df
+            )
+        else:
+            print(f"no new basic processing done on {self.df_name}")

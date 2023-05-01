@@ -1,6 +1,6 @@
 
 # paths data_stages
-DATA_STAGES = "data_stages"
+DATA_STAGES = "data_saved"
 BASIC_PROCCESSED = f"{DATA_STAGES}/basic_processed"
 
 DATA_SPLIT = "data/split/data"
