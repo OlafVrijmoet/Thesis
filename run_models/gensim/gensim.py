@@ -54,14 +54,8 @@ def gensim():
             ) # all this must be done for the Gensim model
         )
 
-        # get dataset
-        datasets[df_name].get_dataset()
-
-        # process dataset based on process_stages
-        datasets[df_name].process_dataset()
-        
-        # save dataset based on df_name at and stage
-        datasets[df_name].save()
+        # get dataset, process dataset, save dataset
+        datasets[df_name].run_all()
 
     # gensim_dataset = Datasets(
     #     force_re_run = False,
@@ -119,20 +113,7 @@ def gensim():
         # loop through stemmed datasets
         for root, dirs, files in os.walk(GENSIM_DATA):
 
-            for key, dataset in datasets.items():
-
-                # embed dfs
-                dataset.embed_sentence_add()
-
-                # add cosine similatiry
-                dataset.add_cosine_similarity_column()
-
-                # create dataseplits using DatasetSplits class
-
-                # run experiments!
-            
-
-            # delete
+            # keep
             for file in files:
                 if file.endswith(".csv"):
 

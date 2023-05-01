@@ -26,6 +26,9 @@ class Embed_Words:
 
         self.save_path = save_path
 
+    # get df
+    
+    
     def embed_df(self):
 
         embedded_reference_answers = []

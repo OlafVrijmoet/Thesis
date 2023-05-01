@@ -17,6 +17,7 @@ from tqdm import tqdm
 # services
 from services.import_csvs_from_dir import import_csvs_from_dir
 from services.save import save
+from services.get_df import get_df
 
 # classes
 from classes.Process_Stages import Process_Stages
@@ -47,6 +48,13 @@ class Dataset:
         self.former_stage_dir = f"{SPLITS}"
         self.next_stage_dir = f"{BASIC_PROCCESSED}"
 
+    # get dataset, process dataset, save dataset
+    def run_all(self):
+
+        self.get_dataset()
+        self.process_dataset()
+        self.save()
+
     def get_dataset(self):
 
         # check if there is already a dataset that has been processed before
@@ -65,8 +73,22 @@ class Dataset:
             self.process_stages.only_text = False
             self.process_stages.strip_extra_whitespace = False
             self.process_stages.spelling_check = False
+            self.process_stages.strip_punctuation = False
 
     def processed_dataset(self) -> bool:
+
+        # check if basic processing already done, located at data_saved/basic_processed/df_name
+        df_found, df = get_df(
+            dir=self.next_stage_dir, 
+            file_name=self.df_name
+        )
+
+        if df_found == True:
+            self.df = df
+            return True
+        
+        else:
+            return False
 
         # if self.process_stages.gensim_remove_stop_words == True:
         #     nltk.download('stopwords')
@@ -74,21 +96,22 @@ class Dataset:
         # if self.process_stages.gensim_lemmatize == True:
         #     nltk.download('wordnet')
 
-        # check if basic processing already done, located at data_saved/basic_processed/df_name
-        if os.path.exists(f"{self.next_stage_dir}/{self.df_name}.csv"):
-            print(f"basic processing exists already for {self.df_name}")
+        # if os.path.exists(f"{self.next_stage_dir}/{self.df_name}.csv"):
+        #     print(f"basic processing exists already for {self.df_name}")
             
-            # fetch data and save it to self.df
-            self.df = pd.read_csv(f"{self.next_stage_dir}/{self.df_name}.csv")
-            return True
-        else:
-            print(f"basic processing does not already exist for {self.df_name}")
-            return False
+        #     # fetch data and save it to self.df
+        #     self.df = pd.read_csv(f"{self.next_stage_dir}/{self.df_name}.csv")
+        #     return True
+        # else:
+        #     print(f"basic processing does not already exist for {self.df_name}")
+        #     return False
 
     def process_dataset(self):
 
         # ensure there is soemthing to be updated in the df
         if self.process_stages.all_basic_processing_true() == True:
+            
+            print(f"basic processing starting for {self.df_name}")
 
             # itterate rows of df
             for index, row in tqdm(self.df.iterrows(), total=self.df.shape[0]):
@@ -96,6 +119,9 @@ class Dataset:
                 # process row
                 processed_row = self.process_row(row)
                 self.df.loc[index] = processed_row
+
+        else:
+            print(f"basic processing already done for {self.df_name}")
 
     def process_row(self, row):
 
@@ -196,4 +222,4 @@ class Dataset:
                 df=self.df
             )
         else:
-            print(f"no new basic processing done on {self.df_name}")
+            print(f"no saving needed because new basic processing done on {self.df_name}")
