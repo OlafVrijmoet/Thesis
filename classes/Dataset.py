@@ -72,10 +72,16 @@ class Dataset:
                     file_name=self.df_name
                 )
 
+                print(f"df found: {df_found}, name: {key}")
+
                 if df_found:
 
                     self.df[key] = df
+                    self.replace_non_with_string(key)
+
                     self.latest_already_processed_phase = key
+
+                    self.process_stages[key] = False
 
                 else:
                     # make sure this stage stuff already done indicated 
@@ -89,13 +95,16 @@ class Dataset:
 
                 self.df[key] = self.df[self.latest_already_processed_phase].copy()
 
-
     def fetch_dataset_and_replace_null(self, key, dir):
         # fetch base dataset from data/splits/self.df_name
         self.df[key] = pd.read_csv(dir)
 
+        self.replace_non_with_string(key)
+
+    def replace_non_with_string(self, key):
+        
         # replace Nan answers with emty string
-        self.df[key][["student_answer", "reference_answer", "question"]] = self.df["standardized_splits"][["student_answer", "reference_answer", "question"]].fillna('')
+        self.df[key][["student_answer", "reference_answer", "question"]] = self.df[key][["student_answer", "reference_answer", "question"]].fillna('')
 
     def process_dataset(self):
 
