@@ -19,11 +19,17 @@ def main():
     # create datasets splits, example: based on domains
     run_phase(SPLIT_DATA)
 
-    # embed words
-    run_phase(EMBED_WORDS)
+    # # embed words
+    # run_phase(EMBED_WORDS)
 
-    # reun Gensim models
+    # run Gensim models
     run_phase(GENSIM)
+
+    # run Embedding models
+    run_phase(EMBEDDING)
+
+    # add cosine similarity
+    run_phase(COSINE_SIMILARITY)
 
 if __name__ == "__main__":
 

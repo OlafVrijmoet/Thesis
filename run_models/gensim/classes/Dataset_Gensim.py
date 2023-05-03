@@ -14,7 +14,7 @@ from services.save import save
 from services.get_df import get_df
 
 # parant classes
-from classes.Dataset import Dataset
+from classes.Dataset_Basic import Dataset_Basic
 
 # constants
 from run_models.gensim.constants import GENSIM_DATA
@@ -22,16 +22,10 @@ from constants_dir.column_constants import *
 from constants_dir.path_constants import DATA_STAGES
 from constants_dir.path_constants import BASIC_PROCCESSED, DATA_STAGES, GENSIM_PROCESSED
 
-class Dataset_Gensim(Dataset):
+class Dataset_Gensim(Dataset_Basic):
 
-    def __init__(self, df_name, model_name, language, process_stages, force_Gensim_run=False) -> None:
-        super().__init__(df_name, model_name, language, process_stages)
-
-        self.df = {
-            "standardized_splits": None,
-            "basic_processed": None,
-            "gensim": None
-        }
+    def __init__(self, df_name, model_name, datasets, language) -> None:
+        super().__init__(df_name, model_name, datasets, language)
 
     def get_dataset(self):
         # make sure that basic processing is done, get the already basic processed df from dir if done, else do the basic processing
@@ -51,15 +45,13 @@ class Dataset_Gensim(Dataset):
         # add gensim version of row
         row_dict[self.model_name] = row_dict["basic_processed"].copy()
 
-        if self.process_stages.gensim == True:
+        if self.datasets[self.model_name]["may_run_now"] == True and self.datasets[self.model_name]["done"] == False:
             row_dict[self.model_name]["student_answer"] = nltk.word_tokenize(row_dict[self.model_name]["student_answer"])
             row_dict[self.model_name]["reference_answer"] = nltk.word_tokenize(row_dict[self.model_name]["reference_answer"])
 
-        if self.process_stages.gensim == True:
             row_dict[self.model_name]["student_answer"] = self.remove_stop_words(row_dict[self.model_name]["student_answer"])
             row_dict[self.model_name]["reference_answer"] = self.remove_stop_words(row_dict[self.model_name]["reference_answer"])
 
-        if self.process_stages.gensim == True:
             row_dict[self.model_name]["student_answer"] = self.lemmatize_tokens(row_dict[self.model_name]["student_answer"])
             row_dict[self.model_name]["reference_answer"] = self.lemmatize_tokens(row_dict[self.model_name]["reference_answer"])
 

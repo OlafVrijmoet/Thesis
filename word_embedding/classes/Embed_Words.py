@@ -10,10 +10,11 @@ from services.save import save
 
 # constants
 from constants_dir.column_constants import *
+from constants_dir.path_constants import DATA_STAGES
 
 class Embed_Words:
 
-    def __init__(self, name_df, name_model, df, model, embed_word, save_path):
+    def __init__(self, name_df, name_model, df, model, embed_word):
         
         self.name_df = name_df
         self.name_model = name_model
@@ -23,8 +24,6 @@ class Embed_Words:
 
         # custom function for model that embeds word
         self.embed_word = embed_word
-
-        self.save_path = save_path
 
     # get df
     
@@ -65,7 +64,7 @@ class Embed_Words:
 
         # save raw
         save(
-            dir=f"{self.save_path}/{self.model.model_name}",
+            dir=f"{DATA_STAGES}/embedded_by_{self.model.model_name}",
             file_name=self.name_df,
             df=self.df,
             parquet=True

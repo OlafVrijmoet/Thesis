@@ -4,10 +4,11 @@ from data.raw.all_to_csv import all_to_csv
 from data.standardized.standardize import standardize
 from data.processed.process_text import process_text
 from data.splits.split_data import split_data
-from word_embedding.embed_words import embed_words
 
 # data processing for models
 from run_models.gensim.gensim import gensim
+from run_models.embed_words.embed_words import embed_words
+from run_models.cosine_sililarity.cosine_sililarity import cosine_sililarity
 
 # classes
 from classes.Phase_Settings import Phase_Settings
@@ -34,19 +35,31 @@ PROCESS_TEXT_PHASE = Phase_Settings(
 SPLIT_DATA = Phase_Settings(
     name="Split data", 
     function=split_data,
-    run=True
-)
-
-# delete
-EMBED_WORDS = Phase_Settings(
-    name="Embed words", 
-    function=embed_words,
     run=False
 )
+
+# # delete
+# EMBED_WORDS = Phase_Settings(
+#     name="Embed words", 
+#     function=embed_words,
+#     run=False
+# )
 
 GENSIM = Phase_Settings(
     name="sensim_models", 
     function=gensim,
+    run=False
+)
+
+EMBEDDING = Phase_Settings(
+    name="sensim_models", 
+    function=embed_words,
+    run=False
+)
+
+COSINE_SIMILARITY = Phase_Settings(
+    name="cosine_sililarity", 
+    function=cosine_sililarity,
     run=True
 )
 

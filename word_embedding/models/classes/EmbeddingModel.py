@@ -5,17 +5,19 @@ from word_embedding.models.constants import *
 
 class EmbeddingModel:
 
-    def __init__(self, model_name, download_link, download_func, save_func, load_func):
+    def __init__(self, model_name, download_link, download_func, save_func, load_func, dir_in_model_embedding = ""):
         self.model_name = model_name
         self.download_link = download_link
         self.download_func = download_func
         self.save_func = save_func
         self.load_func = load_func
         self.model = None
+        
+        self.dir_in_model_embedding = dir_in_model_embedding
 
     def load_model(self):
         # Create the directory if it doesn't exist
-        os.makedirs(MODEL_DIR, exist_ok=True)
+        os.makedirs(f"{MODEL_DIR}/{self.model_name}", exist_ok=True)
 
         model_file = os.path.join(f"{MODEL_DIR}/{self.model_name}", f"{self.model_name}.bin")
 
@@ -30,3 +32,7 @@ class EmbeddingModel:
 
         # Load the model from the local file
         self.model = self.load_func(model_file)
+
+    # get attribute values
+    def __getitem__(self, key):
+        return getattr(self, key)

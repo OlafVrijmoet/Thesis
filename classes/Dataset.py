@@ -30,20 +30,18 @@ from constants_dir.path_constants import BASIC_PROCCESSED, DATA_STAGES
 # dataset porcessing
 class Dataset:
 
-    def __init__(self, df_name, model_name, language, process_stages, force_basic_processing=False) -> None:
+    def __init__(self, df_name, model_name, datasets, language, columns_to_add={}) -> None:
 
         self.df_name = df_name
         self.model_name = model_name
 
-        self.df = {
-            "standardized_splits": None,
-            "basic_processed": None
-        }
-        self.latest_already_processed_phase = "standardized_splits" # this indicates the df that should be used for itteration
+        self.datasets = datasets
+
+        self.latest_already_processed_phase = "standardized_splits" # this indicates the df that should be used for itteration 
 
         self.language = language
 
-        self.process_stages = process_stages
+        self.columns_to_add = columns_to_add # structure {dataset_name: {column_name: [values]}}
 
         self.spell = SpellChecker()
         self.stop_words = set(stopwords.words(language))
@@ -58,102 +56,104 @@ class Dataset:
 
     def get_dataset(self):
 
-        for key, df in self.df.items():
+        for key, dataset in self.datasets.items():
             
             # fetch standardized_splits from special dir
             if key == "standardized_splits":
                 self.fetch_dataset_and_replace_null(key=key, dir=f"{SPLITS}/{self.df_name}.csv")
 
             else:
-                
+                                
                 # check if basic processing already done, located at data_saved/basic_processed/df_name
                 df_found, df = get_df(
                     dir=f"{DATA_STAGES}/{key}", 
-                    file_name=self.df_name
+                    file_name=self.df_name,
+                    parquet=self.datasets[key]["parquet"]
                 )
 
                 print(f"df found: {df_found}, name: {key}")
 
+                # update value of dataset done
+                dataset["done"] = df_found
+
                 if df_found:
 
-                    self.df[key] = df
+                    dataset["df"] = df
                     self.replace_non_with_string(key)
 
                     self.latest_already_processed_phase = key
 
-                    self.process_stages[key] = False
-
                 else:
-                    # make sure this stage stuff already done indicated 
-                    self.process_stages[key] = True
+                    
+                    if dataset["may_run_now"] == False and dataset["required"] == True:
 
-        
-        # use the latest dataset and copy it to all none valued in self.df
-        for key, processed_row in self.df.items():
+                        # this meas it you need a different dataset class child to run this & it has not been run yet
+                        # so break run!
+                        raise ValueError(f"{key} is a required datasets but is not present and it is not able to be run with this dataset class!")
+                    
+        # use the latest dataset and copy it to all none valued in self.datasets[key]["df"]
+        for key, dataset in self.datasets.items():
 
-            if self.df[key] is None:
+            if self.datasets[key]["df"] is None:
 
-                self.df[key] = self.df[self.latest_already_processed_phase].copy()
+                self.datasets[key]["df"] = self.datasets[self.latest_already_processed_phase]["df"].copy()
 
     def fetch_dataset_and_replace_null(self, key, dir):
-        # fetch base dataset from data/splits/self.df_name
-        self.df[key] = pd.read_csv(dir)
+
+        # check if dataset is parquet
+        if self.datasets[key]["parquet"] == True:
+            # fetch parquet
+            self.datasets[key]["df"] = pd.read_parquet(dir)
+        else:
+            # fetch base dataset from data/splits/self.df_name
+            self.datasets[key]["df"] = pd.read_csv(dir)
 
         self.replace_non_with_string(key)
 
     def replace_non_with_string(self, key):
         
         # replace Nan answers with emty string
-        self.df[key][["student_answer", "reference_answer", "question"]] = self.df[key][["student_answer", "reference_answer", "question"]].fillna('')
+        self.datasets[key]["df"][["student_answer", "reference_answer", "question"]] = self.datasets[key]["df"][["student_answer", "reference_answer", "question"]].fillna('')
 
     def process_dataset(self):
 
         # ensure there is something to be updated in the df
-        if self.process_stages.any_process_stages_true() == True:
+        if self.any_datasets_should_run() == True:
             
             print(f"basic processing starting for {self.df_name}")
 
             # itterate rows of df
-            for index, row in tqdm(self.df[self.latest_already_processed_phase].iterrows(), total=self.df[self.latest_already_processed_phase].shape[0]):
+            for index, row in tqdm(self.datasets[self.latest_already_processed_phase]["df"].iterrows(), total=self.datasets[self.latest_already_processed_phase]["df"].shape[0]):
 
                 # process row
                 processed_row_dict = self.process_row(row)
                 for key, processed_row in processed_row_dict.items():
-                    self.df[key].loc[index] = processed_row
+                    if key is not "row":
+                        self.datasets[key]["df"].loc[index] = processed_row
+            
+    def any_datasets_should_run(self):
+        
+        run_loop = False
 
-        else:
-            print(f"basic processing already done for {self.df_name}")
+        for key, dataset in self.datasets.items():
+
+            if self.datasets[key]["may_run_now"] == True and self.datasets[key]["done"] == False:
+
+                run_loop = True
+
+                print(f"Running {key} for {self.df_name}")
+            
+            else:
+                
+                print(f"No need to run {key} for {self.df_name}")
+
+        return run_loop
 
     def process_row(self, row):
 
         row_dict = {
-            "basic_processed": row
+            "row": row
         }
-
-        # lower
-        if self.process_stages.basic_processed == True:
-            row_dict["basic_processed"]["student_answer"] = row_dict["basic_processed"]["student_answer"].lower()
-            row_dict["basic_processed"]["reference_answer"] = row_dict["basic_processed"]["reference_answer"].lower()
-
-        # remove non chars
-        if self.process_stages.basic_processed == True:
-            row_dict["basic_processed"]["student_answer"] = self.keep_only_text(row_dict["basic_processed"]["student_answer"])
-            row_dict["basic_processed"]["reference_answer"] = self.keep_only_text(row_dict["basic_processed"]["reference_answer"])
-
-        # remove extra whitespace
-        if self.process_stages.basic_processed == True:
-            row_dict["basic_processed"]["student_answer"] = self.strip_extra_whitespace(row_dict["basic_processed"]["student_answer"])
-            row_dict["basic_processed"]["reference_answer"] = self.strip_extra_whitespace(row_dict["basic_processed"]["reference_answer"])
-
-        # remove punctuation
-        if self.process_stages.basic_processed == True:
-            row_dict["basic_processed"]["student_answer"] = self.strip_punctuation(row_dict["basic_processed"]["student_answer"])
-            row_dict["basic_processed"]["reference_answer"] = self.strip_punctuation(row_dict["basic_processed"]["reference_answer"])
-
-        # spelling check
-        if self.process_stages.basic_processed == True:
-            row_dict["basic_processed"]["student_answer"] = self.correctSpelling(row_dict["basic_processed"]["student_answer"])
-            row_dict["basic_processed"]["reference_answer"] = self.correctSpelling(row_dict["basic_processed"]["reference_answer"])
 
         return row_dict
 
@@ -187,22 +187,44 @@ class Dataset:
         # Initialize the spell checker
         return corrected_sentence
 
+    def add_columns(self):
+
+        for name_dataset_to_add_column, conlumn_to_add in self.columns_to_add.items():
+
+            for column_name, column_values in conlumn_to_add.items():
+
+                # add column to dataset
+                self.datasets[name_dataset_to_add_column]["df"][column_name] = column_values
+
+    def dataset_splits(self, seed, x_column_name, y_column_name):
+
+        self.datasets[self.df_name].split_datasets(seed, x_column_name, y_column_name)
+
+    # get attribute values
+    def __getitem__(self, key):
+        return getattr(self, key)
+    
+    # set attribute values
+    def __setitem__(self, key, value):
+        setattr(self, key, value)
+
     # save basic processed
     def save(self):
         
-        for key, df in self.df.items():
+        for key, dataset in self.datasets.items():
 
             # skip the base df
             if key == "standardized_splits":
                 continue
 
             # check if any new basic processing is done
-            if self.process_stages[key] == True:
+            if self.datasets[key]["may_run_now"] == True and self.datasets[key]["done"] == False:
                 print(f"saving new {key} phase for: {self.df_name}")
                 save(
                     dir=f"{DATA_STAGES}/{key}",
                     file_name=self.df_name,
-                    df=df
+                    df=dataset["df"],
+                    parquet=self.datasets[key]["parquet"]
                 )
             else:
-                print(f"no saving needed because basic processing already done on {self.df_name}")
+                print(f"no saving needed because basic {key} already done on {self.df_name}")
