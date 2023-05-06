@@ -60,7 +60,7 @@ EMBEDDING = Phase_Settings(
 COSINE_SIMILARITY = Phase_Settings(
     name="cosine_sililarity", 
     function=cosine_sililarity,
-    run=True
+    run=False
 )
 
 # paths

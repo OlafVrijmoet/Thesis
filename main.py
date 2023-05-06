@@ -13,8 +13,8 @@ def main():
     # standardize data
     run_phase(STANDARDIZE_PHASE)
 
-    # process text - !!!OUTDATED!!!
-    run_phase(PROCESS_TEXT_PHASE)
+    # # process text - !!!OUTDATED!!!
+    # run_phase(PROCESS_TEXT_PHASE)
 
     # create datasets splits, example: based on domains
     run_phase(SPLIT_DATA)

@@ -67,6 +67,17 @@ def gensim():
         # get dataset, process dataset, save dataset
         datasets[df_name].run_all()
 
+    # normalize points for each dataset
+    for df_name in df_names:
+        print(f"normalizing points for dataset: {df_name}")
+
+        df = pd.read_csv(f"data_saved/gensim/{df_name}.csv")
+
+        # add normalized points
+        df["normalized_points"] = df["assigned_points"] / df["max_points"]
+
+        df.to_csv(f"data_saved/gensim/{df_name}.csv", index=False)
+
     # models
     models = {
         "fasttext": EmbeddingModel(
@@ -107,44 +118,3 @@ def gensim():
     for key, model in models.items():
 
         model.load_model()
-
-        # loop through stemmed datasets
-        for root, dirs, files in os.walk(GENSIM_DATA):
-
-            print(root)
-            print(dirs)
-            print(files)
-
-    #         # keep
-    #         for file in files:
-    #             if file.endswith(".csv"):
-
-    #                 file_path = os.path.join(root, file)
-    #                 file_name, _ = os.path.splitext(file)
-
-    #                 print(f"Processing CSV file: {file_name}")
-
-    #                 # !!! IS NOW INSIDE Dataset_Gensim !!! - load data into class for embedding
-    #                 embed_df = Embed_Words(
-
-    #                     name_df=file_name,
-    #                     name_model=model.model_name,
-
-    #                     df = pd.read_csv(file_path),
-
-    #                     model=model,
-
-    #                     embed_word=embed_text_gensim,
-
-    #                     save_path=None,
-
-    #                 )
-                    
-    #                 print_sub_chapter_start(f"Embed {file_name}")
-
-    #                 # embed the data inside the dataset
-    #                 embed_df.embed_df()
-
-    #                 print_sub_chapter_end(f"Embed {file_name}")
-
-    #                 # train, test and validate model
