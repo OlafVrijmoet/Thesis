@@ -105,57 +105,5 @@ class Regression_Model():
         print(f"Weighted-Averaged Recall: {self.test_recall_weighted}")
         print(f"Weighted-Averaged F1-score: {self.test_f1_weighted}")
 
-
-
-
-
-        # # get confusion metrix
-        # # Compute confusion matrix
-        # cm = confusion_matrix(self.dataset[df_name]["assigned_points"], self.dataset[df_name]["pred_points"])
-
-        # # Calculate TP, FP, and FN for each class
-        # n_classes = len(np.unique(self.dataset[df_name]["assigned_points"]))
-        # TP = np.diag(cm)
-        # FP = np.sum(cm, axis=0) - TP
-        # FN = np.sum(cm, axis=1) - TP
-
-        # true_positive = TP
-        # false_positive = FP
-        # false_negative = FN
-
-        # precision = true_positive / (true_positive + false_positive)
-        # accuracy = np.sum(TP) / (np.sum(TP) + np.sum(FP) + np.sum(FN))
-        # recall = true_positive / (true_positive + false_negative)
-
-        # print(f"Accuracy: {accuracy}")
-        # print(f"Recall: {recall}")
-        # print(f"Precision: {precision}")
-        # print(f"f1 score: {2 * ((precision * recall) / (precision + recall))}")
-
-        # # del after!
-
-        # # calculate performance metrics
-        # true_positive = np.sum(self.dataset[df_name]["assigned_points"] == self.dataset[df_name]["pred_points"])
-        
-        # # uses max points as the 'true' class
-        # false_positive = np.sum((self.dataset[df_name]["assigned_points"] != self.dataset[df_name]["pred_points"]) & (self.dataset[df_name]["pred_points"] == self.dataset[df_name]["max_points"]))
-
-        # # uses not max points as the 'false' class
-        # false_negative = np.sum((self.dataset[df_name]["assigned_points"] == self.dataset[df_name]["max_points"]) & (self.dataset[df_name]["pred_points"] != self.dataset[df_name]["max_points"]))
-        
-        # precision = true_positive / (true_positive + false_positive)
-        # accuracy = true_positive / len(self.dataset[df_name])
-        # recall = true_positive / (true_positive + false_negative)
-
-        # print(f"Accuracy: {accuracy}")
-        # print(f"Recall: {recall}")
-        # print(f"Precision: {precision}")
-        # print(f"f1 score: {2 * ((precision * recall) / (precision + recall))}")
-
-        # accuracy, recall and F-1 score
-        
-        # round the y_pred value to the closest whole number between 0 and max_points
-        # self.dataset[df_name]["pred_points"] = np.round(self.dataset[df_name]["pred_points"].values).clip(0, self.dataset[df_name]["max_points"])
-
     def __getitem__(self, key):
         return getattr(self, key)
