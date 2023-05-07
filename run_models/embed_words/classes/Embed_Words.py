@@ -29,7 +29,7 @@ class Embed_Words(Dataset):
         return row_dict
 
     def create_answer_embeddings(self, answer_text):
-                
+        
         words = literal_eval(answer_text)
         answer_vector = np.zeros(self.embedding_model.model.vector_size)
         for word in words:

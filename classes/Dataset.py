@@ -70,11 +70,15 @@ class Dataset:
                     file_name=self.df_name,
                     parquet=self.datasets[key]["parquet"]
                 )
+                                
+                # update value of dataset done
+                if dataset["force_run"] == True:
+                    dataset["done"] = False
+                    df_found = False
+                else:
+                    dataset["done"] = df_found
 
                 print(f"df found: {df_found}, name: {key}")
-
-                # update value of dataset done
-                dataset["done"] = df_found
 
                 if df_found:
 
@@ -94,7 +98,7 @@ class Dataset:
         # use the latest dataset and copy it to all none valued in self.datasets[key]["df"]
         for key, dataset in self.datasets.items():
 
-            if self.datasets[key]["df"] is None:
+            if self.datasets[key]["df"] is None or dataset["force_run"] == True:
 
                 self.datasets[key]["df"] = self.datasets[self.latest_already_processed_phase]["df"].copy()
 
@@ -120,7 +124,7 @@ class Dataset:
         # ensure there is something to be updated in the df
         if self.any_datasets_should_run() == True:
             
-            print(f"basic processing starting for {self.df_name}")
+            print(f"processing starting for {self.df_name}")
 
             # itterate rows of df
             for index, row in tqdm(self.datasets[self.latest_already_processed_phase]["df"].iterrows(), total=self.datasets[self.latest_already_processed_phase]["df"].shape[0]):

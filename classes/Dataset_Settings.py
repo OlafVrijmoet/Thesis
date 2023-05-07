@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 
 class Dataset_Settings:
 
-    def __init__(self, df, may_run_now, required, done = False, parquet=False, name_required_dataset=None, 
+    def __init__(self, df, may_run_now, required, done = False, parquet=False, name_required_dataset=None, force_run=False,
                 train_df=None, test_df=None, validation_df=None,
             x_train=None, x_test=None, x_validation=None, y_train=None, y_test=None, y_validation=None) -> None:
         
@@ -12,6 +12,7 @@ class Dataset_Settings:
         self.required = required
         self.done = done # will check if it is done inside the Dataset class
         self.parquet = parquet
+        self.force_run = force_run
 
         self.name_required_dataset = name_required_dataset
 

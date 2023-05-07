@@ -79,14 +79,16 @@ def embed_words():
                             "gensim": Dataset_Settings(
                                 df=None,
                                 may_run_now=False,
-                                required=True
+                                required=True,
+                                force_run=False
                             ),
                             model_name: Dataset_Settings(
                                 df=None,
                                 may_run_now=True,
                                 required=True,
                                 parquet=True,
-                                name_required_dataset="gensim"
+                                name_required_dataset="gensim",
+                                force_run=True
                             ),
                         },
 
