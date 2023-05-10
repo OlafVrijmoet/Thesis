@@ -73,6 +73,10 @@ def gensim():
 
         df = pd.read_csv(f"data_saved/gensim/{df_name}.csv")
 
+        # round values to howl int numbers
+        df["assigned_points"] = df["assigned_points"].round()
+        df["assigned_points"] = df["assigned_points"].astype(int)
+
         # add normalized points
         df["normalized_points"] = df["assigned_points"] / df["max_points"]
 
