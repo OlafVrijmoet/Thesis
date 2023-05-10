@@ -1,16 +1,22 @@
 
 import pandas as pd
+from datetime import datetime
 
 # classes
 from services.get_df import get_df
 from services.save import save
+
+# services
+from services.get_yes_no_input import get_yes_no_input
 
 # constants
 from performance_tracking.constants import *
 
 class Performance_Row:
 
-    def __init__(self, embedding_model_name, classfication_model_name, dataset_name,
+    def __init__(self,
+                 repeat_experiement_allowed, # allowes experiements with same embedding_model_name, classfication_model_name, dataset_name to be added to performance df without asking
+                 embedding_model_name, classfication_model_name, dataset_name,
                  dataset_performance=None,  # test set, validation set
                  rmse=None,
                  accuracy=None, precision_macro=None, recall_macro=None, f1_macro=None,
@@ -18,6 +24,8 @@ class Performance_Row:
                  precision_weighted=None, recall_weighted=None, f1_weighted=None) -> None:
         
         self.row_add = False
+
+        self.repeat_experiement_allowed = repeat_experiement_allowed
         
         self.past_performance = None
         
@@ -44,12 +52,17 @@ class Performance_Row:
         self.recall_weighted = recall_weighted
         self.f1_weighted = f1_weighted
 
+        self.time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     def save(self):
 
         if self.row_add == False:
 
             # fetch / create df for performance
             self.fetch_saved_performance()
+
+            # check if there is already performance mearsure for embedding, classifier and dataset
+
 
             # add row with this data
             row_data = {
@@ -71,7 +84,8 @@ class Performance_Row:
                 'precision_weighted': self.precision_weighted,
                 'recall_weighted': self.recall_weighted,
                 'f1_weighted': self.f1_weighted,
-                'rmse': self.rmse
+                'rmse': self.rmse,
+                'time_stamp': self.time_stamp
             }
 
             self.past_performance = self.past_performance.append(row_data, ignore_index=True)
@@ -104,7 +118,7 @@ class Performance_Row:
 
             # create new df with class column names
             column_names = [
-                'row_id', 'embedding_id', 'embedding_model_name', 'classification_id', 'classification_model_name',
+                'row_id', 'embedding_id', 'embedding_model_name', 'classification_id', 'classification_model_name', 'dataset_id', 'dataset_name'
                 'dataset_performance', 'accuracy', 'precision_macro', 'recall_macro', 'f1_macro',
                 'precision_micro', 'recall_micro', 'f1_micro',
                 'precision_weighted', 'recall_weighted', 'f1_weighted'
@@ -113,6 +127,32 @@ class Performance_Row:
 
             # save new df
             save(dir=DF_TRACKING_DIR, file_name=DF_TRACKING_FILE_NAME, df=self.past_performance)
+
+    def check_for_duplicates(self):
+
+        duplicate_row = self.past_performance[
+            (self.past_performance['embedding_model_name'] == self.embedding_model_name) &
+            (self.past_performance['classification_model_name'] == self.classfication_model_name) &
+            (self.past_performance['dataset_name'] == self.dataset_name)
+        ]
+
+        row_already_exists = not duplicate_row.empty
+
+        if row_already_exists and not self.repeat_experiement_allowed:
+
+            # change to ask for the following options:
+                # - no redoing experiements and no individual propts
+                # - no redoing experiements but asking individual propts
+                # - redoing experiements allowed, replace old experiement (replace oldest)
+                # - redoing experiements allowed, add experiement
+
+            # redo:
+            # print(f"The experiment that is about to be done has already been done: {self.embedding_model_name, self.classfication_model_name, self.dataset_name}")
+            # replace_results = get_yes_no_input("Do you want to replace the results? (Yes/No): ")
+
+            # add_results = get_yes_no_input("Do you want to add results anyway as a new row? (Yes/No): ")
+
+        return not duplicate_row.empty
 
     def __getitem__(self, key):
         return getattr(self, key)
