@@ -7,3 +7,9 @@ REPLACE = 0
 ADD = 1
 PROMPT_EXPERIMENT_DONE = 2
 NO_PROMPT_NO_REPEAT = 3
+
+# dataset splits
+ALL = "df"
+TRAIN = "train_df"
+TEST = "test_df"
+VALIDATION = "validation_df"
