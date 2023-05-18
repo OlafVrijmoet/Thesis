@@ -7,7 +7,7 @@ from services.get_df import get_df
 from services.save import save
 
 # services
-from services.get_yes_no_input import get_yes_no_input
+from services.prompt_user import prompt_user
 
 # constants
 from performance_tracking.constants import *
@@ -15,8 +15,12 @@ from performance_tracking.constants import *
 class Performance_Row:
 
     def __init__(self,
-                 repeat_experiement_allowed, # allowes experiements with same embedding_model_name, classfication_model_name, dataset_name to be added to performance df without asking
+                 
+                 settings_performance_tacking, # allowes experiements with same embedding_model_name, classfication_model_name, dataset_name to be added to performance df without asking
+                 embedding_seperated, # indicateds if two models are used, one for embedding and one for classifying (True) or one model is used from embedding and classifying (False). Because, the same model might be used in both embedding and classifying
+
                  embedding_model_name, classfication_model_name, dataset_name,
+
                  dataset_performance=None,  # test set, validation set
                  rmse=None,
                  accuracy=None, precision_macro=None, recall_macro=None, f1_macro=None,
@@ -25,7 +29,8 @@ class Performance_Row:
         
         self.row_add = False
 
-        self.repeat_experiement_allowed = repeat_experiement_allowed
+        self.settings_performance_tacking = settings_performance_tacking
+        self.embedding_seperated = embedding_seperated
         
         self.past_performance = None
         
@@ -62,11 +67,37 @@ class Performance_Row:
             self.fetch_saved_performance()
 
             # check if there is already performance mearsure for embedding, classifier and dataset
+            
+            experiement_done_before = self.check_for_duplicates()
 
+            if experiement_done_before == True and self.settings_performance_tacking == PROMPT_EXPERIMENT_DONE:
 
+                # promt user for performance settings
+                user_response = prompt_user(
+                    prompt=f"""
+                    The experiment with embeddings: {self.embedding_model_name}, classifier: {self.classfication_model_name}, dataset: {self.dataset_name}.
+                    Your options: \n
+                        Replace results with oldest findings: {REPLACE} \n
+                        Add results to dataframe as new result: {ADD} \n
+                        Delete new findings: {NO_PROMPT_NO_REPEAT}
+                    """, 
+                    user_options_values={
+                        REPLACE: REPLACE,
+                        ADD: ADD,
+                        NO_PROMPT_NO_REPEAT: NO_PROMPT_NO_REPEAT
+                    }
+                )
+            
+            # user responts no saving or general settings no saving, than skip it!
+            if user_response == NO_PROMPT_NO_REPEAT or (experiement_done_before == True and self.settings_performance_tacking == NO_PROMPT_NO_REPEAT):
+                
+                # stop function
+                return None
+            
             # add row with this data
             row_data = {
                 'row_id': self.row_id,
+                'embedding_seperated': self.embedding_seperated,
                 'embedding_id': None,  # or any default value if not available
                 'embedding_model_name': self.embedding_model_name,
                 'classification_id': None,  # or any default value if not available
@@ -87,6 +118,29 @@ class Performance_Row:
                 'rmse': self.rmse,
                 'time_stamp': self.time_stamp
             }
+
+            if user_response == REPLACE or (experiement_done_before == True and self.settings_performance_tacking == REPLACE):
+                
+                # Filter the DataFrame
+                filtered_df = self.past_performance.query("embedding_model_name == @self.embedding_model_name and classification_model_name == @self.classfication_model_name and dataset_name == @self.dataset_name")
+
+                # !!! filtered_df should not be used to find index, find index inside orininal, including other columns to unieuqly indentify it. !!!
+
+                # !!! also what hoppens if same date, different time ?!!!!
+
+
+                # find the row with the oldest date
+                # Convert the 'Date' column to datetime
+               ik vind jou lief olaf, hoop dat deze code goed werkt!!!!  # Find the index of the row with the oldest date
+                oldest_index = filtered_df['time_stamp'].idxmin()
+
+                # update the row
+                df.loc[oldest_index, row_dict.keys()] = row_dict.values()
+                
+            # if self.settings_performance_tacking == ADD -> let go
+
+
+            
 
             self.past_performance = self.past_performance.append(row_data, ignore_index=True)
 
@@ -136,7 +190,7 @@ class Performance_Row:
             (self.past_performance['dataset_name'] == self.dataset_name)
         ]
 
-        row_already_exists = not duplicate_row.empty
+        return not duplicate_row.empty
 
         if row_already_exists and not self.repeat_experiement_allowed:
 
@@ -151,8 +205,6 @@ class Performance_Row:
             # replace_results = get_yes_no_input("Do you want to replace the results? (Yes/No): ")
 
             # add_results = get_yes_no_input("Do you want to add results anyway as a new row? (Yes/No): ")
-
-        return not duplicate_row.empty
 
     def __getitem__(self, key):
         return getattr(self, key)

@@ -90,6 +90,7 @@ class Regression_Model():
             self.performance['precision_weighted'] = precision_weighted
             self.performance['recall_weighted'] = recall_weighted
             self.performance['f1_weighted'] = f1_weighted
+        
         else:
             self.performance['accuracy'] = accuracy
             self.performance['precision_macro'] = precision_macro
