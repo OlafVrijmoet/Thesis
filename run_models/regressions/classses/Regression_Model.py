@@ -184,7 +184,3 @@ class Regression_Model():
 
     def __getitem__(self, key):
         return getattr(self, key)
-
-    def save(self):
-
-        self.performance.save()

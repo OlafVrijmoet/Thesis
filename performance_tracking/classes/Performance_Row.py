@@ -199,9 +199,6 @@ class Performance_Row:
     def fetch_saved_performance(self):
         found, past_performance = get_df(dir=DF_TRACKING_DIR, file_name=DF_TRACKING_FILE_NAME)
         
-        print(found)
-        print(past_performance)
-        
         if found == True:
 
             # save past performance df into past_performance df in class
