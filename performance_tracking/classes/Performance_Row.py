@@ -66,7 +66,7 @@ class Performance_Row:
     def save(self):
 
         # fetch / create df for performance
-        self.fetch_saved_performance()        
+        self.fetch_saved_performance()
 
         # check if experiement is done before
         experiement_done_before = self.check_for_duplicates()
@@ -77,6 +77,8 @@ class Performance_Row:
             # add row - done
             # replace oldest row - not done
 
+        user_response = None
+        
         # check to prompt use, if indicated to prompt and experiement done before
         if experiement_done_before == True and self.settings_performance_tacking == PROMPT_EXPERIMENT_DONE:
 
@@ -195,17 +197,21 @@ class Performance_Row:
 
     # only do when saving, than the performance df will only be loaded into memory to add the row
     def fetch_saved_performance(self):
-
         found, past_performance = get_df(dir=DF_TRACKING_DIR, file_name=DF_TRACKING_FILE_NAME)
-
+        
+        print(found)
+        print(past_performance)
+        
         if found == True:
-            
+
             # save past performance df into past_performance df in class
             self.past_performance = past_performance
 
-            # set row_id to row_id of last row + 1
-            last_row_id = self.past_performance['row_id'].iloc[-1]
-            self.row_id = last_row_id + 1
+            # default is 0, so only change is len longer than 0
+            if len(past_performance) != 0:
+                # set row_id to row_id of last row + 1
+                last_row_id = self.past_performance['row_id'].iloc[-1]
+                self.row_id = last_row_id + 1
 
         else:
 
@@ -230,6 +236,7 @@ class Performance_Row:
             # save new df - maybe don't do here?! - just when it's saved
             save(dir=DF_TRACKING_DIR, file_name=DF_TRACKING_FILE_NAME, df=self.past_performance)
 
+    # !!! ToDo !!!
     # returns True if experiement done before
     def check_for_duplicates(self):
         

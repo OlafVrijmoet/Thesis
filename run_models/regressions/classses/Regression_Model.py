@@ -112,7 +112,7 @@ class Regression_Model():
         if self.measurement_settings.save_performance == True:
 
             # run saving
-            self.measurement_settings.save()
+            performance_tracking.save()
 
     def make_predictions(self, dataset_split):
 
