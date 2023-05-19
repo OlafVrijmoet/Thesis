@@ -182,6 +182,7 @@ class Performance_Row:
         print("\n*** regression performance ***")
         print(f"rmse: {self.rmse}")
         print(f"pears_correlation: {self.pears_correlation}")
+        print(f"p_value: {self.p_value}")
 
     def print_classification_performance(self):
 

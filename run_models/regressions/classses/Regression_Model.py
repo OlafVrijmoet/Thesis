@@ -44,11 +44,17 @@ class Regression_Model():
         self.x_column = x_column
         self.y_column = y_column
 
+        # track if already trained
+        self.trained = False
+
     # train classification_model
     def train(self):
         
-        # fit regression
-        self.classification_model = self.classification_model().fit(self.dataset["train_df"][self.x_column].values.reshape(-1, 1), self.dataset["train_df"][self.y_column])
+        # no need to fit regression multiple times on same training data
+        if self.trained == False:
+            # fit regression
+            self.classification_model = self.classification_model().fit(self.dataset["train_df"][self.x_column].values.reshape(-1, 1), self.dataset["train_df"][self.y_column])
+            self.trained = True
 
         # measure performance
         self.measure_performance(
@@ -144,8 +150,10 @@ class Regression_Model():
         performance_tracking['p_value'] = p_value
 
         #!!!!!! sqrt means no mead for ** 2 of avg_max_points !!!!!!!!
+        # FOR MSE: rmse = np.sqrt(mean_squared_error(y_ground_truth, y_pred)) * (avg_max_points ** 2)
+
         # the error (distance between normalized pred and normalized actual value) is squared for rmse, so the avg_max_points also has to be squared to get the correct non-normalized rmse
-        rmse = np.sqrt(mean_squared_error(y_ground_truth, y_pred)) * (avg_max_points ** 2)
+        rmse = np.sqrt(mean_squared_error(y_ground_truth, y_pred)) * avg_max_points
 
         # save rmse for experiement
         performance_tracking['rmse'] = rmse
