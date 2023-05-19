@@ -77,29 +77,30 @@ class Performance_Row:
             # add row - done
             # replace oldest row - not done
 
-        user_response = None
+        # to be able to re-use settings in class and run user selected settings with one var
+        running_settings = self.settings_performance_tacking
         
         # check to prompt use, if indicated to prompt and experiement done before
-        if experiement_done_before == True and self.settings_performance_tacking == PROMPT_EXPERIMENT_DONE:
+        if experiement_done_before == True and running_settings == PROMPT_EXPERIMENT_DONE:
 
             # promt user for performance settings
-            user_response = prompt_user(
+            running_settings = prompt_user(
                 prompt=f"""
                 The experiment with embeddings: {self.embedding_model_name}, classifier: {self.classfication_model_name}, dataset: {self.dataset_name}.
                 Your options: \n
                     Replace results with oldest findings: {REPLACE} \n
                     Add results to dataframe as new result: {ADD} \n
-                    Delete new findings: {NO_PROMPT_NO_REPEAT}
+                    Delete new findings: {NO_SAVING} \n
                 """, 
                 user_options_values={
                     REPLACE: REPLACE,
                     ADD: ADD,
-                    NO_PROMPT_NO_REPEAT: NO_PROMPT_NO_REPEAT
+                    NO_SAVING: NO_SAVING
                 }
             )
         
         # user responds no saving or general settings no saving, than skip it!
-        if (user_response == NO_PROMPT_NO_REPEAT and experiement_done_before == True) or (experiement_done_before == True and self.settings_performance_tacking == NO_PROMPT_NO_REPEAT):
+        if running_settings == NO_SAVING or (experiement_done_before == True and running_settings == NO_PROMPT_NO_REPEAT):
             
             # stop function, don't save results of this experiment
             return None
@@ -135,32 +136,34 @@ class Performance_Row:
             
         }
 
-        if user_response == ADD or self.settings_performance_tacking == ADD:
+        if running_settings == ADD or experiement_done_before == False:
 
             # add row
             self.past_performance = self.past_performance.append(row_data, ignore_index=True)
         
-        # todo:
-            # find index: self.past_performance on lastest time_stamp & same experiement
-            # replace row at found index
-        elif (experiement_done_before == True and user_response == REPLACE) or (experiement_done_before == True and self.settings_performance_tacking == REPLACE):
+        elif (experiement_done_before == True and running_settings == REPLACE):
             
-            # Filter the DataFrame for same experiment
-            filtered_df = self.past_performance.query("embedding_model_name == @self.embedding_model_name and classification_model_name == @self.classfication_model_name and dataset_name == @self.dataset_name and dataset_split == @self.dataset_split")
+            # Get the indices of the rows in the original DataFrame which match the conditions
+            match_indices = self.past_performance[
+                (self.past_performance.embedding_model_name == self.embedding_model_name) & 
+                (self.past_performance.classification_model_name == self.classfication_model_name) &
+                (self.past_performance.dataset_name == self.dataset_name) &
+                (self.past_performance.dataset_split == self.dataset_split)
+            ].index
 
-            # !!! filtered_df should not be used to find index, find index inside orininal, including other columns to unieuqly indentify it. !!!
+            # Convert the time_stamp column to datetime format
+            self.past_performance['time_stamp'] = pd.to_datetime(self.past_performance['time_stamp'])
 
-            # !!! also what hoppens if same date, different time ?!!!!
-
-            # find the row with the oldest date
-            # Convert the 'Date' column to datetime
-            # ik vind jou lief olaf, hoop dat deze code goed werkt!!!!  # Find the index of the row with the oldest date
-            
-            
-            oldest_index = filtered_df['time_stamp'].idxmin()
+            # Get the index of the row with the oldest time_stamp among the matched rows
+            oldest_index = self.past_performance.loc[match_indices, 'time_stamp'].idxmin()
 
             # update the row
-            df.loc[oldest_index, row_dict.keys()] = row_dict.values()
+            self.past_performance.loc[oldest_index] = row_data
+
+        else:
+            print("Something weard happened. Results not saved!")
+            print(f"experiement_done_before: {experiement_done_before}")
+            print(f"running_settings: {running_settings}")
 
         # save df
         save(
@@ -206,9 +209,10 @@ class Performance_Row:
 
             # default is 0, so only change is len longer than 0
             if len(past_performance) != 0:
-                # set row_id to row_id of last row + 1
-                last_row_id = self.past_performance['row_id'].iloc[-1]
-                self.row_id = last_row_id + 1
+                
+                # set row_id to max_value_id + 1
+                max_value_id = self.past_performance['row_id'].max()
+                self.row_id = max_value_id + 1
 
         else:
 
@@ -233,7 +237,6 @@ class Performance_Row:
             # save new df - maybe don't do here?! - just when it's saved
             save(dir=DF_TRACKING_DIR, file_name=DF_TRACKING_FILE_NAME, df=self.past_performance)
 
-    # !!! ToDo !!!
     # returns True if experiement done before
     def check_for_duplicates(self):
         
@@ -242,26 +245,13 @@ class Performance_Row:
             (self.past_performance['embedding_model_name'] == self.embedding_model_name) &
             (self.past_performance['classification_model_name'] == self.classfication_model_name) &
             (self.past_performance['dataset_name'] == self.dataset_name) & 
-            (self.past_performance['embedding_seperated'] == self.embedding_seperated)
+            (self.past_performance['embedding_seperated'] == self.embedding_seperated) & 
+            (self.past_performance['dataset_split'] == self.dataset_split)
         ]
 
         # checks if df is empty, returns True if experiement done before
         return not duplicate_row.empty
-
-        # if row_already_exists and not self.repeat_experiement_allowed:
-
-            # change to ask for the following options:
-                # - no redoing experiements and no individual propts
-                # - no redoing experiements but asking individual propts
-                # - redoing experiements allowed, replace old experiement (replace oldest)
-                # - redoing experiements allowed, add experiement
-
-            # redo:
-            # print(f"The experiment that is about to be done has already been done: {self.embedding_model_name, self.classfication_model_name, self.dataset_name}")
-            # replace_results = get_yes_no_input("Do you want to replace the results? (Yes/No): ")
-
-            # add_results = get_yes_no_input("Do you want to add results anyway as a new row? (Yes/No): ")
-
+    
     def __getitem__(self, key):
         return getattr(self, key)
 
