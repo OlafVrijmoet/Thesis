@@ -2,7 +2,7 @@
 import os
 import pandas as pd
 
-def get_df(dir, file_name, parquet=False):
+def get_df(dir, file_name, parquet=False): # can get rid of parquet
 
     # check if parquet file exsits
     if os.path.exists(f"{dir}/{file_name}.parquet"):
