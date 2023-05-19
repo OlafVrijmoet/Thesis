@@ -9,6 +9,7 @@ from data.splits.split_data import split_data
 from run_models.gensim.gensim import gensim
 from run_models.embed_words.embed_words import embed_words
 from run_models.cosine_sililarity.cosine_sililarity import cosine_sililarity
+from experiements.experiments import experiments
 
 # classes
 from classes.Phase_Settings import Phase_Settings
@@ -61,6 +62,12 @@ COSINE_SIMILARITY = Phase_Settings(
     name="cosine_sililarity", 
     function=cosine_sililarity,
     run=False
+)
+
+CLASSIFICATION_EXPERIMENTS = Phase_Settings(
+    name="classification experiements", 
+    function=experiments,
+    run=True
 )
 
 # paths

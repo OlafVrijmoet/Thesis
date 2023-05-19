@@ -31,6 +31,9 @@ def main():
     # add cosine similarity
     run_phase(COSINE_SIMILARITY)
 
+    # run experiements where embedding and classification are seperate
+    run_phase(CLASSIFICATION_EXPERIMENTS)
+
 if __name__ == "__main__":
 
     main()
