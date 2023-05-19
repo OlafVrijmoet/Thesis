@@ -24,3 +24,7 @@ The text of all the standardized datasets are pre-processed and saved at differe
 - Raw text
 - Lower & tokenize & get rid of punctuation
 - Stem & lemitize
+
+### potential structure todo
+- The pre-processing - cleaning data, plitting into applicable datasets & using models to make make embeddings and all the features
+- Experiements - spliting datasets into train, test & validation sets, using models to make predictions, measuring the quality of the predictions and tracking the performance of the models on the different datasets
