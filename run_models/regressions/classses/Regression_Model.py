@@ -19,6 +19,7 @@ class Regression_Model():
             # id what is being tracked
             embedding_seperated: bool,
             embedding_model_name, classfication_model_name, dataset_name,
+            seed_data_split,
 
             # duplicates handeling
             settings_performance_tacking: int,
@@ -32,6 +33,7 @@ class Regression_Model():
         self.embedding_model_name = embedding_model_name
         self.classfication_model_name = classfication_model_name
         self.dataset_name = dataset_name
+        self.seed_data_split = seed_data_split
 
         # settings
         self.settings_performance_tacking=settings_performance_tacking
@@ -87,6 +89,7 @@ class Regression_Model():
             classfication_model_name=self.classfication_model_name,
             dataset_name=self.dataset_name,
             dataset_split=dataset_split,
+            seed_data_split=self.seed_data_split,
 
             # duplicates handeling
             settings_performance_tacking=self.settings_performance_tacking

@@ -20,6 +20,7 @@ class Performance_Row:
             embedding_seperated: bool, # indicateds if two models are used, one for embedding and one for classifying (True) or one model is used from embedding and classifying (False). Because, the same model might be used in both embedding and classifying
             embedding_model_name, classfication_model_name, dataset_name,
             dataset_split, # is it training, test or validation - constants defined in performance_tracking
+            seed_data_split,
 
             # duplicates handeling
             settings_performance_tacking: int, # allowes experiements with same embedding_model_name, classfication_model_name, dataset_name to be added to performance df without asking
@@ -42,6 +43,7 @@ class Performance_Row:
         self.classfication_model_name = classfication_model_name
         self.dataset_name = dataset_name
         self.dataset_split = dataset_split
+        self.seed_data_split = seed_data_split
 
         self.time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -111,6 +113,7 @@ class Performance_Row:
             'classification_model_name': self.classfication_model_name,
             'dataset_name': self.dataset_name,
             'dataset_split': self.dataset_split,
+            'seed_data_split': self.seed_data_split,
 
             'time_stamp': self.time_stamp,
 
@@ -145,7 +148,8 @@ class Performance_Row:
                 (self.past_performance.embedding_model_name == self.embedding_model_name) & 
                 (self.past_performance.classification_model_name == self.classfication_model_name) &
                 (self.past_performance.dataset_name == self.dataset_name) &
-                (self.past_performance.dataset_split == self.dataset_split)
+                (self.past_performance.dataset_split == self.dataset_split) &
+                (self.past_performance.seed_data_split == self.seed_data_split)
             ].index
 
             # Convert the time_stamp column to datetime format
@@ -217,7 +221,7 @@ class Performance_Row:
             # create new df with class column names
             column_names = [
                 # id'ing experiment
-                'row_id', 'embedding_seperated', 'embedding_model_name', 'classification_model_name', 'dataset_name', 'dataset_split',
+                'row_id', 'embedding_seperated', 'embedding_model_name', 'classification_model_name', 'dataset_name', 'dataset_split', 'seed_data_split',
                 'time_stamp',
                 
                 # performance measurements, regression
@@ -245,7 +249,8 @@ class Performance_Row:
             (self.past_performance['classification_model_name'] == self.classfication_model_name) &
             (self.past_performance['dataset_name'] == self.dataset_name) & 
             (self.past_performance['embedding_seperated'] == self.embedding_seperated) & 
-            (self.past_performance['dataset_split'] == self.dataset_split)
+            (self.past_performance['dataset_split'] == self.dataset_split) &
+            (self.past_performance['seed_data_split'] == self.seed_data_split)
         ]
 
         # checks if df is empty, returns True if experiement done before
