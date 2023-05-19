@@ -223,7 +223,7 @@ class Performance_Row:
                 # performance measurements, regression
                 'rmse',
                 'pears_correlation',
-                'p_value'
+                'p_value',
 
                 # performance measurements, classification
                 'accuracy', 
