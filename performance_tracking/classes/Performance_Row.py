@@ -26,6 +26,7 @@ class Performance_Row:
             
             rmse=None,
             pears_correlation=None,
+            p_value=None,
 
             accuracy=None, precision_macro=None, recall_macro=None, f1_macro=None,
             precision_micro=None, recall_micro=None, f1_micro=None,
@@ -50,6 +51,7 @@ class Performance_Row:
         # performance measurements, regression
         self.rmse = rmse
         self.pears_correlation = pears_correlation # still implement!!!
+        self.p_value = p_value
 
         # performance measurements, classification
         self.accuracy = accuracy # what is this? Is this not just precision?!
@@ -70,12 +72,6 @@ class Performance_Row:
 
         # check if experiement is done before
         experiement_done_before = self.check_for_duplicates()
-
-        # options:
-            # prompt user - done
-            # delete performance / don't save latest performance - done
-            # add row - done
-            # replace oldest row - not done
 
         # to be able to re-use settings in class and run user selected settings with one var
         running_settings = self.settings_performance_tacking
@@ -121,6 +117,7 @@ class Performance_Row:
             # performance measurements, regression
             'rmse': self.rmse,
             'pears_correlation': self.pears_correlation,
+            'p_value': self.p_value,
 
             # performance measurements, classification
             'accuracy': self.accuracy,
@@ -225,6 +222,7 @@ class Performance_Row:
                 # performance measurements, regression
                 'rmse',
                 'pears_correlation',
+                'p_value'
 
                 # performance measurements, classification
                 'accuracy', 

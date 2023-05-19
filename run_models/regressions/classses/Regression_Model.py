@@ -1,6 +1,7 @@
 
 import numpy as np
 
+from scipy.stats import pearsonr
 from sklearn.metrics import mean_squared_error
 
 from sklearn.metrics import confusion_matrix, precision_recall_fscore_support, accuracy_score
@@ -77,7 +78,7 @@ class Regression_Model():
             # id what is being tracked
             embedding_seperated=True, # indicateds if two models are used
             embedding_model_name=self.embedding_model_name,
-            classfication_model_name=self.embedding_model_name,
+            classfication_model_name=self.classfication_model_name,
             dataset_name=self.dataset_name,
             dataset_split=dataset_split,
 
@@ -137,6 +138,12 @@ class Regression_Model():
 
         y_pred, avg_max_points, y_ground_truth = self.make_predictions(dataset_split)
 
+        # Pearson's correlation
+        correlation, p_value = pearsonr(y_ground_truth, y_pred)
+        performance_tracking['pears_correlation'] = correlation
+        performance_tracking['p_value'] = p_value
+
+        #!!!!!! sqrt means no mead for ** 2 of avg_max_points !!!!!!!!
         # the error (distance between normalized pred and normalized actual value) is squared for rmse, so the avg_max_points also has to be squared to get the correct non-normalized rmse
         rmse = np.sqrt(mean_squared_error(y_ground_truth, y_pred)) * (avg_max_points ** 2)
 
