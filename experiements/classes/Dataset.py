@@ -31,7 +31,7 @@ class Dataset:
     # get data using dataset_dir
     def get_data(self, dir, file_name):
 
-        found, dataset = get_df(dir=dir, file_name=file_name)
+        found, df_name, dataset = get_df(dir=dir, file_name=file_name)
 
         return dataset
     

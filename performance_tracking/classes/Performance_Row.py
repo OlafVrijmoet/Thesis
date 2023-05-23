@@ -202,7 +202,7 @@ class Performance_Row:
 
     # only do when saving, than the performance df will only be loaded into memory to add the row
     def fetch_saved_performance(self):
-        found, past_performance = get_df(dir=DF_TRACKING_DIR, file_name=DF_TRACKING_FILE_NAME)
+        found, df_name, past_performance = get_df(dir=DF_TRACKING_DIR, file_name=DF_TRACKING_FILE_NAME)
         
         if found == True:
 

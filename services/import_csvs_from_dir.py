@@ -5,6 +5,7 @@ import pandas as pd
 # printing
 from services.printing.print_warning import print_warning
 
+# DEPRICATED: replaced by get_dfs
 def import_csvs_from_dir(dict_datasets, dir_datasets) -> dict:
 
     # iterate over all files in the folder
