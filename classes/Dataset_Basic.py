@@ -26,10 +26,6 @@ class Dataset_Basic(Dataset):
             row_dict["basic_processed"]["student_answer"] = self.strip_extra_whitespace(row_dict["basic_processed"]["student_answer"])
             row_dict["basic_processed"]["reference_answer"] = self.strip_extra_whitespace(row_dict["basic_processed"]["reference_answer"])
 
-            # remove punctuation
-            row_dict["basic_processed"]["student_answer"] = self.strip_punctuation(row_dict["basic_processed"]["student_answer"])
-            row_dict["basic_processed"]["reference_answer"] = self.strip_punctuation(row_dict["basic_processed"]["reference_answer"])
-
             # spelling check
             row_dict["basic_processed"]["student_answer"] = self.correctSpelling(row_dict["basic_processed"]["student_answer"])
             row_dict["basic_processed"]["reference_answer"] = self.correctSpelling(row_dict["basic_processed"]["reference_answer"])

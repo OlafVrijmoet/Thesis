@@ -1,4 +1,7 @@
 
+# word embedders
+from data.embed_words.gensim_embedding.gensim_embedding import gensim_embedding
+
 # services
 from services.get_dfs import get_dfs
 
@@ -7,9 +10,4 @@ from data.splits.constants import SPLITS
 
 def embed_words():
 
-    datasets = {}
-
-    # get dfs from former phase
-    datasets = get_dfs(dict=datasets, dir=SPLITS)
-    
-    
+    gensim_embedding()

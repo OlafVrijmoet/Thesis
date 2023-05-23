@@ -22,8 +22,6 @@ from constants_dir.column_constants import *
 from constants_dir.path_constants import DATA_STAGES
 from constants_dir.path_constants import BASIC_PROCCESSED, DATA_STAGES, GENSIM_PROCESSED
 
-# moved to data/embed_words/gensim_embedding/classes/Dataset_Gensim.py
-# can be deleted!!!
 class Dataset_Gensim(Dataset_Basic):
 
     def __init__(self, df_name, model_name, datasets, language) -> None:

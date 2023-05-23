@@ -67,8 +67,7 @@ class Dataset:
                 # check if basic processing already done, located at data_saved/basic_processed/df_name
                 df_found, df_name, df = get_df(
                     dir=f"{DATA_STAGES}/{key}", 
-                    file_name=self.df_name,
-                    parquet=self.datasets[key]["parquet"]
+                    file_name=self.df_name
                 )
                                 
                 # update value of dataset done
