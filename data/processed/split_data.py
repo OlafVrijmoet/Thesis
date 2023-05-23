@@ -9,6 +9,7 @@ from data.processed.classes.Split_Data import Split_Data
 # constants
 from data.processed.constants import *
 
+# seems to be deleted!!!
 def split_data():
 
     raw_data_split = Split_Data(

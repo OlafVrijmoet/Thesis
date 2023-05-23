@@ -86,7 +86,7 @@ def experiments():
                         ),
                         
                         dataset=dataset,
-                        classification_model=Ridge,
+                        classification_model=classification_model["model"],
                         x_column="cosine_similarity",
                         y_column="normalized_points"
                         

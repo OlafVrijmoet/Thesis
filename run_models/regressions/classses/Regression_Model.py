@@ -128,7 +128,7 @@ class Regression_Model():
 
         # get predictions
         y_pred = self.classification_model.predict(self.dataset[dataset_split][self.x_column].values.reshape(-1, 1))
-
+        
         # get average max points
         avg_max_points = self.dataset[dataset_split]["max_points"].mean()
 
@@ -146,6 +146,8 @@ class Regression_Model():
         # ***
 
         y_pred, avg_max_points, y_ground_truth = self.make_predictions(dataset_split)
+
+        y_pred = np.nan_to_num(y_pred, nan=0)
 
         # Pearson's correlation
         correlation, p_value = pearsonr(y_ground_truth, y_pred)
@@ -168,6 +170,8 @@ class Regression_Model():
 
         # get predictions
         y_pred = self.classification_model.predict(self.dataset[dataset_split][self.x_column].values.reshape(-1, 1))
+
+        y_pred = np.nan_to_num(y_pred, nan=0)
 
         # add predictions to the df as a column
         self.dataset[dataset_split]["y_pred"] = y_pred
