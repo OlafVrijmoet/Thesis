@@ -160,7 +160,7 @@ def gensim_embedding():
                                 required=True,
                                 parquet=True,
                                 name_required_dataset="gensim",
-                                force_run=False
+                                force_run=True
                             ),
                         },
 

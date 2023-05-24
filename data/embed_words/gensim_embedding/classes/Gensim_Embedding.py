@@ -32,24 +32,32 @@ class Gensim_Embedding(Dataset):
         return row_dict
 
     def create_answer_embeddings(self, answer_text):
-        
+
+        # convert string of array into array of data type
         words = literal_eval(answer_text)
-        answer_vector = np.zeros(self.embedding_model.model.vector_size)
+
+        first_word = True
+
+        # create np array with 1 vector of zeros of float32 in case of no words
+        answer_vector = np.zeros(self.embedding_model.model.vector_size, dtype=np.float32)        
+        answer_vector = np.reshape(answer_vector, (1, 300))
 
         for word in words:
 
             try:
                 
-                if len(answer_vector) == 1:
+                if first_word == True:
                     # when it's the first word
                     answer_vector = self.embedding_model.model[f"{self.embedding_model.dir_in_model_embedding}{word}"]
-
+                    first_word = False
                 else:
                     answer_vector = np.vstack((answer_vector, self.embedding_model.model[f"{self.embedding_model.dir_in_model_embedding}{word}"]))
                 
                 # answer_vector += self.embedding_model.model[f"{self.embedding_model.dir_in_model_embedding}{word}"]
-            except:                
-                None
-                # answer_vector += np.zeros((self.embedding_model.model.vector_size,), dtype=np.float32)
+            except:
                 
+                None
+
+                # answer_vector += np.zeros((self.embedding_model.model.vector_size,), dtype=np.float32)
+
         return array_to_str(answer_vector)
