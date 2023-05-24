@@ -21,3 +21,25 @@ def split_data():
     )
 
     data_split.create_data_splits()
+
+    # normalize points for each dataset
+    df_names = []
+    # get all file names in a dir
+    for file in os.listdir(SPLITS):
+        filename, file_extension = os.path.splitext(file)
+        df_names.append(filename)
+
+    # normalize points for each dataset
+    for df_name in df_names:
+        print(f"normalizing points for dataset: {df_name}")
+
+        df = pd.read_csv(f"{SPLITS}/{df_name}.csv")
+
+        # round values to howl int numbers
+        df["assigned_points"] = df["assigned_points"].round()
+        df["assigned_points"] = df["assigned_points"].astype(int)
+
+        # add normalized points
+        df["normalized_points"] = df["assigned_points"] / df["max_points"]
+
+        df.to_csv(f"{SPLITS}/{df_name}.csv", index=False)

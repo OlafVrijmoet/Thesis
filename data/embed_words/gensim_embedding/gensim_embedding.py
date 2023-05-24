@@ -70,21 +70,6 @@ def gensim_embedding():
         # get dataset, process dataset, save dataset
         datasets[df_name].run_all()
 
-    # normalize points for each dataset
-    for df_name in df_names:
-        print(f"normalizing points for dataset: {df_name}")
-
-        df = pd.read_csv(f"data_saved/gensim/{df_name}.csv")
-
-        # round values to howl int numbers
-        df["assigned_points"] = df["assigned_points"].round()
-        df["assigned_points"] = df["assigned_points"].astype(int)
-
-        # add normalized points
-        df["normalized_points"] = df["assigned_points"] / df["max_points"]
-
-        df.to_csv(f"data_saved/gensim/{df_name}.csv", index=False)
-
     # models
     models = {
         GENSIM_MODEL_NAMES["fasttext"]: Gensim_Embedding_Model(
@@ -161,7 +146,7 @@ def gensim_embedding():
                                 required=True,
                                 parquet=True,
                                 name_required_dataset="gensim",
-                                force_run=True if model.model_name == GENSIM_MODEL_NAMES["conceptnet"] else False
+                                force_run=False
                             ),
                         },
 

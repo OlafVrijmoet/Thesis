@@ -6,8 +6,8 @@ import numpy as np
 # classes local
 from classes.Dataset import Dataset
 
-# services local
-from data.embed_words.services.string_array import array_to_str
+# services
+from services.string_array import array_to_str
 
 class Gensim_Embedding(Dataset):
 
@@ -53,11 +53,8 @@ class Gensim_Embedding(Dataset):
                 else:
                     answer_vector = np.vstack((answer_vector, self.embedding_model.model[f"{self.embedding_model.dir_in_model_embedding}{word}"]))
                 
-                # answer_vector += self.embedding_model.model[f"{self.embedding_model.dir_in_model_embedding}{word}"]
             except:
                 
                 None
-
-                # answer_vector += np.zeros((self.embedding_model.model.vector_size,), dtype=np.float32)
 
         return array_to_str(answer_vector)
