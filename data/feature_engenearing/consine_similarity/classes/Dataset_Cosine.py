@@ -1,6 +1,4 @@
 
-# depricated!
-
 # libaries
 from scipy.spatial.distance import cosine
 
