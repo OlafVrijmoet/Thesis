@@ -116,7 +116,8 @@ def gensim_embedding():
             download_link="conceptnet-numberbatch-17-06-300",
             download_func=gensim_download,
             save_func=gensim_save,
-            load_func=gensim_load
+            load_func=gensim_load,
+            dir_in_model_embedding="/c/en/"
         )
 
     }
@@ -160,7 +161,7 @@ def gensim_embedding():
                                 required=True,
                                 parquet=True,
                                 name_required_dataset="gensim",
-                                force_run=True
+                                force_run=True if model.model_name == GENSIM_MODEL_NAMES["conceptnet"] else False
                             ),
                         },
 
