@@ -23,6 +23,7 @@ class Dataset_Settings:
         self.df = df
         self.df_name = df_name
         self.base_dir = base_dir
+        self.save_location = f"{base_dir}/{df_name}/data"
         
         # settings
         self.may_run_now = may_run_now
@@ -32,7 +33,6 @@ class Dataset_Settings:
         self.force_run = force_run
 
         self.name_required_dataset = name_required_dataset
-
 
         # delete
         self.train_df = train_df

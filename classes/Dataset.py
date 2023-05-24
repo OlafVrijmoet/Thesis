@@ -60,13 +60,15 @@ class Dataset:
             
             # fetch standardized_splits from special dir
             if key == "standardized_splits":
-                self.fetch_dataset_and_replace_null(key=key, dir=f"{SPLITS}/{self.df_name}.csv")
+
+                standardized_splits_save_location = dataset["save_location"]
+                self.fetch_dataset_and_replace_null(key=key, dir=f"{standardized_splits_save_location}/{self.df_name}.csv")
 
             else:
                                 
                 # check if basic processing already done, located at data_saved/basic_processed/df_name
                 df_found, df_name, df = get_df(
-                    dir=f"{DATA_STAGES}/{key}", 
+                    dir=dataset["save_location"], 
                     file_name=self.df_name
                 )
                                 
@@ -224,7 +226,7 @@ class Dataset:
             if self.datasets[key]["may_run_now"] == True and self.datasets[key]["done"] == False:
                 print(f"saving new {key} phase for: {self.df_name}")
                 save(
-                    dir=f"{DATA_STAGES}/{key}",
+                    dir=self.datasets[key]["save_location"],
                     file_name=self.df_name,
                     df=dataset["df"],
                     parquet=self.datasets[key]["parquet"]

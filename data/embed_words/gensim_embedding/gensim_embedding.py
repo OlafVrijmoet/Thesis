@@ -50,16 +50,25 @@ def gensim_embedding():
             datasets = {
                 "standardized_splits": Dataset_Settings(
                     df=None,
+                    df_name="splits",
+                    base_dir="data",
+
                     may_run_now=False,
-                    required=True
+                    required=True,
                 ),
                 "basic_processed": Dataset_Settings(
                     df=None,
+                    df_name="basic_processed",
+                    base_dir="data",
+
                     may_run_now=True,
                     required=True
                 ),
                 "gensim": Dataset_Settings(
                     df=None,
+                    df_name="gensim_embedding",
+                    base_dir="data/embed_words",
+
                     may_run_now=True,
                     required=True
                 ),
@@ -136,12 +145,18 @@ def gensim_embedding():
                         datasets = {
                             "gensim": Dataset_Settings(
                                 df=None,
+                                df_name="gensim_embedding",
+                                base_dir="data/embed_words",
+
                                 may_run_now=False,
                                 required=True,
                                 force_run=False
                             ),
                             model_name: Dataset_Settings(
                                 df=None,
+                                df_name=model_name,
+                                base_dir="data/embed_words/data",
+
                                 may_run_now=True,
                                 required=True,
                                 parquet=True,
