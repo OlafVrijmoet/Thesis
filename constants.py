@@ -9,7 +9,7 @@ from data.embed_words.embed_words import embed_words
 
 # data processing for models
 # from run_models.gensim.gensim import gensim
-# # from run_models.embed_words.embed_words import embed_words
+# from run_models.embed_words.embed_words import embed_words
 # from run_models.cosine_sililarity.cosine_sililarity import cosine_sililarity
 # from experiements.experiments import experiments
 

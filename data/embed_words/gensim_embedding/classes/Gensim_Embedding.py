@@ -6,7 +6,10 @@ import numpy as np
 # classes local
 from classes.Dataset import Dataset
 
-class Embedding_Model_Gensim(Dataset):
+# services local
+from data.embed_words.services.string_array import array_to_str
+
+class Gensim_Embedding(Dataset):
 
     def __init__(self, df_name, model_name, datasets, language, embedding_model) -> None:
         super().__init__(df_name, model_name, datasets, language)
@@ -45,10 +48,8 @@ class Embedding_Model_Gensim(Dataset):
                     answer_vector = np.vstack((answer_vector, self.embedding_model.model[f"{self.embedding_model.dir_in_model_embedding}{word}"]))
                 
                 # answer_vector += self.embedding_model.model[f"{self.embedding_model.dir_in_model_embedding}{word}"]
-            except:
-                print(f"No embedding found for: {word}")
-                
+            except:                
                 None
                 # answer_vector += np.zeros((self.embedding_model.model.vector_size,), dtype=np.float32)
                 
-        return answer_vector
+        return array_to_str(answer_vector)

@@ -10,7 +10,7 @@ from classes.Dataset_Settings import Dataset_Settings
 # local classes
 from data.embed_words.gensim_embedding.classes.Dataset_Gensim import Dataset_Gensim
 from data.embed_words.gensim_embedding.classes.Gensim_Embedding_Model import Gensim_Embedding_Model
-from data.embed_words.gensim_embedding.classes.Embedding_Model_Gensim import Embedding_Model_Gensim
+from data.embed_words.gensim_embedding.classes.Gensim_Embedding import Gensim_Embedding
 
 # local services
 from data.embed_words.gensim_embedding.services.Gensim_services import gensim_download, gensim_save, gensim_load
@@ -141,7 +141,7 @@ def gensim_embedding():
 
                     model_name = f"{EMBED_WORDS}_{model.model_name}"
 
-                    dataset = Embedding_Model_Gensim(
+                    dataset = Gensim_Embedding(
                         df_name=df_name,
                         model_name=model_name, # used for dir name inside data_saved
 
@@ -160,7 +160,7 @@ def gensim_embedding():
                                 required=True,
                                 parquet=True,
                                 name_required_dataset="gensim",
-                                force_run=True
+                                force_run=False
                             ),
                         },
 
