@@ -49,6 +49,8 @@ class Gensim_Embedding(Dataset):
                 if first_word == True:
                     # when it's the first word
                     answer_vector = self.embedding_model.model[f"{self.embedding_model.dir_in_model_embedding}{word}"]
+                    answer_vector = np.reshape(answer_vector, (1, 300))
+
                     first_word = False
                 else:
                     answer_vector = np.vstack((answer_vector, self.embedding_model.model[f"{self.embedding_model.dir_in_model_embedding}{word}"]))

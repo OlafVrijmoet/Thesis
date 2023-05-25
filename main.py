@@ -21,6 +21,10 @@ def main():
 
     run_phase(EMBED_WORDS)
 
+    run_phase(EMBED_SENTENCES)
+
+    run_phase(FEATURE_ENGENERING)
+
     # updated:
 
     # # embed words

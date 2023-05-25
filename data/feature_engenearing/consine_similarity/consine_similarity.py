@@ -20,7 +20,7 @@ def consine_similarity(dataset_dict):
             f"emebeded_words": Dataset_Settings(
                 df=None,
                 df_name=abriviation_method,
-                base_dir=f"data/embed_words/data/{embed_model}",
+                base_dir=f"data/embed_words/data/{embed_model}/data",
 
                 may_run_now=False,
                 required=True,

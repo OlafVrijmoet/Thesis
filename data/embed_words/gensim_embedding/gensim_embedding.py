@@ -149,8 +149,7 @@ def gensim_embedding():
                                 base_dir="data/embed_words",
 
                                 may_run_now=False,
-                                required=True,
-                                force_run=False
+                                required=True
                             ),
                             model_name: Dataset_Settings(
                                 df=None,

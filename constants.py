@@ -6,6 +6,8 @@ from data.processed.process_text import process_text
 from data.splits.split_data import split_data
 
 from data.embed_words.embed_words import embed_words
+from data.embed_sentences.embed_sentences import embed_sentences
+from data.feature_engenearing.feature_engenearing import feature_engenearing
 
 # data processing for models
 # from run_models.gensim.gensim import gensim
@@ -44,6 +46,18 @@ SPLIT_DATA = Phase_Settings(
 EMBED_WORDS = Phase_Settings(
     name="Embed words", 
     function=embed_words,
+    run=False
+)
+
+EMBED_SENTENCES = Phase_Settings(
+    name="Embed sentences", 
+    function=embed_sentences,
+    run=False
+)
+
+FEATURE_ENGENERING = Phase_Settings(
+    name="feature engenearing", 
+    function=feature_engenearing,
     run=True
 )
 
