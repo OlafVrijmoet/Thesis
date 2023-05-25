@@ -12,8 +12,8 @@ def feature_engenearing():
     base_dir = 'data/embed_sentences/data/'
 
     # Use glob to get all dataset file paths
-    dataset_files = glob.glob(os.path.join(base_dir, '*', '*', '*.parquet'))
-
+    dataset_files = glob.glob(os.path.join(base_dir, '*', '*', '*', '*', '*.parquet'))
+    
     # Initialize an empty list to store the dictionaries
     data_list = []
 
@@ -23,8 +23,8 @@ def feature_engenearing():
         path_parts = dataset_file.split(os.sep)
 
         # Get the embed_model, abriviation_method and dataset_name from the path parts
-        embed_model = path_parts[-3]
-        abriviation_method = path_parts[-2]
+        embed_model = path_parts[-5]
+        abriviation_method = path_parts[-3]
         dataset_name = os.path.basename(dataset_file).replace('.parquet', '')
 
         # Read the parquet file as a pandas DataFrame
