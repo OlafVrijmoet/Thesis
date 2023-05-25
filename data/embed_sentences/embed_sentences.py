@@ -60,7 +60,7 @@ def embed_sentences():
         df = data['df'].copy()
         
         # Add or average the embedded words
-        for key, abriviation_method in ABBRIVIATION_METHODS.items():
+        for abriviation_method_name, abriviation_method in ABBRIVIATION_METHODS.items():
 
             # Create a copy of the DataFrame for each operation
             df_temp = df.copy()
@@ -89,7 +89,7 @@ def embed_sentences():
                 )
             
             else:
-                print(f"abriviation method {key} does not exist!")
+                print(f"abriviation method {abriviation_method_name} does not exist!")
                 continue
             
             # define save directory variables
@@ -97,7 +97,7 @@ def embed_sentences():
             df_name = data["dataset_name"]
 
             # Define the save directory
-            save_dir = f"data/embed_sentences/data/{embedding_model}/{key}"
+            save_dir = f"data/embed_sentences/data/{embedding_model}/{abriviation_method_name}"
 
             # save df
             save(

@@ -7,6 +7,9 @@ from classes.Dataset_Settings import Dataset_Settings
 
 def consine_similarity(dataset_dict):
 
+    embed_model = dataset_dict["embed_model"]
+    abriviation_method = dataset_dict["abriviation_method"]
+
     dataset = Dataset_Cosine(
         df_name=dataset_dict["dataset_name"],
         model_name=f"cosine_similarity", # used for dir name inside data_saved
@@ -16,8 +19,8 @@ def consine_similarity(dataset_dict):
         datasets = {
             f"emebeded_words": Dataset_Settings(
                 df=None,
-                df_name=dataset_dict["abriviation_method"],
-                base_dir=f"data/embed_sentences/data/{dataset_dict["embed_model"]}",
+                df_name=abriviation_method,
+                base_dir=f"data/embed_words/data/{embed_model}",
 
                 may_run_now=False,
                 required=True,
@@ -27,7 +30,7 @@ def consine_similarity(dataset_dict):
             f"cosine_similarity": Dataset_Settings(
                 df=None,
                 df_name="cosine_similarity",
-                base_dir=f"data/feature_engenearing/consine_similarity/{dataset_dict["embed_model"]}/{dataset_dict["abriviation_method"]}",
+                base_dir=f"data/feature_engenearing/data/{embed_model}/{abriviation_method}/consine_similarity",
 
                 may_run_now=True,
                 required=True,
@@ -44,6 +47,5 @@ def consine_similarity(dataset_dict):
     # get dataset, process dataset, save dataset
     dataset.get_dataset()
     dataset.process_dataset()
-    dataset.add_columns()
+    dataset.add_columns() # should this not be before process_dataset?!
     dataset.save()
-
