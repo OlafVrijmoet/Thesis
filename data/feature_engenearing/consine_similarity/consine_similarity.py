@@ -30,7 +30,7 @@ def consine_similarity(dataset_dict):
             f"cosine_similarity": Dataset_Settings(
                 df=None,
                 df_name="cosine_similarity",
-                base_dir=f"data/feature_engenearing/data/consine_similarity/data/{embed_model}/data/{abriviation_method}",
+                base_dir=f"data/feature_engenearing/data/{embed_model}/data/{abriviation_method}",
 
                 may_run_now=True,
                 required=True,
