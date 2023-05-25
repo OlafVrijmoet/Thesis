@@ -97,7 +97,7 @@ def embed_sentences():
             df_name = data["dataset_name"]
 
             # Define the save directory
-            save_dir = f"data/embed_sentences/data/{embedding_model}/{abriviation_method_name}"
+            save_dir = f"data/embed_sentences/data/{embedding_model}/data/{abriviation_method_name}/data"
 
             # save df
             save(

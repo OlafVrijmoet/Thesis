@@ -52,7 +52,7 @@ EMBED_WORDS = Phase_Settings(
 EMBED_SENTENCES = Phase_Settings(
     name="Embed sentences", 
     function=embed_sentences,
-    run=False
+    run=True
 )
 
 FEATURE_ENGENERING = Phase_Settings(

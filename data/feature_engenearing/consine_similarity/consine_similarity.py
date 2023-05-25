@@ -17,10 +17,10 @@ def consine_similarity(dataset_dict):
         language="english",
 
         datasets = {
-            f"emebeded_words": Dataset_Settings(
+            f"emebeded_sentences": Dataset_Settings(
                 df=None,
                 df_name=abriviation_method,
-                base_dir=f"data/embed_words/data/{embed_model}/data",
+                base_dir=f"data/embed_sentences/data/{embed_model}/data",
 
                 may_run_now=False,
                 required=True,
