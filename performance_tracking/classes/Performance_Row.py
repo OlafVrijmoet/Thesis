@@ -15,48 +15,61 @@ from performance_tracking.constants import *
 class Performance_Row:
 
     def __init__(self,
-            
             # id what is being tracked
-            embedding_seperated: bool, # indicateds if two models are used, one for embedding and one for classifying (True) or one model is used from embedding and classifying (False). Because, the same model might be used in both embedding and classifying
-            embedding_model_name, classfication_model_name, dataset_name,
+            dataset_name,
+            embedding_seperated, # indicates if two models are used, one for embedding and one for classifying (True) or one model is used for embedding and classifying (False)
+            embedding_model_name, 
+            sentence_embedding_method, # new parameter
+            grading_model, # new parameter
             dataset_split, # is it training, test or validation - constants defined in performance_tracking
             seed_data_split,
 
-            # duplicates handeling
-            settings_performance_tacking: int, # allowes experiements with same embedding_model_name, classfication_model_name, dataset_name to be added to performance df without asking
-            
+            # duplicates handling
+            settings_performance_tracking, # allows experiments with the same embedding_model_name, classification_model_name, dataset_name to be added to performance df without asking
+
+            # performance measurements, regression
             rmse=None,
             pears_correlation=None,
             p_value=None,
 
-            accuracy=None, precision_macro=None, recall_macro=None, f1_macro=None,
-            precision_micro=None, recall_micro=None, f1_micro=None,
-            precision_weighted=None, recall_weighted=None, f1_weighted=None) -> None:
-        
-        # dataframe of past performance, current experiement performance is added to this df
+            # performance measurements, classification
+            accuracy=None, 
+            precision_macro=None, 
+            recall_macro=None, 
+            f1_macro=None,
+            precision_micro=None, 
+            recall_micro=None, 
+            f1_micro=None,
+            precision_weighted=None, 
+            recall_weighted=None, 
+            f1_weighted=None
+        ) -> None:
+
+        # dataframe of past performance, current experiment performance is added to this df
         self.past_performance = None
 
         # id'ing experiment
-        self.row_id = 0 # default, if there is no other past performance
+        self.row_id = 0  # default, if there is no other past performance
+        self.dataset_name = dataset_name
         self.embedding_seperated = embedding_seperated
         self.embedding_model_name = embedding_model_name
-        self.classfication_model_name = classfication_model_name
-        self.dataset_name = dataset_name
+        self.sentence_embedding_method = sentence_embedding_method
+        self.grading_model = grading_model
         self.dataset_split = dataset_split
         self.seed_data_split = seed_data_split
 
         self.time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        # duplicates handeling
-        self.settings_performance_tacking = settings_performance_tacking
-        
+        # duplicates handling
+        self.settings_performance_tracking = settings_performance_tracking
+
         # performance measurements, regression
         self.rmse = rmse
-        self.pears_correlation = pears_correlation # still implement!!!
+        self.pears_correlation = pears_correlation
         self.p_value = p_value
 
         # performance measurements, classification
-        self.accuracy = accuracy # what is this? Is this not just precision?!
+        self.accuracy = accuracy
         self.precision_macro = precision_macro
         self.recall_macro = recall_macro
         self.f1_macro = f1_macro
@@ -66,7 +79,7 @@ class Performance_Row:
         self.precision_weighted = precision_weighted
         self.recall_weighted = recall_weighted
         self.f1_weighted = f1_weighted
-        
+
     def save(self):
 
         # fetch / create df for performance
@@ -76,7 +89,7 @@ class Performance_Row:
         experiement_done_before = self.check_for_duplicates()
 
         # to be able to re-use settings in class and run user selected settings with one var
-        running_settings = self.settings_performance_tacking
+        running_settings = self.settings_performance_tracking
         
         # check to prompt use, if indicated to prompt and experiement done before
         if experiement_done_before == True and running_settings == PROMPT_EXPERIMENT_DONE:
@@ -84,7 +97,7 @@ class Performance_Row:
             # promt user for performance settings
             running_settings = prompt_user(
                 prompt=f"""
-                The experiment with embeddings: {self.embedding_model_name}, classifier: {self.classfication_model_name}, dataset: {self.dataset_name}.
+                The experiment with embeddings: {self.embedding_model_name}, classifier: {self.grading_model}, dataset: {self.dataset_name}.
                 Your options: \n
                     Replace results with oldest findings: {REPLACE} \n
                     Add results to dataframe as new result: {ADD} \n
@@ -110,7 +123,7 @@ class Performance_Row:
             'row_id': self.row_id,
             'embedding_seperated': self.embedding_seperated,
             'embedding_model_name': self.embedding_model_name,
-            'classification_model_name': self.classfication_model_name,
+            'classification_model_name': self.grading_model,
             'dataset_name': self.dataset_name,
             'dataset_split': self.dataset_split,
             'seed_data_split': self.seed_data_split,
@@ -146,7 +159,7 @@ class Performance_Row:
             # Get the indices of the rows in the original DataFrame which match the conditions
             match_indices = self.past_performance[
                 (self.past_performance.embedding_model_name == self.embedding_model_name) & 
-                (self.past_performance.classification_model_name == self.classfication_model_name) &
+                (self.past_performance.classification_model_name == self.grading_model) &
                 (self.past_performance.dataset_name == self.dataset_name) &
                 (self.past_performance.dataset_split == self.dataset_split) &
                 (self.past_performance.seed_data_split == self.seed_data_split)
@@ -178,7 +191,7 @@ class Performance_Row:
 
         print("\n-----")
         print(f"embedding_model_name: {self.embedding_model_name}")
-        print(f"classfication_model_name: {self.classfication_model_name}")
+        print(f"grading_model: {self.grading_model}")
         print(f"dataset_name: {self.dataset_name}")
 
     def print_regression_preformance(self):
@@ -246,7 +259,7 @@ class Performance_Row:
         # gives df with all rows with unique experiement ids
         duplicate_row = self.past_performance[
             (self.past_performance['embedding_model_name'] == self.embedding_model_name) &
-            (self.past_performance['classification_model_name'] == self.classfication_model_name) &
+            (self.past_performance['classification_model_name'] == self.grading_model) &
             (self.past_performance['dataset_name'] == self.dataset_name) & 
             (self.past_performance['embedding_seperated'] == self.embedding_seperated) & 
             (self.past_performance['dataset_split'] == self.dataset_split) &

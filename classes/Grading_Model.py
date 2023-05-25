@@ -12,66 +12,51 @@ from performance_tracking.classes.Performance_Row import Performance_Row
 # constants
 from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION
 
-class Regression_Model():
+class Grading_Model:
 
-    def __init__(self, 
-            
-            # id what is being tracked
-            embedding_seperated: bool,
-            embedding_model_name, classfication_model_name, dataset_name,
-            seed_data_split,
+    def __init__(self, model, dataset, measurement_settings, y_column):
+        """
+        Initialize the Grading_Model class.
 
-            # duplicates handeling
-            settings_performance_tacking: int,
-            measurement_settings,
-
-            dataset, classification_model, x_column, y_column
-        ) -> None:
-        
-        # naming
-        self.embedding_seperated = embedding_seperated
-        self.embedding_model_name = embedding_model_name
-        self.classfication_model_name = classfication_model_name
-        self.dataset_name = dataset_name
-        self.seed_data_split = seed_data_split
-
-        # settings
-        self.settings_performance_tacking=settings_performance_tacking
-        self.measurement_settings = measurement_settings
-
+        Parameters:
+        - model: object
+            The model object.
+        - dataset: Dataset
+            The dataset object.
+        - experiment_identification: Measurement_Settings
+          The model Measurement_Settings and contains information already known to create an identifiable experiment in the measurements.
+        """
+        self.model = model
         self.dataset = dataset
-        self.classification_model = classification_model
-
-        # columns
-        self.x_column = x_column
+        self.measurement_settings = measurement_settings
         self.y_column = y_column
 
-        # track if already trained
-        self.trained = False
-
-    # train classification_model
     def train(self):
-        
-        # no need to fit regression multiple times on same training data
-        if self.trained == False:
-            # fit regression
-            self.classification_model = self.classification_model().fit(self.dataset["train_df"][self.x_column].values.reshape(-1, 1), self.dataset["train_df"][self.y_column])
-            self.trained = True
-
+        """
+        *** customize ***
+        Train the grading model.
+        """
         # measure performance
         self.measure_performance(
             dataset_split=TRAIN,
         )
-    
-    # measure classification_model performance
+
     def test(self):
+        """
+        *** customize ***
+        Test the grading model.
+        """
 
         # measure performance on test datasetsplit
         self.measure_performance(
             dataset_split=TEST,
         )
-    
+
     def validation(self):
+        """
+        *** customize ***
+        Perform validation for the grading model.
+        """
 
         # measure performance on validation datasetsplit
         self.measure_performance(
@@ -79,20 +64,28 @@ class Regression_Model():
         )
 
     def measure_performance(self, dataset_split):
+        """
+        Measure the performance of the grading model on a dataset split.
 
+        Parameters:
+        - dataset_split: str
+          The dataset split to measure performance on.
+        """
         # create Performance_Row class
         performance_tracking = Performance_Row(
             
             # id what is being tracked
-            embedding_seperated=True, # indicateds if two models are used
-            embedding_model_name=self.embedding_model_name,
-            classfication_model_name=self.classfication_model_name,
-            dataset_name=self.dataset_name,
+            dataset_name=self.measurement_settings.dataset_name,
+            embedding_seperated=self.measurement_settings.embedding_seperated,
+            embedding_model_name = self.measurement_settings.embedding_model_name,
+            sentence_embedding_method = self.measurement_settings.sentence_embedding_method,
+            grading_model = self.measurement_settings.grading_model,
+            seed_data_split = self.measurement_settings.seed_data_split,
+
             dataset_split=dataset_split,
-            seed_data_split=self.seed_data_split,
 
             # duplicates handeling
-            settings_performance_tacking=self.settings_performance_tacking
+            settings_performance_tracking=self.measurement_settings.settings_performance_tracking
         )
 
         # print model info settings ask to print performance
@@ -100,10 +93,15 @@ class Regression_Model():
 
             performance_tracking.print_experiement_info()
 
+        # make predictions if print_regression, print_classification or save_performance are true
+        if self.measurement_settings.print_regression == True or self.measurement_settings.print_classification == True or self.measurement_settings.save_performance == True:
+
+            y_pred = self.make_predictions(dataset_split)
+
         if self.measurement_settings.print_regression == True or self.measurement_settings.save_performance == True:
 
             # measure regression accuracy
-            performance_tracking = self.mean_squared_error(performance_tracking, dataset_split)
+            performance_tracking = self.mean_squared_error(performance_tracking, dataset_split, y_pred)
 
             # print accuracy regression
             if self.measurement_settings.print_regression == True:
@@ -113,7 +111,7 @@ class Regression_Model():
         if self.measurement_settings.print_classification == True or self.measurement_settings.save_performance == True:
             
             # measure classification performance
-            performance_tracking = self.classification_performance(performance_tracking, dataset_split)
+            performance_tracking = self.classification_performance(performance_tracking, dataset_split, y_pred)
 
             if self.measurement_settings.print_classification == True:
                 
@@ -124,41 +122,49 @@ class Regression_Model():
             # run saving
             performance_tracking.save()
 
-    def make_predictions(self, dataset_split):
+    def make_predictions(self):
+        """
+        *** customize ***
+        Make predictions using the grading model.
+        """
 
-        # get predictions
-        y_pred = self.classification_model.predict(self.dataset[dataset_split][self.x_column].values.reshape(-1, 1))
-        
+        raise ValueError("No custome make_predictions fuction defined in the child class")
+
+    def mean_squared_error(self, performance_tracking, dataset_split, y_pred):
+        """
+        Calculate the mean squared error (MSE) between true and predicted values.
+
+        Parameters:
+        - performance_tracking: Performance_Row
+            the row data for performance tracking
+        - y_true: array-like
+          The true values.
+        - y_pred: array-like
+          The predicted values.
+        - avg_max_points: float
+            average max points values in dataset
+
+        Returns:
+        - float
+          The calculated mean squared error.
+        """
+
+        # get ground truth
+        y_true = self.dataset[dataset_split][self.y_column]
+
         # get average max points
         avg_max_points = self.dataset[dataset_split]["max_points"].mean()
 
-        # get ground truth
-        y_ground_truth = self.dataset[dataset_split][self.y_column]
-
-        return y_pred, avg_max_points, y_ground_truth
-
-    # calculates rmse and add it to self.performance
-    def mean_squared_error(self, performance_tracking, dataset_split):
-        
-        # ***
-            # multiply the mean squared error by the average max points to the power of two.
-            # in this way we get the non normalized rmse
-        # ***
-
-        y_pred, avg_max_points, y_ground_truth = self.make_predictions(dataset_split)
-
-        y_pred = np.nan_to_num(y_pred, nan=0)
-
         # Pearson's correlation
-        correlation, p_value = pearsonr(y_ground_truth, y_pred)
+        correlation, p_value = pearsonr(y_true, y_pred)
         performance_tracking['pears_correlation'] = correlation
         performance_tracking['p_value'] = p_value
 
         #!!!!!! sqrt means no mead for ** 2 of avg_max_points !!!!!!!!
-        # FOR MSE: rmse = np.sqrt(mean_squared_error(y_ground_truth, y_pred)) * (avg_max_points ** 2)
+        # FOR MSE: rmse = np.sqrt(mean_squared_error(y_true, y_pred)) * (avg_max_points ** 2)
 
         # the error (distance between normalized pred and normalized actual value) is squared for rmse, so the avg_max_points also has to be squared to get the correct non-normalized rmse
-        rmse = np.sqrt(mean_squared_error(y_ground_truth, y_pred)) * avg_max_points
+        rmse = np.sqrt(mean_squared_error(y_true, y_pred)) * avg_max_points
 
         # save rmse for experiement
         performance_tracking['rmse'] = rmse
@@ -166,12 +172,20 @@ class Regression_Model():
         # i think necissary
         return performance_tracking
 
-    def classification_performance(self, performance_tracking, dataset_split):
+    def classification_performance(self, performance_tracking, dataset_split, y_pred):
+        """
+        Evaluate the classification performance based on true and predicted labels.
 
-        # get predictions
-        y_pred = self.classification_model.predict(self.dataset[dataset_split][self.x_column].values.reshape(-1, 1))
+        Parameters:
+        - performance_tracking: Performance_Row
+            the row data for performance tracking
+        - y_pred: array-like
+          The predicted labels.
 
-        y_pred = np.nan_to_num(y_pred, nan=0)
+        Returns:
+        - dict
+          A dictionary containing various classification performance metrics.
+        """
 
         # add predictions to the df as a column
         self.dataset[dataset_split]["y_pred"] = y_pred
@@ -203,6 +217,3 @@ class Regression_Model():
         performance_tracking['f1_weighted'] = f1_weighted
 
         return performance_tracking
-
-    def __getitem__(self, key):
-        return getattr(self, key)
