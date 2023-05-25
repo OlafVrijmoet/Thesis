@@ -25,6 +25,8 @@ def main():
 
     run_phase(FEATURE_ENGENERING)
 
+    run_phase(REGRESSION)
+
     # updated:
 
     # # embed words

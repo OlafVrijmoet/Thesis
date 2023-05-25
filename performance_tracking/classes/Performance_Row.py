@@ -19,7 +19,8 @@ class Performance_Row:
             dataset_name,
             embedding_seperated, # indicates if two models are used, one for embedding and one for classifying (True) or one model is used for embedding and classifying (False)
             embedding_model_name, 
-            sentence_embedding_method, # new parameter
+            sentence_embedding_method,
+            feature_engenearing_method,
             grading_model, # new parameter
             dataset_split, # is it training, test or validation - constants defined in performance_tracking
             seed_data_split,
@@ -54,6 +55,7 @@ class Performance_Row:
         self.embedding_seperated = embedding_seperated
         self.embedding_model_name = embedding_model_name
         self.sentence_embedding_method = sentence_embedding_method
+        self.feature_engenearing = feature_engenearing_method
         self.grading_model = grading_model
         self.dataset_split = dataset_split
         self.seed_data_split = seed_data_split
@@ -121,10 +123,12 @@ class Performance_Row:
 
             # id'ing experiment
             'row_id': self.row_id,
+            'dataset_name': self.dataset_name,
             'embedding_seperated': self.embedding_seperated,
             'embedding_model_name': self.embedding_model_name,
-            'classification_model_name': self.grading_model,
-            'dataset_name': self.dataset_name,
+            'sentence_embedding_method': self.sentence_embedding_method,
+            'feature_engenearing': self.feature_engenearing,
+            'grading_model': self.grading_model,
             'dataset_split': self.dataset_split,
             'seed_data_split': self.seed_data_split,
 
@@ -145,8 +149,7 @@ class Performance_Row:
             'f1_micro': self.f1_micro,
             'precision_weighted': self.precision_weighted,
             'recall_weighted': self.recall_weighted,
-            'f1_weighted': self.f1_weighted,
-            
+            'f1_weighted': self.f1_weighted
         }
 
         if running_settings == ADD or experiement_done_before == False:
@@ -158,11 +161,14 @@ class Performance_Row:
             
             # Get the indices of the rows in the original DataFrame which match the conditions
             match_indices = self.past_performance[
-                (self.past_performance.embedding_model_name == self.embedding_model_name) & 
-                (self.past_performance.classification_model_name == self.grading_model) &
-                (self.past_performance.dataset_name == self.dataset_name) &
-                (self.past_performance.dataset_split == self.dataset_split) &
-                (self.past_performance.seed_data_split == self.seed_data_split)
+                (self.past_performance['embedding_model_name'] == self.embedding_model_name) &
+                (self.past_performance['grading_model'] == self.grading_model) &
+                (self.past_performance['dataset_name'] == self.dataset_name) & 
+                (self.past_performance['embedding_seperated'] == self.embedding_seperated) & 
+                (self.past_performance['dataset_split'] == self.dataset_split) &
+                (self.past_performance['seed_data_split'] == self.seed_data_split) &
+                (self.past_performance['sentence_embedding_method'] == self.sentence_embedding_method) &
+                (self.past_performance['feature_engenearing'] == self.feature_engenearing)
             ].index
 
             # Convert the time_stamp column to datetime format
@@ -234,7 +240,7 @@ class Performance_Row:
             # create new df with class column names
             column_names = [
                 # id'ing experiment
-                'row_id', 'embedding_seperated', 'embedding_model_name', 'classification_model_name', 'dataset_name', 'dataset_split', 'seed_data_split',
+                'row_id', 'embedding_seperated', 'embedding_model_name', 'sentence_embedding_method', 'feature_engenearing', 'grading_model', 'dataset_name', 'dataset_split', 'seed_data_split',
                 'time_stamp',
                 
                 # performance measurements, regression
@@ -248,6 +254,7 @@ class Performance_Row:
                 'precision_micro', 'recall_micro', 'f1_micro',
                 'precision_weighted', 'recall_weighted', 'f1_weighted'
             ]
+
             self.past_performance = pd.DataFrame(columns=column_names)
 
             # save new df - maybe don't do here?! - just when it's saved
@@ -259,11 +266,13 @@ class Performance_Row:
         # gives df with all rows with unique experiement ids
         duplicate_row = self.past_performance[
             (self.past_performance['embedding_model_name'] == self.embedding_model_name) &
-            (self.past_performance['classification_model_name'] == self.grading_model) &
+            (self.past_performance['grading_model'] == self.grading_model) &
             (self.past_performance['dataset_name'] == self.dataset_name) & 
             (self.past_performance['embedding_seperated'] == self.embedding_seperated) & 
             (self.past_performance['dataset_split'] == self.dataset_split) &
-            (self.past_performance['seed_data_split'] == self.seed_data_split)
+            (self.past_performance['seed_data_split'] == self.seed_data_split) &
+            (self.past_performance['sentence_embedding_method'] == self.sentence_embedding_method) &
+            (self.past_performance['feature_engenearing'] == self.feature_engenearing)
         ]
 
         # checks if df is empty, returns True if experiement done before

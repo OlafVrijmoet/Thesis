@@ -79,6 +79,7 @@ class Grading_Model:
             embedding_seperated=self.measurement_settings.embedding_seperated,
             embedding_model_name = self.measurement_settings.embedding_model_name,
             sentence_embedding_method = self.measurement_settings.sentence_embedding_method,
+            feature_engenearing_method = self.measurement_settings.feature_engenearing_method,
             grading_model = self.measurement_settings.grading_model,
             seed_data_split = self.measurement_settings.seed_data_split,
 

@@ -9,6 +9,9 @@ from data.embed_words.embed_words import embed_words
 from data.embed_sentences.embed_sentences import embed_sentences
 from data.feature_engenearing.feature_engenearing import feature_engenearing
 
+# grading
+from grading_models.regression.regression import regression
+
 # data processing for models
 # from run_models.gensim.gensim import gensim
 # from run_models.embed_words.embed_words import embed_words
@@ -58,6 +61,12 @@ EMBED_SENTENCES = Phase_Settings(
 FEATURE_ENGENERING = Phase_Settings(
     name="feature engenearing", 
     function=feature_engenearing,
+    run=False
+)
+
+REGRESSION = Phase_Settings(
+    name="regression", 
+    function=regression,
     run=True
 )
 

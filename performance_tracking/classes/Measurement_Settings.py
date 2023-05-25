@@ -8,6 +8,7 @@ class Measurement_Settings:
         embedding_seperated: bool,
         embedding_model_name: str,
         sentence_embedding_method: str,
+        feature_engenearing_method: str,
         grading_model: str,
         seed_data_split: int,
 
@@ -32,6 +33,8 @@ class Measurement_Settings:
           The name of the embedding model.
         - sentence_embedding_method: str
           The sentence embedding method used.
+        - feature_engenearing_method
+          feature_engenearing: like cosine_similarity
         - grading_model: str
           The name of the grading model.
         - seed_data_split: int
@@ -53,6 +56,7 @@ class Measurement_Settings:
         self.embedding_seperated = embedding_seperated
         self.embedding_model_name = embedding_model_name
         self.sentence_embedding_method = sentence_embedding_method
+        self.feature_engenearing_method = feature_engenearing_method
         self.grading_model = grading_model
         self.seed_data_split = seed_data_split
 
