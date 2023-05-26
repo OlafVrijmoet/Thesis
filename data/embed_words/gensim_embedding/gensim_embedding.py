@@ -134,7 +134,7 @@ def gensim_embedding():
 
                     print(f"move datasets into DatasetClass: {df_name}")
 
-                    model_name = f"{EMBED_WORDS}_{model.model_name}"
+                    model_name = f"{model.model_name}"
 
                     dataset = Gensim_Embedding(
                         df_name=df_name,
