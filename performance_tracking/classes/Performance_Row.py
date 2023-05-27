@@ -24,6 +24,8 @@ class Performance_Row:
             grading_model, # new parameter
             dataset_split, # is it training, test or validation - constants defined in performance_tracking
             seed_data_split,
+            shots,
+            epochs,
 
             # duplicates handling
             settings_performance_tracking, # allows experiments with the same embedding_model_name, classification_model_name, dataset_name to be added to performance df without asking
@@ -59,6 +61,8 @@ class Performance_Row:
         self.grading_model = grading_model
         self.dataset_split = dataset_split
         self.seed_data_split = seed_data_split
+        self.shots = shots
+        self.epochs = epochs
 
         self.time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -131,6 +135,8 @@ class Performance_Row:
             'grading_model': self.grading_model,
             'dataset_split': self.dataset_split,
             'seed_data_split': self.seed_data_split,
+            'shots': self.shots,
+            'epochs': self.epochs,
 
             'time_stamp': self.time_stamp,
 
@@ -168,7 +174,9 @@ class Performance_Row:
                 (self.past_performance['dataset_split'] == self.dataset_split) &
                 (self.past_performance['seed_data_split'] == self.seed_data_split) &
                 (self.past_performance['sentence_embedding_method'] == self.sentence_embedding_method) &
-                (self.past_performance['feature_engenearing'] == self.feature_engenearing)
+                (self.past_performance['feature_engenearing'] == self.feature_engenearing) &
+                (self.past_performance['shots'] == self.shots) &
+                (self.past_performance['epochs'] == self.epochs)
             ].index
 
             # Convert the time_stamp column to datetime format
@@ -241,6 +249,8 @@ class Performance_Row:
             column_names = [
                 # id'ing experiment
                 'row_id', 'embedding_seperated', 'embedding_model_name', 'sentence_embedding_method', 'feature_engenearing', 'grading_model', 'dataset_name', 'dataset_split', 'seed_data_split',
+                'shots','epochs',
+
                 'time_stamp',
                 
                 # performance measurements, regression
@@ -272,7 +282,9 @@ class Performance_Row:
             (self.past_performance['dataset_split'] == self.dataset_split) &
             (self.past_performance['seed_data_split'] == self.seed_data_split) &
             (self.past_performance['sentence_embedding_method'] == self.sentence_embedding_method) &
-            (self.past_performance['feature_engenearing'] == self.feature_engenearing)
+            (self.past_performance['feature_engenearing'] == self.feature_engenearing) &
+            (self.past_performance['shots'] == self.shots) &
+            (self.past_performance['epochs'] == self.epochs)
         ]
 
         # checks if df is empty, returns True if experiement done before

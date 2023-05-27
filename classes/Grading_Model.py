@@ -31,6 +31,9 @@ class Grading_Model:
         self.measurement_settings = measurement_settings
         self.y_column = y_column
 
+        self.shots = 0
+        self.epochs = 0
+
     def train(self):
         """
         *** customize ***
@@ -82,6 +85,8 @@ class Grading_Model:
             feature_engenearing_method = self.measurement_settings.feature_engenearing_method,
             grading_model = self.measurement_settings.grading_model,
             seed_data_split = self.measurement_settings.seed_data_split,
+            shots=self.shots,
+            epochs=self.epochs,
 
             dataset_split=dataset_split,
 
@@ -119,6 +124,8 @@ class Grading_Model:
                 performance_tracking.print_classification_performance()
 
         if self.measurement_settings.save_performance == True:
+
+            # !!! save y_pred for validation !!!
 
             # run saving
             performance_tracking.save()

@@ -11,6 +11,7 @@ from data.feature_engenearing.feature_engenearing import feature_engenearing
 
 # grading
 from grading_models.regression.regression import regression
+from grading_models.api.api import api
 
 # data processing for models
 # from run_models.gensim.gensim import gensim
@@ -49,25 +50,31 @@ SPLIT_DATA = Phase_Settings(
 EMBED_WORDS = Phase_Settings(
     name="Embed words", 
     function=embed_words,
-    run=True
+    run=False
 )
 
 EMBED_SENTENCES = Phase_Settings(
     name="Embed sentences", 
     function=embed_sentences,
-    run=True
+    run=False
 )
 
 FEATURE_ENGENERING = Phase_Settings(
     name="feature engenearing", 
     function=feature_engenearing,
-    run=True
+    run=False
 )
 
 REGRESSION = Phase_Settings(
     name="regression", 
     function=regression,
     run=True
+)
+
+API = Phase_Settings(
+    name="api", 
+    function=api,
+    run=False
 )
 
 # # delete

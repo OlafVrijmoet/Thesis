@@ -27,6 +27,8 @@ def main():
 
     run_phase(REGRESSION)
 
+    run_phase(API)
+
     # updated:
 
     # # embed words

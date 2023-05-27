@@ -18,6 +18,8 @@ class Dataset_api(Dataset):
         # Call the parent class's constructor
         super().__init__(dir, file_name, seed)
 
+        self.name = file_name
+
         # Store the number of examples per question
         self.shots = shots
 
