@@ -22,5 +22,3 @@ class Dataset_Cosine(Dataset):
 
         # add value to array of the column to be added
         self.columns_to_add[self.model_name]["cosine_similarity"].append(1 - cosine(vec1, vec2))
-
-        

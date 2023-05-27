@@ -53,4 +53,3 @@ class BERT_Embedding(Dataset):
         embeddings = outputs[0][0]
 
         return array_to_str(embeddings.numpy())
-
