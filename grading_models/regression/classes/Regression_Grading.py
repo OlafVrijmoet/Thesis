@@ -41,7 +41,7 @@ class Regression_Grading(Grading_Model):
         # no need to fit regression multiple times on same training data
         if self.trained == False:
             # fit regression
-            self.model = self.model().fit(self.dataset["train_df"][self.x_column].values.reshape(-1, 1), self.dataset["train_df"][self.y_column])
+            self.model = self.model().fit(self.dataset["train"][self.x_column].values.reshape(-1, 1), self.dataset["train"][self.y_column])
             self.trained = True
 
         # Call the parent's train() function

@@ -26,11 +26,15 @@ class Dataset_api(Dataset):
     # Define the generate_rows function within the class
     def generate_rows(self, group):
 
+        shots = self.shots
+
         # Make sure there are enough rows to sample
         if len(group) < self.shots:
-            raise ValueError("The group must contain at least as many rows as the number of shots.")
+            print(f"Not enough shots: {self.name}")
+            shots = len(group)
+            # raise ValueError("The group must contain at least as many rows as the number of shots.")
 
-        indices = group.sample(self.shots, random_state=self.seed).index
+        indices = group.sample(shots, random_state=self.seed).index
 
         result = {}
         for i, index in enumerate(indices):
@@ -46,13 +50,13 @@ class Dataset_api(Dataset):
         # Call the parent class's split_datasets method
         super().split_datasets()
 
-        # Concatenate train_df and test_df
-        combined_df = pd.concat([self.train_df, self.test_df])
+        # Concatenate train and test
+        combined_df = pd.concat([self.train, self.test])
 
         # Generate rows for the combined DataFrame
         grouped_with_shots = combined_df.groupby('question_id').apply(self.generate_rows).reset_index()
 
         # Merge the generated rows with the original datasets
-        self.train_df = pd.merge(self.train_df, grouped_with_shots, on='question_id', how='left')
-        self.test_df = pd.merge(self.test_df, grouped_with_shots, on='question_id', how='left')
-        self.validation_df = pd.merge(self.validation_df, grouped_with_shots, on='question_id', how='left')
+        self.train = pd.merge(self.train, grouped_with_shots, on='question_id', how='left')
+        self.test = pd.merge(self.test, grouped_with_shots, on='question_id', how='left')
+        self.validation = pd.merge(self.validation, grouped_with_shots, on='question_id', how='left')

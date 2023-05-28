@@ -10,7 +10,7 @@ NO_PROMPT_NO_REPEAT = 3
 NO_SAVING = 4
 
 # dataset splits
-ALL = "df"
-TRAIN = "train_df"
-TEST = "test_df"
-VALIDATION = "validation_df"
+ALL = "all"
+TRAIN = "train"
+TEST = "test"
+VALIDATION = "validation"

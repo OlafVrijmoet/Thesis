@@ -34,6 +34,63 @@ class Grading_Model:
         self.shots = 0
         self.epochs = 0
 
+        self.performance_tracking = {
+            TRAIN: Performance_Row(
+                
+                # id what is being tracked
+                dataset_name=self.measurement_settings.dataset_name,
+                embedding_seperated=self.measurement_settings.embedding_seperated,
+                embedding_model_name = self.measurement_settings.embedding_model_name,
+                sentence_embedding_method = self.measurement_settings.sentence_embedding_method,
+                feature_engenearing_method = self.measurement_settings.feature_engenearing_method,
+                grading_model = self.measurement_settings.grading_model,
+                seed_data_split = self.measurement_settings.seed_data_split,
+
+                length_df = len(dataset[TRAIN]),
+
+                dataset_split=TRAIN,
+
+                # duplicates handeling
+                settings_performance_tracking=self.measurement_settings.settings_performance_tracking
+            ),
+            TEST: Performance_Row(
+                
+                # id what is being tracked
+                dataset_name=self.measurement_settings.dataset_name,
+                embedding_seperated=self.measurement_settings.embedding_seperated,
+                embedding_model_name = self.measurement_settings.embedding_model_name,
+                sentence_embedding_method = self.measurement_settings.sentence_embedding_method,
+                feature_engenearing_method = self.measurement_settings.feature_engenearing_method,
+                grading_model = self.measurement_settings.grading_model,
+                seed_data_split = self.measurement_settings.seed_data_split,
+
+                length_df = len(dataset[TEST]),
+
+                dataset_split=TEST,
+
+                # duplicates handeling
+                settings_performance_tracking=self.measurement_settings.settings_performance_tracking
+            ),
+            VALIDATION: Performance_Row(
+                
+                # id what is being tracked
+                dataset_name=self.measurement_settings.dataset_name,
+                embedding_seperated=self.measurement_settings.embedding_seperated,
+                embedding_model_name = self.measurement_settings.embedding_model_name,
+                sentence_embedding_method = self.measurement_settings.sentence_embedding_method,
+                feature_engenearing_method = self.measurement_settings.feature_engenearing_method,
+                grading_model = self.measurement_settings.grading_model,
+                seed_data_split = self.measurement_settings.seed_data_split,
+
+                length_df = len(dataset[VALIDATION]),
+
+                dataset_split=VALIDATION,
+
+                # duplicates handeling
+                settings_performance_tracking=self.measurement_settings.settings_performance_tracking
+            )
+        }
+
     def train(self):
         """
         *** customize ***
@@ -74,30 +131,11 @@ class Grading_Model:
         - dataset_split: str
           The dataset split to measure performance on.
         """
-        # create Performance_Row class
-        performance_tracking = Performance_Row(
-            
-            # id what is being tracked
-            dataset_name=self.measurement_settings.dataset_name,
-            embedding_seperated=self.measurement_settings.embedding_seperated,
-            embedding_model_name = self.measurement_settings.embedding_model_name,
-            sentence_embedding_method = self.measurement_settings.sentence_embedding_method,
-            feature_engenearing_method = self.measurement_settings.feature_engenearing_method,
-            grading_model = self.measurement_settings.grading_model,
-            seed_data_split = self.measurement_settings.seed_data_split,
-            shots=self.shots,
-            epochs=self.epochs,
 
-            dataset_split=dataset_split,
-
-            # duplicates handeling
-            settings_performance_tracking=self.measurement_settings.settings_performance_tracking
-        )
- 
         # print model info settings ask to print performance
         if self.measurement_settings.print_regression == True or self.measurement_settings.print_classification == True:
 
-            performance_tracking.print_experiement_info()
+            self.performance_tracking[dataset_split].print_experiement_info()
 
         # make predictions if print_regression, print_classification or save_performance are true
         if self.measurement_settings.print_regression == True or self.measurement_settings.print_classification == True or self.measurement_settings.save_performance == True:
@@ -107,33 +145,33 @@ class Grading_Model:
         if self.measurement_settings.print_regression == True or self.measurement_settings.save_performance == True:
 
             # measure regression accuracy
-            performance_tracking = self.mean_squared_error(performance_tracking, dataset_split, y_pred)
+            self.mean_squared_error(dataset_split, y_pred)
 
             # print accuracy regression
             if self.measurement_settings.print_regression == True:
 
-                performance_tracking.print_regression_preformance()
+                self.performance_tracking[dataset_split].print_regression_preformance()
 
         if self.measurement_settings.print_classification == True or self.measurement_settings.save_performance == True:
             
             # measure classification performance
-            performance_tracking = self.classification_performance(performance_tracking, dataset_split, y_pred)
+            self.classification_performance(dataset_split, y_pred)
 
             if self.measurement_settings.print_classification == True:
                 
-                performance_tracking.print_classification_performance()
+                self.performance_tracking[dataset_split].print_classification_performance()
 
         if self.measurement_settings.save_performance == True:
             
             # save predictions only for validation
-            if dataset_split == "validation_df":
+            if dataset_split == "validation":
+
+                self.performance_tracking["validation"]["y_pred"] = y_pred
                 
-                self.save_predictions(y_pred=y_pred, performance_tracking=performance_tracking)
-
             # run saving
-            performance_tracking.save()
+            self.performance_tracking[dataset_split].save()
 
-    def make_predictions(self):
+    def make_predictions(self, dataset_split):
         """
         *** customize ***
         Make predictions using the grading model.
@@ -141,7 +179,7 @@ class Grading_Model:
 
         raise ValueError("No custome make_predictions fuction defined in the child class")
 
-    def mean_squared_error(self, performance_tracking, dataset_split, y_pred):
+    def mean_squared_error(self, dataset_split, y_pred):
         """
         Calculate the mean squared error (MSE) between true and predicted values.
 
@@ -168,8 +206,8 @@ class Grading_Model:
 
         # Pearson's correlation
         correlation, p_value = pearsonr(y_true, y_pred)
-        performance_tracking['pears_correlation'] = correlation
-        performance_tracking['p_value'] = p_value
+        self.performance_tracking[dataset_split]['pears_correlation'] = correlation
+        self.performance_tracking[dataset_split]['p_value'] = p_value
 
         #!!!!!! sqrt means no mead for ** 2 of avg_max_points !!!!!!!!
         # FOR MSE: rmse = np.sqrt(mean_squared_error(y_true, y_pred)) * (avg_max_points ** 2)
@@ -178,12 +216,9 @@ class Grading_Model:
         rmse = np.sqrt(mean_squared_error(y_true, y_pred)) * avg_max_points
 
         # save rmse for experiement
-        performance_tracking['rmse'] = rmse
+        self.performance_tracking[dataset_split]['rmse'] = rmse
 
-        # i think necissary
-        return performance_tracking
-
-    def classification_performance(self, performance_tracking, dataset_split, y_pred):
+    def classification_performance(self, dataset_split, y_pred):
         """
         Evaluate the classification performance based on true and predicted labels.
 
@@ -216,27 +251,13 @@ class Grading_Model:
         precision_micro, recall_micro, f1_micro, _ = precision_recall_fscore_support(self.dataset[dataset_split]["assigned_points"], self.dataset[dataset_split]["pred_points"], average='micro')
         precision_weighted, recall_weighted, f1_weighted, _ = precision_recall_fscore_support(self.dataset[dataset_split]["assigned_points"], self.dataset[dataset_split]["pred_points"], average='weighted')
 
-        performance_tracking['accuracy'] = accuracy
-        performance_tracking['precision_macro'] = precision_macro
-        performance_tracking['recall_macro'] = recall_macro
-        performance_tracking['f1_macro'] = f1_macro
-        performance_tracking['precision_micro'] = precision_micro
-        performance_tracking['recall_micro'] = recall_micro
-        performance_tracking['f1_micro'] = f1_micro
-        performance_tracking['precision_weighted'] = precision_weighted
-        performance_tracking['recall_weighted'] = recall_weighted
-        performance_tracking['f1_weighted'] = f1_weighted
-
-        return performance_tracking
-
-    def save_predictions(self, y_pred, performance_tracking):
-
-        # run this before saving the predictions because it add a one!
-        run_id = performance_tracking.current_row_id()
-
-        # save validation inside 1 data based on split seed and add the column based on performance_tracking["row_id"]
-        
-        # make sure predictions are unormalized if necissary!
-
-        # add y_pred to validation dataset
-        self.dataset["validation_df"]["y_pred"] = y_pred
+        self.performance_tracking[dataset_split]['accuracy'] = accuracy
+        self.performance_tracking[dataset_split]['precision_macro'] = precision_macro
+        self.performance_tracking[dataset_split]['recall_macro'] = recall_macro
+        self.performance_tracking[dataset_split]['f1_macro'] = f1_macro
+        self.performance_tracking[dataset_split]['precision_micro'] = precision_micro
+        self.performance_tracking[dataset_split]['recall_micro'] = recall_micro
+        self.performance_tracking[dataset_split]['f1_micro'] = f1_micro
+        self.performance_tracking[dataset_split]['precision_weighted'] = precision_weighted
+        self.performance_tracking[dataset_split]['recall_weighted'] = recall_weighted
+        self.performance_tracking[dataset_split]['f1_weighted'] = f1_weighted

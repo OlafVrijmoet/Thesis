@@ -25,13 +25,14 @@ class Performance_Row:
             grading_model, # new parameter
             dataset_split, # is it training, test or validation - constants defined in performance_tracking
             seed_data_split,
-            shots,
-            epochs,
 
             length_df,
 
             # duplicates handling
             settings_performance_tracking, # allows experiments with the same embedding_model_name, classification_model_name, dataset_name to be added to performance df without asking
+
+            shots=0,
+            epochs=0,
 
             # performance measurements, regression
             rmse=None,
@@ -110,7 +111,7 @@ class Performance_Row:
 
         else:
 
-            self.last_pred_index = self.length_df
+            self.last_pred_index = self.length_df - 1
             self.finished_pred = True
             
         # # fetch / create df for performance
@@ -227,9 +228,10 @@ class Performance_Row:
             file_name=DF_TRACKING_FILE_NAME,
             df=self.past_performance
         )
-
-        # save predictions
-        self.save_past_predictions()
+        
+        if self.dataset_split == VALIDATION:
+            # save predictions
+            self.save_past_predictions()
     
     # print info
     def print_experiement_info(self):
@@ -294,17 +296,21 @@ class Performance_Row:
             # save past performance df into past_performance df in class
             self.past_performance = past_performance
 
-            # find row with the lagest row_id value
-            last_experiment = self.past_performance.loc[self.past_performance['row_id'].idxmax()]
+            if past_performance.empty:
+                return False
 
-            if last_experiment["finished_pred"] == False:
+            # find row with the lagest row_id value
+            last_experiment_row = self.past_performance.loc[self.past_performance['row_id'].idxmax()]
+
+            if last_experiment_row["finished_pred"] == False and self.dataset_split == VALIDATION:
                 
-                self.row_id = last_experiment["row_id"]
-                self.last_pred_index = last_experiment["last_pred_index"]
+                self.row_id = last_experiment_row["row_id"]
+                self.last_pred_index = last_experiment_row["last_pred_index"]
 
                 # !!! check if this is same experiement !!!
+                if self.row_is_current_experiment(last_experiment_row) == False:
 
-                    # if not same through error!!!
+                    raise ValueError("This row is not the same as the last unfinished row! First, finish the other experiement before going to the next.")
                 
                 # take out row with row_id from self.past_performance
                 self.past_performance = self.past_performance.query("row_id != @self.row_id")
@@ -330,6 +336,9 @@ class Performance_Row:
                 'row_id', 'embedding_seperated', 'embedding_model_name', 'sentence_embedding_method', 'feature_engenearing', 'grading_model', 'dataset_name', 'dataset_split', 'seed_data_split',
                 'shots','epochs',
 
+                "finished_pred",
+                "last_pred_index",
+
                 'time_stamp',
                 
                 # performance measurements, regression
@@ -349,8 +358,26 @@ class Performance_Row:
             # save new df - maybe don't do here?! - just when it's saved
             save(dir=DF_TRACKING_DIR, file_name=DF_TRACKING_FILE_NAME, df=self.past_performance)
 
+    def row_is_current_experiment(self, row):
+
+        if (row['embedding_model_name'] == self.embedding_model_name) and \
+            (row['grading_model'] == self.grading_model) and \
+            (row['dataset_name'] == self.dataset_name) and \
+            (row['embedding_seperated'] == self.embedding_seperated) and \
+            (row['dataset_split'] == self.dataset_split) and \
+            (row['seed_data_split'] == self.seed_data_split) and \
+            (row['sentence_embedding_method'] == self.sentence_embedding_method) and \
+            (row['feature_engenearing'] == self.feature_engenearing) and \
+            (row['shots'] == self.shots):
+            return True
+        else:
+            return False
+
     # returns True if experiement done before
     def check_for_duplicates(self):
+
+        if self.past_performance.empty:
+            return False
         
         # gives df with all rows with unique experiement ids
         duplicate_row = self.past_performance[

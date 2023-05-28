@@ -24,9 +24,9 @@ class Dataset:
         self.dataset = self.get_data(dir, file_name)
 
         # places to save the splits
-        self.train_df = None
-        self.test_df = None
-        self.validation_df = None
+        self.train = None
+        self.test = None
+        self.validation = None
 
     # get data using dataset_dir
     def get_data(self, dir, file_name):
@@ -38,10 +38,10 @@ class Dataset:
     def split_datasets(self):
 
         # Split the DataFrame into train (70%) and the remaining data (30%)
-        self.train_df, temp_df = train_test_split(self.dataset, test_size=0.3, random_state=self.seed)
+        self.train, temp_df = train_test_split(self.dataset, test_size=0.3, random_state=self.seed)
 
         # Split the remaining data further into test (20% of the original dataset) and validation (10% of the original dataset) sets
-        self.test_df, self.validation_df = train_test_split(temp_df, test_size=1/3, random_state=self.seed)
+        self.test, self.validation = train_test_split(temp_df, test_size=1/3, random_state=self.seed)
 
     def __getitem__(self, key):
         return getattr(self, key)
