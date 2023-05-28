@@ -93,7 +93,7 @@ class Grading_Model:
             # duplicates handeling
             settings_performance_tracking=self.measurement_settings.settings_performance_tracking
         )
-
+ 
         # print model info settings ask to print performance
         if self.measurement_settings.print_regression == True or self.measurement_settings.print_classification == True:
 
@@ -124,8 +124,11 @@ class Grading_Model:
                 performance_tracking.print_classification_performance()
 
         if self.measurement_settings.save_performance == True:
-
-            # !!! save y_pred for validation !!!
+            
+            # save predictions only for validation
+            if dataset_split == "validation_df":
+                
+                self.save_predictions(y_pred=y_pred, performance_tracking=performance_tracking)
 
             # run saving
             performance_tracking.save()
@@ -225,3 +228,15 @@ class Grading_Model:
         performance_tracking['f1_weighted'] = f1_weighted
 
         return performance_tracking
+
+    def save_predictions(self, y_pred, performance_tracking):
+
+        # run this before saving the predictions because it add a one!
+        run_id = performance_tracking.current_row_id()
+
+        # save validation inside 1 data based on split seed and add the column based on performance_tracking["row_id"]
+        
+        # make sure predictions are unormalized if necissary!
+
+        # add y_pred to validation dataset
+        self.dataset["validation_df"]["y_pred"] = y_pred

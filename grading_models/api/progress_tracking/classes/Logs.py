@@ -51,6 +51,13 @@ class Logs:
         # Save the updated logs_df to a CSV file
         self.logs_df.to_csv("grading_models/api/progress_tracking/logs.csv", index=False)
 
+    def get_index_df(self, df_name):
+
+        # Use query to get the row and then access the 'index' column
+        index_value = self.logs_df.query("df_name == @df_name")['index'].values[0]
+
+        return index_value
+
     # get attribute values
     def __getitem__(self, key):
         return getattr(self, key)

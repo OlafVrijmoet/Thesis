@@ -68,13 +68,13 @@ FEATURE_ENGENERING = Phase_Settings(
 REGRESSION = Phase_Settings(
     name="regression", 
     function=regression,
-    run=True
+    run=False
 )
 
 API = Phase_Settings(
     name="api", 
     function=api,
-    run=False
+    run=True
 )
 
 # # delete

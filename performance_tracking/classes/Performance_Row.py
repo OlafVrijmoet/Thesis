@@ -1,5 +1,6 @@
 
 import pandas as pd
+import numpy as np
 from datetime import datetime
 
 # classes
@@ -26,6 +27,8 @@ class Performance_Row:
             seed_data_split,
             shots,
             epochs,
+
+            length_df,
 
             # duplicates handling
             settings_performance_tracking, # allows experiments with the same embedding_model_name, classification_model_name, dataset_name to be added to performance df without asking
@@ -64,6 +67,13 @@ class Performance_Row:
         self.shots = shots
         self.epochs = epochs
 
+        self.finishing_previous_experiement = False
+        self.finished_pred = False
+        self.y_pred = np.full(length_df, np.nan)
+        self.last_pred_index = 0
+        self.length_df = length_df
+        self.past_pred_dict = f"performance_tracking/data/{dataset_name}"
+
         self.time_stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # duplicates handling
@@ -86,10 +96,25 @@ class Performance_Row:
         self.recall_weighted = recall_weighted
         self.f1_weighted = f1_weighted
 
+        # get the info of past run
+        self.fetch_saved_performance()
+
+    # severly alter!!!
     def save(self):
 
-        # fetch / create df for performance
-        self.fetch_saved_performance()
+        # check if all predictions have been made
+        if np.isnan(self.y_pred).any():
+
+            # get the index of the first nan value
+            self.last_pred_index = np.where(np.isnan(self.y_pred))[0][0]
+
+        else:
+
+            self.last_pred_index = self.length_df
+            self.finished_pred = True
+            
+        # # fetch / create df for performance
+        # self.fetch_saved_performance()
 
         # check if experiement is done before
         experiement_done_before = self.check_for_duplicates()
@@ -137,6 +162,9 @@ class Performance_Row:
             'seed_data_split': self.seed_data_split,
             'shots': self.shots,
             'epochs': self.epochs,
+            
+            "finished_pred": self.finished_pred,
+            "last_pred_index": self.last_pred_index,
 
             'time_stamp': self.time_stamp,
 
@@ -199,6 +227,9 @@ class Performance_Row:
             file_name=DF_TRACKING_FILE_NAME,
             df=self.past_performance
         )
+
+        # save predictions
+        self.save_past_predictions()
     
     # print info
     def print_experiement_info(self):
@@ -227,6 +258,33 @@ class Performance_Row:
     # --- Services ---
         # only used internally
 
+    def get_past_predictions(self):
+
+        found, df_name, past_predictions = get_df(dir=self.past_pred_dict, file_name="past_predictions")
+
+        if found == False:
+
+            return False
+        
+        # update y_pred with the 
+        self.y_pred = past_predictions[f"{self.row_id}"].values
+    
+    # save past_performance table
+    def save_past_predictions(self):
+
+        found, df_name, past_predictions = get_df(dir=self.past_pred_dict, file_name="past_predictions")
+
+        if found == False:
+            
+            # create pd with row_id as column with y_ped
+            past_predictions = pd.DataFrame({f"{self.row_id}": self.y_pred})
+
+        else:
+            # replace values of row_id with latest predictions
+            past_predictions[f"{self.row_id}"] = self.y_pred
+
+        save(dir=self.past_pred_dict, file_name="past_predictions", df=past_predictions)
+
     # only do when saving, than the performance df will only be loaded into memory to add the row
     def fetch_saved_performance(self):
         found, df_name, past_performance = get_df(dir=DF_TRACKING_DIR, file_name=DF_TRACKING_FILE_NAME)
@@ -236,12 +294,33 @@ class Performance_Row:
             # save past performance df into past_performance df in class
             self.past_performance = past_performance
 
-            # default is 0, so only change is len longer than 0
-            if len(past_performance) != 0:
+            # find row with the lagest row_id value
+            last_experiment = self.past_performance.loc[self.past_performance['row_id'].idxmax()]
+
+            if last_experiment["finished_pred"] == False:
                 
-                # set row_id to max_value_id + 1
-                max_value_id = self.past_performance['row_id'].max()
-                self.row_id = max_value_id + 1
+                self.row_id = last_experiment["row_id"]
+                self.last_pred_index = last_experiment["last_pred_index"]
+
+                # !!! check if this is same experiement !!!
+
+                    # if not same through error!!!
+                
+                # take out row with row_id from self.past_performance
+                self.past_performance = self.past_performance.query("row_id != @self.row_id")
+
+                self.finishing_previous_experiement = True
+
+                # get y_pred from tracked_performance df based on row_id
+                self.get_past_predictions()
+
+            else:
+                # default is 0, so only change is len longer than 0
+                if len(past_performance) != 0:
+                    
+                    # set row_id to max_value_id + 1
+                    max_value_id = self.past_performance['row_id'].max()
+                    self.row_id = max_value_id + 1
 
         else:
 
@@ -290,6 +369,21 @@ class Performance_Row:
         # checks if df is empty, returns True if experiement done before
         return not duplicate_row.empty
     
+    def current_row_id(self):
+
+        found, _, past_performance = get_df(dir=DF_TRACKING_DIR, file_name=DF_TRACKING_FILE_NAME)
+        
+        if found == True:
+            
+            # default is 0, so only change is len longer than 0
+            if len(past_performance) != 0:
+                
+                # set row_id to max_value_id + 1
+                max_value_id = self.past_performance['row_id'].max()
+                self.row_id = max_value_id + 1
+
+        return self.row_id
+
     def __getitem__(self, key):
         return getattr(self, key)
 

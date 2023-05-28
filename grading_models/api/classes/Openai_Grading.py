@@ -7,8 +7,12 @@ openai.api_key = "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"
 
 import numpy as np
 
+# services
+from services.save import save
+
 # classes
 from classes.Grading_Model import Grading_Model
+from performance_tracking.classes.Performance_Row import Performance_Row
 
 # constants
 from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION
@@ -24,6 +28,7 @@ class Openai_Grading(Grading_Model):
 
     # logs
     logs
+
   ):
     """
     Initialize the Regression_Grading class.
@@ -40,6 +45,11 @@ class Openai_Grading(Grading_Model):
     
     self.logs = logs
 
+    # saving predictions
+    self.y_pred = []
+
+    # make y_pred of None's of length validation set - maybe even in df or np array!?
+
   def validation(self):
     """
     Perform validation for the regression grading model.
@@ -51,12 +61,20 @@ class Openai_Grading(Grading_Model):
     )
 
   def make_predictions(self, dataset_split):
+
+    # make sure it starts from the index given
+    start_index = self.logs.get_index_df(self.dataset["name"])
     
-    # Loop through the sampled dataframe
-    for index, row in self.dataset[dataset_split].iterrows():
-      
-      # Get the predicted points using the grade_student_answer function
-      predicted_points = self.grade_student_answer(row=row, model=self.model, index=index)
+    # Loop through the sampled dataframe from the start_index
+    for index, row in self.dataset[dataset_split].iloc[start_index:].iterrows():
+        # Get the predicted points using the grade_student_answer function
+        predicted_points = self.grade_student_answer(row=row, model=self.model, index=index)
+
+        # save predicted_points in self.y_pred at index row
+        self.y_pred.append(predicted_points)
+
+    # return self.y_pred
+    return self.y_pred
 
   def grade_student_answer(row, model, shots, index):
 
@@ -102,13 +120,44 @@ class Openai_Grading(Grading_Model):
         # If the API call is successful, we break the loop and don't retry
         break
       except Exception as e:
+
         print(f"Error on attempt {attempt + 1}: {str(e)}")
         
         # If we've reached max attempts, re-raise the exception
         if attempt + 1 == max_attempts:
           
-          # save predictions
-          
+          # create Performance_Row class
+          performance_tracking = Performance_Row(
+              
+              # id what is being tracked
+              dataset_name=self.measurement_settings.dataset_name,
+              embedding_seperated=self.measurement_settings.embedding_seperated,
+              embedding_model_name = self.measurement_settings.embedding_model_name,
+              sentence_embedding_method = self.measurement_settings.sentence_embedding_method,
+              feature_engenearing_method = self.measurement_settings.feature_engenearing_method,
+              grading_model = self.measurement_settings.grading_model,
+              seed_data_split = self.measurement_settings.seed_data_split,
+              shots=self.shots,
+              epochs=self.epochs,
+
+              dataset_split=dataset_split,
+
+              # duplicates handeling
+              settings_performance_tracking=self.measurement_settings.settings_performance_tracking
+          )
+
+          run_id = performance_tracking.current_row_id()
+
+          # save run_id df with y_pred values up till now
+            # !maybe just use the tracking df! Rather than creating a new one!
+
+            # get length of dataset
+            # create a list of Nan's of that length
+
+            # from index 0 fill with self.y_pred and the rest are Nan's
+
+            # save it to the tracking dataset
+
 
           # save progress up till now
           self.logs.update_index_df(df_name=self.dataset.name, index=index)
