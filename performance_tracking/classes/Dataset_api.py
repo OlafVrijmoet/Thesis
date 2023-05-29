@@ -26,14 +26,15 @@ class Dataset_api(Dataset):
     # Function to generate new rows based on randomly selected samples within each group
     def generate_rows(self, group):
         shots = self.shots
-        sample_with_replacement = False
 
         # Adjust sample size if group size is less than `shots`
         if len(group) < self.shots:
-            sample_with_replacement = True
 
-        # Randomly sample indices from group
-        indices = group.sample(shots, random_state=self.seed, replace=sample_with_replacement).index
+            # sample all group members
+            indices = group.sample(len(group), random_state=self.seed).index
+        else:
+            # Randomly sample indices from group
+            indices = group.sample(shots, random_state=self.seed).index
 
         result = {}
         for i, index in enumerate(indices):
@@ -42,6 +43,23 @@ class Dataset_api(Dataset):
             result[f'student_answer_{i+1}'] = row['student_answer']
             result[f'reference_answer_{i+1}'] = row['reference_answer']
             result[f'assigned_points_{i+1}'] = row['assigned_points']
+
+        if len(group) < self.shots:
+
+            # fill up the missing examples by sampling from test and train
+            combined_df = pd.concat([self.train, self.test])
+
+            missing_samples_count = self.shots - len(group)
+
+            sample_indices = combined_df.sample(missing_samples_count, random_state=self.seed).index
+
+            # add extra samples to row
+            for i_extra, index in enumerate(sample_indices):
+                row = combined_df.loc[index]
+                # Store student's answer, reference answer, and assigned points in the result dictionary
+                result[f'student_answer_{i+i_extra+1}'] = row['student_answer']
+                result[f'reference_answer_{i+i_extra+1}'] = row['reference_answer']
+                result[f'assigned_points_{i+i_extra+1}'] = row['assigned_points']
 
         return pd.Series(result)
 
