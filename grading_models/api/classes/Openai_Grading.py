@@ -28,9 +28,6 @@ class Openai_Grading(Grading_Model):
     # child
     y_column,
 
-    # logs
-    logs
-
   ):
     """
     Initialize the Regression_Grading class.
@@ -44,8 +41,6 @@ class Openai_Grading(Grading_Model):
         ensures that the model is not trained multiple times
     """
     super().__init__(model, dataset, measurement_settings, y_column)
-    
-    self.logs = logs
 
     # saving predictions
     self.y_pred = []
@@ -65,7 +60,7 @@ class Openai_Grading(Grading_Model):
   def make_predictions(self, dataset_split):
 
     # make sure it starts from the index given
-    start_index = self.logs.get_index_df(self.dataset["name"])
+    start_index = self.performance_tracking[dataset_split]["last_pred_index"]
     
     print(f"Running api calls for following dataset: {self.dataset['name']}")
 

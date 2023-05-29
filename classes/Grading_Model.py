@@ -14,7 +14,7 @@ from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION
 
 class Grading_Model:
 
-    def __init__(self, model, dataset, measurement_settings, y_column):
+    def __init__(self, model, dataset, measurement_settings, y_column, y_normalized):
         """
         Initialize the Grading_Model class.
 
@@ -30,6 +30,8 @@ class Grading_Model:
         self.dataset = dataset
         self.measurement_settings = measurement_settings
         self.y_column = y_column
+
+        self.y_normalized = y_normalized
 
         self.shots = 0
         self.epochs = 0
@@ -213,7 +215,13 @@ class Grading_Model:
         # FOR MSE: rmse = np.sqrt(mean_squared_error(y_true, y_pred)) * (avg_max_points ** 2)
 
         # the error (distance between normalized pred and normalized actual value) is squared for rmse, so the avg_max_points also has to be squared to get the correct non-normalized rmse
-        rmse = np.sqrt(mean_squared_error(y_true, y_pred)) * avg_max_points
+        if self.y_normalized == True:
+
+            rmse = np.sqrt(mean_squared_error(y_true, y_pred)) * avg_max_points
+
+        else:
+            
+            rmse = np.sqrt(mean_squared_error(y_true, y_pred))
 
         # save rmse for experiement
         self.performance_tracking[dataset_split]['rmse'] = rmse
@@ -237,7 +245,10 @@ class Grading_Model:
         self.dataset[dataset_split]["y_pred"] = y_pred
 
         # scale prediction from normalized value back to the original points
-        self.dataset[dataset_split]["pred_points"] = self.dataset[dataset_split]["y_pred"] * self.dataset[dataset_split]["max_points"]
+        if self.y_normalized == True:
+            self.dataset[dataset_split]["pred_points"] = self.dataset[dataset_split]["y_pred"] * self.dataset[dataset_split]["max_points"]
+        else:
+            self.dataset[dataset_split]["pred_points"] = self.dataset[dataset_split]["y_pred"]
 
         # round to closest round number and convert from float to int
         self.dataset[dataset_split]["pred_points"] = self.dataset[dataset_split]["pred_points"].round()

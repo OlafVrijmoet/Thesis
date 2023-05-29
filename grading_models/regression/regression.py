@@ -122,7 +122,9 @@ def regression():
                     ),
 
                     x_column="cosine_similarity",
-                    y_column="normalized_points"
+                    y_column="normalized_points",
+
+                    y_normalized=True,
                     
                 )
 

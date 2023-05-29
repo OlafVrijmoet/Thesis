@@ -66,12 +66,12 @@ def api():
                     # child
                     y_column="reference_answer",
 
-                    # logs
-                    logs=logs
+                    y_normalized=True,
+
                 )
 
                 dataset_grading.validation()
-                
+
     # run predictions
         # keep track of logs
         # if there is an error: save logs
