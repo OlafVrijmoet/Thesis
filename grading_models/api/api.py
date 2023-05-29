@@ -31,9 +31,16 @@ def api():
                 # get file name without file type for get_df
                 file_name, _ = os.path.splitext(file_name)
 
+                # dataset = Dataset_api(
+                #     dir="data/splits/data",
+                #     file_name=file_name,
+                #     seed=SEED,
+                #     shots=SHOT # DO NOT CHANGE UNTILL FINISHED WITH RUN THROUGH ALL DATASETS!
+                # )
+                
                 dataset = Dataset_api(
-                    dir="data/splits/data",
-                    file_name=file_name,
+                    dir="testing/data",
+                    file_name="sample",
                     seed=SEED,
                     shots=SHOT # DO NOT CHANGE UNTILL FINISHED WITH RUN THROUGH ALL DATASETS!
                 )
@@ -55,25 +62,19 @@ def api():
                         seed_data_split=SEED,
 
                         # inform user settings
-                        print_regression=False,
-                        print_classification=False,
+                        print_regression=True,
+                        print_classification=True,
                         
                         # save settings
-                        settings_performance_tracking=REPLACE,
+                        settings_performance_tracking=NO_SAVING,
                         save_performance=True
                     ),
 
                     # child
-                    y_column="reference_answer",
+                    y_column="assigned_points",
 
                     y_normalized=True,
 
                 )
 
                 dataset_grading.validation()
-
-    # run predictions
-        # keep track of logs
-        # if there is an error: save logs
-
-    print(logs["logs_df"])

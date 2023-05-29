@@ -1,0 +1,101 @@
+row_id,question,question_id,student_answer,reference_answer,assigned_points,max_points,domain,dataset_name,normalized_points
+3901,Explain why circuit 5 is a short circuit.,98,the bulb is not connected to the battery.,the battery is contained in a closed path in which there is no bulb,0,1,,beetle,0.0
+6220,Explain your reasoning.,126,i dont knpw,Bulbs A and C are still in closed paths with the battery,0,1,,beetle,0.0
+3771,Explain why circuit 5 is a short circuit.,97,the battery is contained in a closed path without any devices,the battery is contained in a path in which there is no bulb,1,1,,beetle,1.0
+4918,Explain why you got a voltage reading of 1.5 for terminal 3 and the positive terminal.,110,Terminal 3 is not connected to the positive battery terminal.,Terminal 3 and the positive terminal are not connected,1,1,,beetle,1.0
+6348,Explain your reasoning.,127,it will cut off the circuit,bulb B creates a gap,0,1,,beetle,0.0
+1393,Explain why you got a voltage reading of 1.5 for terminal 2 and the positive terminal.,69,the positive battery is seperated by a gap from terminal 2.,Terminal 2 and the positive terminal are not connected,1,1,,beetle,1.0
+1454,How does a damaged bulb compare to an open switch?,70,the have the same effect on the circuit,A damaged bulb and an open switch both create a gap and cause bulbs to go out,1,1,,beetle,1.0
+4823,Explain why you got a voltage reading of 1.5 for terminal 1 and the positive terminal.,108,because terminal 1 and the neavtive terminal are seperated.,Terminal 1 and the positive terminal are not connected,0,1,,beetle,0.0
+534,Explain your reasoning.,57,Bulbs B and C will still be contained in a closed path with the battery,bulbs B and C are still in closed paths with the battery,1,1,,beetle,1.0
+3749,What does a voltage reading of 1.5 tell you about the connection between a bulb terminal and a battery terminal?,96,the terminals form a closed path,the terminals are not connected,0,1,,beetle,0.0
+4516,Explain why circuit 2 is not a short circuit.,106,Because the battery is out of the closed path completely.,The battery in 2 is not in a closed path,1,1,,beetle,1.0
+6272,Explain your reasoning.,126,There are other closed path without bulb B,Bulbs A and C are still in closed paths with the battery,0,1,,beetle,0.0
+2851,"When switch X was closed and switch Y was open, why was bulb A on?",85,Bubl A was contained in a closed path with the battery.,Bulb A was still contained in the same closed path with the battery.,1,1,,beetle,1.0
+3089,Explain why you got a voltage reading of 1.5 for terminal 1 and the positive terminal.,88,no damaged bulb,Terminal 1 and the positive terminal are not connected,0,1,,beetle,0.0
+3309,Under what circumstances will a switch affect a bulb?,90,If the bulb is on the same pathway as the switch,When the switch and the bulb are contained in the same path,1,1,,beetle,1.0
+5894,Explain your reasoning.,122,because bulb c is not in the same path as bulb a or b,bulbs A and B are still in closed paths with the battery,1,1,,beetle,1.0
+2167,Explain why you got a voltage reading of 1.5 for terminal 1 and terminal 6.,79,terminal 1 is connected to terminal 6,There is a gap between terminals 1 and 6,0,1,,beetle,0.0
+3016,Explain why you got a voltage reading of 1.5 for terminal 1 and the positive terminal.,87,there is no gap between terminal 1 and the psoitive terminal,Terminal 1 and the positive terminal are separated by the gap,0,1,,beetle,0.0
+472,Why not?,50,IF Switch Z is closed then it makes a closed path with the battery,Bulb A is still in a closed path with the battery,1,1,,beetle,1.0
+3096,Explain why you got a voltage reading of 1.5 for terminal 1 and the positive terminal.,88,the positive battery terminal and terminal 1 are not connected,Terminal 1 and the positive terminal are not connected,1,1,,beetle,1.0
+625,Explain why you got a voltage reading of 1.5 for terminal 4 and the positive terminal.,61,same answer as i put for the other two,Terminal 4 and the positive terminal are not connected,0,1,,beetle,0.0
+3893,Explain why circuit 5 is a short circuit.,98,the batter is on a closed path without any other component on that same path,the battery is contained in a closed path in which there is no bulb,1,1,,beetle,1.0
+5764,Why not?,121,complete circuit,Bulb A is still in a closed path with the battery,0,1,,beetle,0.0
+1748,Explain why you got a voltage reading of 0 for terminal 6 and the positive terminal.,73,because there was two positive connections,Terminal 6 and the positive terminal are connected,0,1,,beetle,0.0
+3856,Explain why circuit 5 is a short circuit.,98,the battery has a closed path and no bulbs,the battery is contained in a closed path in which there is no bulb,1,1,,beetle,1.0
+2666,Why was bulb A on when switch Y was open and switch Z was closed?,83,Because it was still in a closed circuit,Bulb A is still contained in a closed path with the battery and switch Z.,0,1,,beetle,0.0
+5882,Explain your reasoning.,122,they are on their own closed circuits with the battery,bulbs A and B are still in closed paths with the battery,0,1,,beetle,0.0
+1922,Why was bulb C off when switch Z was open?,76,There was a gap,Bulb C was no longer in a closed path with the battery,1,1,,beetle,1.0
+5516,Explain your reasoning.,118,both bulbs are on the same path with the battery,B and C are in the same path with the battery,1,1,,beetle,1.0
+6383,Explain your reasoning.,128,bulb a creates a gap,bulbs B and C are still in closed paths with the battery,0,1,,beetle,0.0
+5690,Why not?,120,"bulb A is on a closed path with switches X and Z, so as long as those are closed the bulb can light up","there is still a closed path containing Switch Z, Switch X, Bulbs A and C and the battery",1,1,,beetle,1.0
+5777,Why not?,121,Bulb A and C are contained in a closed path with the  battery,Bulb A is still in a closed path with the battery,1,1,,beetle,1.0
+4546,Explain why circuit 2 is not a short circuit.,106,postive terminal of battery is not connected,The battery in 2 is not in a closed path,0,1,,beetle,0.0
+1193,Why did it happen?,67,bulbs b and  c were not contained in a closed path,damaged bulb A creates a gap,0,1,,beetle,0.0
+1858,Why do you think those terminals and the negative battery terminal are in the same state?,74,On the same side,"Terminals 1, 2 and 3 are connected to the negative battery terminal",0,1,,beetle,0.0
+2778,"When switch X was closed and switch Y was open, why was bulb A on?",85,becuase bulb a is on a closed circuit with the battery,Bulb A was still contained in the same closed path with the battery.,0,1,,beetle,0.0
+1022,Explain your reasoning.,65,because it is a closed path,In both circuits there is a closed path containing both the a and a battery,0,1,,beetle,0.0
+4198,What are the conditions that are required to make a bulb light up?,101,The bulb has to be connected to the positive and negative charge of the battery.,there is a closed path containing both the bulb and a battery,0,1,,beetle,0.0
+1221,Why did it happen?,67,there was a gap in the circut,damaged bulb A creates a gap,1,1,,beetle,1.0
+2937,"When switch X was closed and switch Y was open, why was bulb A on?",86,it was in a closed path with the battery,Bulb A is still contained in a closed path with the battery and switch X.,1,1,,beetle,1.0
+2298,"Why does measuring voltage help you locate a burned out bulb? Try to answer in terms of electrical states, connections and/ or a gap.",80,it helps because you find the gap where the terminals are disconnected,Measuring voltage indicates the place where the electrical state changes due to a damaged bulb.,0,1,,beetle,0.0
+1897,Explain why you got a voltage reading of 0 for terminal 1 and terminal 4.,75,because they are both connected,Terminals 1 and 4 are connected,1,1,,beetle,1.0
+1321,Explain why you got a voltage reading of 1.5 for terminal 2 and the positive terminal.,68,The positive battery terminal is separted by a gap from terminal 2,Terminal 2 and the positive terminal are separated by the gap,1,1,,beetle,1.0
+3789,Explain why circuit 5 is a short circuit.,97,The bulb is not contained in a closed path with the battery.,the battery is contained in a path in which there is no bulb,1,1,,beetle,1.0
+4504,Why do both bulbs A and B stay on when bulb C is burned out?,105,"Because bulb C is on it""s own pathway seperate from A and B with the battery",If C burns out then A and B are still in a closed path with the battery,1,1,,beetle,1.0
+5179,Explain why you got a voltage reading of 0 for terminal 5 and the positive terminal.,114,there is no gap between the positive battery terminal and terminal 4,Terminal 5 and the positive terminal are connected,0,1,,beetle,0.0
+2031,Why was bulb C off when switch Z was open?,77,Because bulb C is not contained in a closed pathway.,There was no longer a closed path containing Bulb C and the battery,1,1,,beetle,1.0
+1550,What role does the path play in determining whether or not a switch affects a bulb?,71,bulbs will be affected by switches that are in the path,If a bulb and a switch are in the same path the switch affects the bulb,0,1,,beetle,0.0
+6237,Explain your reasoning.,126,there is still a closed path,Bulbs A and C are still in closed paths with the battery,0,1,,beetle,0.0
+4692,Explain why you got a voltage reading of 1.5 for terminal 1 and the positive terminal.,107,All components are in a closed circuit.,Terminal 1 and the positive terminal are separated by the gap,0,1,,beetle,0.0
+2673,Why was bulb A on when switch Y was open and switch Z was closed?,83,because it was in a closed path,Bulb A is still contained in a closed path with the battery and switch Z.,0,1,,beetle,0.0
+6169,Describe the paths in this diagram and explain how those paths account for the results.,125,Bulb A will not affect bulbs B and C because B and C are still contained within the same path with the battery,"Bulb A is in a path which does not contain B and C, so bulbs B and C don't affect it. Bulbs B and C are in the same path. They affect each other, but Bulb A doesn't affect them.",0,1,,beetle,0.0
+3931,Explain why circuit 5 is a short circuit.,98,the battery alone is in a closed path,the battery is contained in a closed path in which there is no bulb,1,1,,beetle,1.0
+1599,What role does the path play in determining whether or not a switch affects a bulb?,71,If the switch is in front of the path of a light bulb or not.,If a bulb and a switch are in the same path the switch affects the bulb,0,1,,beetle,0.0
+5070,What is voltage?,112,difference in electrical states of terminals,Voltage is the difference in electrical states between two terminals,0,1,,beetle,0.0
+2833,"When switch X was closed and switch Y was open, why was bulb A on?",85,Bulb A and switch x are contained in the same path and the switch affects bulb A.,Bulb A was still contained in the same closed path with the battery.,0,1,,beetle,0.0
+4877,Explain why you got a voltage reading of 1.5 for terminal 3 and the positive terminal.,109,Terminal 3 is not connected to the positive battery terminal.,Terminal 3 and the positive terminal are separated by the gap,1,1,,beetle,1.0
+4103,What are the conditions that are required to make a bulb light up?,101,the battery should connect to the bulb at different terminals,there is a closed path containing both the bulb and a battery,0,1,,beetle,0.0
+3313,Under what circumstances will a switch affect a bulb?,90,if switch x is open,When the switch and the bulb are contained in the same path,0,1,,beetle,0.0
+2584,Why was bulb A on when switch Y was open and switch Z was closed?,83,it has a closed path with the battery,Bulb A is still contained in a closed path with the battery and switch Z.,1,1,,beetle,1.0
+3127,Explain why you got a voltage reading of 1.5 for terminal 1 and the positive terminal.,88,the gap separates the positive battery terminal from terminal 1,Terminal 1 and the positive terminal are not connected,1,1,,beetle,1.0
+1803,Why do you think those terminals and the negative battery terminal are in the same state?,74,Because they all measure 0.00 V,"Terminals 1, 2 and 3 are connected to the negative battery terminal",0,1,,beetle,0.0
+4375,Under what circumstances will a damaged/ burned out bulb affect another bulb?,104,if the damaged bulb is on the ame path as the undamaged bulb,If they are in the same path the burned out bulb affects the other bulb.,1,1,,beetle,1.0
+4060,Why does a damaged bulb impact a circuit?,100,The path will not be closed.,a damaged bulb creates a gap,1,1,,beetle,1.0
+2753,Explain your reasoning.,84,not contained inthe same path,"If C burns out, then A and B are still in a closed path with the battery.",0,1,,beetle,0.0
+61,Why do you think those terminals and the negative battery terminal are in the same state?,3,because the path in the circuit to the positive battery terminal is disrupted by bulb B,"Terminals 1, 2 and 3 are connected to the negative battery terminal",0,1,,beetle,0.0
+1419,How does a damaged bulb compare to an open switch?,70,It is the same.,A damaged bulb and an open switch both create a gap and cause bulbs to go out,1,1,,beetle,1.0
+5218,Explain why you got a voltage reading of 0 for terminal 4 and the positive terminal.,115,The positive battery terminal is not seperated by a gap from terminal 4.,Terminal 4 and the positive terminal are connected,1,1,,beetle,1.0
+5860,Explain your reasoning.,122,Bulb C is in an indepedent path,bulbs A and B are still in closed paths with the battery,1,1,,beetle,1.0
+3090,Explain why you got a voltage reading of 1.5 for terminal 1 and the positive terminal.,88,I get a 1.5 V reading because the negative terminal of battery is connected to terminal of bulb and then bulb is then connected to postive terminal of battery,Terminal 1 and the positive terminal are not connected,0,1,,beetle,0.0
+31,What does a voltage reading of 0 tell you about the connection between a bulb terminal and a battery terminal?,1,That the bulb is connected to the positive end of the terminal,the terminals are connected,0,1,,beetle,0.0
+2338,"Why does measuring voltage help you locate a burned out bulb? Try to answer in terms of electrical states, connections and/ or a gap.",80,Measuring voltage shows what terminals are connected and where there is a gap so you can determins which bulb is out.,Measuring voltage indicates the place where the electrical state changes due to a damaged bulb.,1,1,,beetle,1.0
+2622,Why was bulb A on when switch Y was open and switch Z was closed?,83,switch y is not in the same closed path as bulb a and switch z,Bulb A is still contained in a closed path with the battery and switch Z.,1,1,,beetle,1.0
+1536,What role does the path play in determining whether or not a switch affects a bulb?,71,The path must be closed and contain the battery,If a bulb and a switch are in the same path the switch affects the bulb,0,1,,beetle,0.0
+6598,Explain your reasoning.,130,becuase there is only one path,A and C are in the same closed path,1,1,,beetle,1.0
+3411,Why does an open switch impact a circuit?,91,"because it opens the circuit, therefore the circuit is not closed",the open switch creates a gap,0,1,,beetle,0.0
+561,Explain why you got a voltage reading of 1.5 for terminal 4 and the positive terminal.,60,terminal 4 is not connected to the positive terminal,Terminal 4 and the positive terminal are separated by the gap,1,1,,beetle,1.0
+2927,"When switch X was closed and switch Y was open, why was bulb A on?",86,It was still contained in a closed path with the battery.,Bulb A is still contained in a closed path with the battery and switch X.,1,1,,beetle,1.0
+681,Explain your reasoning.,62,bulbs a and c are not in closed path with bulb b,"If B burns out, then there is still a closed path with the battery that contains A and C.",0,1,,beetle,0.0
+17,What does a voltage reading of 0 tell you about the connection between a bulb terminal and a battery terminal?,1,there is a gap,the terminals are connected,0,1,,beetle,0.0
+5709,Why not?,120,"If Z is closed, A is still part of a complete circut.","there is still a closed path containing Switch Z, Switch X, Bulbs A and C and the battery",1,1,,beetle,1.0
+233,Explain why you got a voltage reading of 1.5 for terminal 2 and the positive terminal.,22,positive battery terminal is separated by a gap from terminal 2,Terminal 2 and the positive terminal are separated by the gap,1,1,,beetle,1.0
+5328,Why?,116,because there is no gap between the positive and negative terminal,A battery uses a chemical reaction to maintain different electrical states at the terminals,0,1,,beetle,0.0
+4882,Explain why you got a voltage reading of 1.5 for terminal 3 and the positive terminal.,109,the positive terminal is seperated by a gap from terminal 3,Terminal 3 and the positive terminal are separated by the gap,1,1,,beetle,1.0
+5501,Explain your reasoning.,118,different paths with the battery,B and C are in the same path with the battery,0,1,,beetle,0.0
+96,Explain why you got a voltage reading of 1.5 for terminal 1 and terminal 6.,8,Terminal 1 is not connected to terminal 1,There is a gap between terminals 1 and 6,0,1,,beetle,0.0
+1964,Why was bulb C off when switch Z was open?,76,because bulb C is not connected to switch z,Bulb C was no longer in a closed path with the battery,0,1,,beetle,0.0
+5912,Explain your reasoning.,122,bulb c is not contained in the same paths as A and B,bulbs A and B are still in closed paths with the battery,1,1,,beetle,1.0
+1335,Explain why you got a voltage reading of 1.5 for terminal 2 and the positive terminal.,68,Terminal 2 was connected to the negative terminal,Terminal 2 and the positive terminal are separated by the gap,1,1,,beetle,1.0
+5223,Explain why you got a voltage reading of 0 for terminal 4 and the positive terminal.,115,the negative battery terminal is connected to terminal 4,Terminal 4 and the positive terminal are connected,0,1,,beetle,0.0
+230,"When switch X was open and switch Y was closed, why were bulbs B and C on?",21,Bulbs B and C were still in a closed path with the battery,Bulb B and Bulb C were still contained in the same closed path with the battery.,1,1,,beetle,1.0
+3424,Why does an open switch impact a circuit?,91,An open switch stops the energy flow,the open switch creates a gap,0,1,,beetle,0.0
+6247,Explain your reasoning.,126,i said bulbs a and c are linked to the battery!,Bulbs A and C are still in closed paths with the battery,0,1,,beetle,0.0
+5370,Why?,116,"because a battery always has a chemical reaction, positive or negative",A battery uses a chemical reaction to maintain different electrical states at the terminals,0,1,,beetle,0.0
+3213,Explain why you got a voltage reading of 0 for terminal 1 and terminal 2.,89,because they are connected,Terminals 1 and 2 are connected,1,1,,beetle,1.0
+5482,Explain your reasoning.,117,they are in different closed paths and do no effect each other,A and C are in different paths with the battery,1,1,,beetle,1.0
+1488,How does a damaged bulb compare to an open switch?,70,it creates the same effect,A damaged bulb and an open switch both create a gap and cause bulbs to go out,1,1,,beetle,1.0
+1511,What role does the path play in determining whether or not a switch affects a bulb?,71,A switch affects a bulb when it is in a closed path with a battery.,If a bulb and a switch are in the same path the switch affects the bulb,0,1,,beetle,0.0
+2004,Why was bulb C off when switch Z was open?,77,Bulb B is in the path of the opened switch,There was no longer a closed path containing Bulb C and the battery,0,1,,beetle,0.0
+957,"Finally, consider finding a burned out light bulb in a long string of lights. One approach would be to place one lead of the multimeter on a battery terminal and then move the other lead systematically, one light bulb terminal at a time. How would you know when you have found the burned out bulb?",64,idk,When there is a change in voltage you have found the damaged bulb,0,1,,beetle,0.0

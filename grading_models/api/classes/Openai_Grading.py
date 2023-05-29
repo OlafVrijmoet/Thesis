@@ -28,6 +28,8 @@ class Openai_Grading(Grading_Model):
     # child
     y_column,
 
+    y_normalized
+
   ):
     """
     Initialize the Regression_Grading class.
@@ -40,7 +42,7 @@ class Openai_Grading(Grading_Model):
     - trained: bool
         ensures that the model is not trained multiple times
     """
-    super().__init__(model, dataset, measurement_settings, y_column)
+    super().__init__(model, dataset, measurement_settings, y_column, y_normalized)
 
     # saving predictions
     self.y_pred = []
@@ -64,6 +66,11 @@ class Openai_Grading(Grading_Model):
     
     print(f"Running api calls for following dataset: {self.dataset['name']}")
 
+    print("dataset_split", dataset_split)
+    print("start_index", start_index)
+
+    print(self.dataset[dataset_split])
+    
     # Loop through the sampled dataframe from the start_index
     for index, row in tqdm(self.dataset[dataset_split].iloc[start_index:].iterrows(), total=self.dataset[dataset_split].iloc[start_index:].shape[0]):
         

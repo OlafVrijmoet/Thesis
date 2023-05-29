@@ -14,7 +14,10 @@ class Regression_Grading(Grading_Model):
         model, dataset, measurement_settings,
 
         # child
-        x_column, y_column
+        x_column, y_column,
+
+        y_normalized
+        
     ):
         """
         Initialize the Regression_Grading class.
@@ -27,7 +30,7 @@ class Regression_Grading(Grading_Model):
         - trained: bool
             ensures that the model is not trained multiple times
         """
-        super().__init__(model, dataset, measurement_settings, y_column)
+        super().__init__(model, dataset, measurement_settings, y_column, y_normalized)
 
         self.x_column=x_column
         
