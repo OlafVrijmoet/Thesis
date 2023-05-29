@@ -14,7 +14,7 @@ from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION
 
 class Grading_Model:
 
-    def __init__(self, model, dataset, measurement_settings, y_column, y_normalized):
+    def __init__(self, model, dataset, measurement_settings, y_column, y_normalized, shots=0):
         """
         Initialize the Grading_Model class.
 
@@ -33,7 +33,7 @@ class Grading_Model:
 
         self.y_normalized = y_normalized
 
-        self.shots = 0
+        self.shots = shots
         self.epochs = 0
 
         self.performance_tracking = {
@@ -143,6 +143,9 @@ class Grading_Model:
         if self.measurement_settings.print_regression == True or self.measurement_settings.print_classification == True or self.measurement_settings.save_performance == True:
 
             y_pred = self.make_predictions(dataset_split)
+
+            self.performance_tracking[dataset_split]["shots"] = self.shots
+            self.performance_tracking[dataset_split]["epochs"] = self.epochs
 
         if self.measurement_settings.print_regression == True or self.measurement_settings.save_performance == True:
 

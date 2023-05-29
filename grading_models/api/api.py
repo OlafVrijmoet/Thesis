@@ -7,7 +7,6 @@ from performance_tracking.classes.Dataset_api import Dataset_api
 
 # classes local
 from grading_models.api.classes.Openai_Grading import Openai_Grading
-from grading_models.api.progress_tracking.classes.Logs import Logs
 
 # services
 from services.get_df import get_df
@@ -25,22 +24,12 @@ def api():
             # iterate over all files in the folder
             for file_name in os.listdir("data/splits/data"):
 
-                # get logs
-                logs = Logs()
-
                 # get file name without file type for get_df
                 file_name, _ = os.path.splitext(file_name)
 
-                # dataset = Dataset_api(
-                #     dir="data/splits/data",
-                #     file_name=file_name,
-                #     seed=SEED,
-                #     shots=SHOT # DO NOT CHANGE UNTILL FINISHED WITH RUN THROUGH ALL DATASETS!
-                # )
-                
                 dataset = Dataset_api(
-                    dir="testing/data",
-                    file_name="sample",
+                    dir="data/splits/data",
+                    file_name=file_name,
                     seed=SEED,
                     shots=SHOT # DO NOT CHANGE UNTILL FINISHED WITH RUN THROUGH ALL DATASETS!
                 )
@@ -66,14 +55,16 @@ def api():
                         print_classification=True,
                         
                         # save settings
-                        settings_performance_tracking=NO_SAVING,
+                        settings_performance_tracking=REPLACE,
                         save_performance=True
                     ),
 
                     # child
                     y_column="assigned_points",
 
-                    y_normalized=True,
+                    y_normalized=False,
+
+                    shots=SHOT
 
                 )
 

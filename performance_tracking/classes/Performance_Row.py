@@ -282,6 +282,15 @@ class Performance_Row:
             past_predictions = pd.DataFrame({f"{self.row_id}": self.y_pred})
 
         else:
+
+            # Check if lengths are the same
+            if past_predictions.shape[0] != len(self.y_pred):
+                # Calculate how many elements need to be added
+                missing_elements = past_predictions.shape[0] - len(self.y_pred)
+                
+                # Extend self.y_pred with the appropriate number of 1000s
+                self.y_pred.extend([1000] * missing_elements)
+
             # replace values of row_id with latest predictions
             past_predictions[f"{self.row_id}"] = self.y_pred
 
