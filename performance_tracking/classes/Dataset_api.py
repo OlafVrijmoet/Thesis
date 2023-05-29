@@ -72,8 +72,6 @@ class Dataset_api(Dataset):
         # Call parent class's split_datasets method
         super().split_datasets()
 
-        print(len(self.validation))
-
         # Concatenate train and test
         combined_df = pd.concat([self.train, self.test])
 
@@ -81,14 +79,10 @@ class Dataset_api(Dataset):
         train_grouped_with_shots = self.train.groupby('question_id').apply(self.generate_rows).reset_index()
         combined_grouped_with_shots = combined_df.groupby('question_id').apply(self.generate_rows).reset_index()
 
-        # print(combined_grouped_with_shots)
-
         # Merge new rows with the original datasets
         self.train = pd.merge(self.train, train_grouped_with_shots, on='question_id', how='left')
         self.test = pd.merge(self.test, combined_grouped_with_shots, on='question_id', how='left')
         self.validation = pd.merge(self.validation, combined_grouped_with_shots, on='question_id', how='left')
-
-        print(len(self.validation))
 
         # Drop rows with NaN values in 'student_answer_1' column if it exists in the dataframe. 0 shots will not have any examples to drop
         if 'student_answer_1' in self.train.columns:
@@ -97,5 +91,3 @@ class Dataset_api(Dataset):
             self.test.dropna(subset=['student_answer_1'], inplace=True)
         if 'student_answer_1' in self.validation.columns:
             self.validation.dropna(subset=['student_answer_1'], inplace=True)
-
-        return combined_grouped_with_shots

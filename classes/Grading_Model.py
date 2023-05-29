@@ -10,7 +10,7 @@ from sklearn.metrics import confusion_matrix, precision_recall_fscore_support, a
 from performance_tracking.classes.Performance_Row import Performance_Row
 
 # constants
-from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION
+from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION, FALSE_PREDICTION
 
 class Grading_Model:
 
@@ -143,6 +143,9 @@ class Grading_Model:
         if self.measurement_settings.print_regression == True or self.measurement_settings.print_classification == True or self.measurement_settings.save_performance == True:
 
             y_pred = self.make_predictions(dataset_split)
+
+            # update FALSE_PREDICTION to value 0
+            y_pred = np.where(y_pred == FALSE_PREDICTION, 0, y_pred)
 
             self.performance_tracking[dataset_split]["shots"] = self.shots
             self.performance_tracking[dataset_split]["epochs"] = self.epochs

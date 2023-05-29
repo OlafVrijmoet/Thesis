@@ -14,3 +14,7 @@ ALL = "all"
 TRAIN = "train"
 TEST = "test"
 VALIDATION = "validation"
+
+# y_pred substituates
+FALSE_PREDICTION = 500
+FILL_PREDICTIONS = 1000

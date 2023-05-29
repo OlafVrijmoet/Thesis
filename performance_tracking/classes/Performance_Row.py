@@ -289,7 +289,7 @@ class Performance_Row:
                 missing_elements = past_predictions.shape[0] - len(self.y_pred)
                 
                 # Extend self.y_pred with the appropriate number of 1000s
-                self.y_pred.extend([1000] * missing_elements)
+                self.y_pred.extend([FILL_PREDICTIONS] * missing_elements)
 
             # replace values of row_id with latest predictions
             past_predictions[f"{self.row_id}"] = self.y_pred

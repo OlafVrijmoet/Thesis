@@ -17,7 +17,7 @@ from classes.Grading_Model import Grading_Model
 from performance_tracking.classes.Performance_Row import Performance_Row
 
 # constants
-from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION
+from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION, FALSE_PREDICTION
 
 class Openai_Grading(Grading_Model):
 
@@ -150,7 +150,7 @@ class Openai_Grading(Grading_Model):
     if numbers:                
         predicted_points = int(round(float(numbers[0])))
     else:
-        print("Not valid input!")
-        predicted_points = 0
+        print(f"Not valid input!: {content}")
+        predicted_points = FALSE_PREDICTION
 
     return predicted_points
