@@ -84,50 +84,106 @@ def regression():
 
             for regression_grading_model in regression_grading_models:
 
+                print(f"\nregression: {data['dataset_name']}\n")
+
                 word_embed_model = data["word_embed_model"]
                 abriviation_method = data["abriviation_method"]
                 feature_engenearing_method = data["feature_engenearing_method"]
                 dataset_name = data["dataset_name"]
 
-                dataset = Dataset(
-                    dir=f"data/feature_engenearing/data/{word_embed_model}/data/{abriviation_method}/{feature_engenearing_method}/data/",
-                    file_name=data["dataset_name"],
-                    seed=seed,
-                )
+                
+                if dataset_name is not "concatenated_domains":
+                    dataset = Dataset(
+                        dir=f"data/feature_engenearing/data/{word_embed_model}/data/{abriviation_method}/{feature_engenearing_method}/data/",
+                        file_name=data["dataset_name"],
+                        seed=seed,
+                    )
 
-                dataset.split_datasets()
+                    dataset.split_datasets()
 
-                model = Regression_Grading(
-                    
-                    # id what is being tracked
-                    model=regression_grading_model["model"],
-                    dataset=dataset,
-                    measurement_settings=Measurement_Settings(
-                        dataset_name=dataset_name,
-                        embedding_seperated=True,
-                        embedding_model_name=word_embed_model,
-                        sentence_embedding_method=abriviation_method,
-                        feature_engenearing_method=feature_engenearing_method,
-                        grading_model=regression_grading_model["model_name"],
+                    model = Regression_Grading(
                         
-                        seed_data_split=seed,
+                        # id what is being tracked
+                        model=regression_grading_model["model"],
+                        dataset=dataset,
+                        measurement_settings=Measurement_Settings(
+                            dataset_name=dataset_name,
+                            embedding_seperated=True,
+                            embedding_model_name=word_embed_model,
+                            sentence_embedding_method=abriviation_method,
+                            feature_engenearing_method=feature_engenearing_method,
+                            grading_model=regression_grading_model["model_name"],
+                            
+                            seed_data_split=seed,
 
-                        # inform user settings
-                        print_regression=False,
-                        print_classification=False,
+                            # inform user settings
+                            print_regression=False,
+                            print_classification=False,
+                            
+                            # save settings
+                            settings_performance_tracking=REPLACE,
+                            save_performance=True
+                        ),
+
+                        x_column="cosine_similarity",
+                        y_column="normalized_points",
+
+                        y_normalized=True,
                         
-                        # save settings
-                        settings_performance_tracking=REPLACE,
-                        save_performance=True
-                    ),
+                    )
 
-                    x_column="cosine_similarity",
-                    y_column="normalized_points",
+                    model.train()
+                    model.test()
+                    model.validation()
 
-                    y_normalized=True,
+                if dataset_name == "concatenated_domains" or dataset_name == "concatenated_datasets":
                     
-                )
+                    datasets = DATASETS
+                    if dataset_name == "concatenated_domains":
+                        datasets = DOMAINS
 
-                model.train()
-                model.test()
-                model.validation()
+                    for dataset_name_to_split in datasets:
+                        dataset = Dataset(
+                            dir=f"data/feature_engenearing/data/{word_embed_model}/data/{abriviation_method}/{feature_engenearing_method}/data/",
+                            file_name=data["dataset_name"],
+                            seed=seed,
+                            left_out_dataset=dataset_name_to_split
+                        )
+
+                        dataset.split_datasets()
+
+                        model = Regression_Grading(
+                            
+                            # id what is being tracked
+                            model=regression_grading_model["model"],
+                            dataset=dataset,
+                            measurement_settings=Measurement_Settings(
+                                dataset_name=dataset_name,
+                                embedding_seperated=True,
+                                embedding_model_name=word_embed_model,
+                                sentence_embedding_method=abriviation_method,
+                                feature_engenearing_method=feature_engenearing_method,
+                                grading_model=regression_grading_model["model_name"],
+                                left_out_dataset=dataset_name_to_split,
+                                
+                                seed_data_split=seed,
+
+                                # inform user settings
+                                print_regression=False,
+                                print_classification=False,
+                                
+                                # save settings
+                                settings_performance_tracking=REPLACE,
+                                save_performance=True
+                            ),
+
+                            x_column="cosine_similarity",
+                            y_column="normalized_points",
+
+                            y_normalized=True,
+                            
+                        )
+
+                        model.train()
+                        model.test()
+                        model.validation()

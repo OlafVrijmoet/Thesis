@@ -12,16 +12,45 @@ class Dataset_api(Dataset):
                  dir,
                  file_name,
                  seed,
-                 shots  # New parameter specifying number of examples per question
+                 shots,  # New parameter specifying number of examples per question
+                 left_out_dataset=None
                  ) -> None:
 
         # Call the parent class's constructor
-        super().__init__(dir, file_name, seed)
-
-        self.name = file_name
+        super().__init__(dir, file_name, seed, left_out_dataset)
 
         # Store the number of examples per question
         self.shots = shots
+
+    def fill_nan_values(self, df):
+
+        print("fill_nan_values")
+
+        df = df.reset_index(drop=True)
+
+        # get nan indices
+        nan_indices = df[df['student_answer_1'].isna()].index
+        
+        # get df to sample from
+        combined_df = pd.concat([self.train, self.test]).reset_index(drop=True)
+
+        sample_indices = combined_df.sample(self.shots).index
+
+        # loop through rows without examples
+        for i, nan_index in enumerate(nan_indices):
+            
+            # add extra samples to row
+            for i_extra, sample_index in enumerate(sample_indices):
+                
+                # Get row data from combined_df
+                row = combined_df.loc[sample_index]
+
+                # Update student's answer, reference answer, and assigned points in df                
+                df.at[nan_index, f'student_answer_{i_extra+1}'] = row['student_answer']
+                df.at[nan_index, f'reference_answer_{i_extra+1}'] = row['reference_answer']
+                df.at[nan_index, f'assigned_points_{i_extra+1}'] = row['assigned_points']
+        
+        return df
 
     def generate_rows(self, group):
         shots = self.shots
@@ -53,14 +82,17 @@ class Dataset_api(Dataset):
             missing_samples_count = self.shots - len(group)
 
             sample_indices = combined_df.sample(missing_samples_count).index
-
+            
+            start_value = 0
+            if i == 0:
+                start_value = 1
             # add extra samples to row
             for i_extra, index in enumerate(sample_indices):
                 row = combined_df.loc[index]
                 # Store student's answer, reference answer, and assigned points in the result dictionary
-                result[f'student_answer_{i+i_extra}'] = row['student_answer']
-                result[f'reference_answer_{i+i_extra}'] = row['reference_answer']
-                result[f'assigned_points_{i+i_extra}'] = row['assigned_points']
+                result[f'student_answer_{i+i_extra+start_value}'] = row['student_answer']
+                result[f'reference_answer_{i+i_extra+start_value}'] = row['reference_answer']
+                result[f'assigned_points_{i+i_extra+start_value}'] = row['assigned_points']
 
         # Change result into a single-row DataFrame and return
         result_df = pd.DataFrame([result])
@@ -90,4 +122,4 @@ class Dataset_api(Dataset):
         if 'student_answer_1' in self.test.columns:
             self.test.dropna(subset=['student_answer_1'], inplace=True)
         if 'student_answer_1' in self.validation.columns:
-            self.validation.dropna(subset=['student_answer_1'], inplace=True)
+            self.validation = self.fill_nan_values(self.validation)

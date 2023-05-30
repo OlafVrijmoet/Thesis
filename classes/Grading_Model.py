@@ -47,6 +47,7 @@ class Grading_Model:
                 feature_engenearing_method = self.measurement_settings.feature_engenearing_method,
                 grading_model = self.measurement_settings.grading_model,
                 seed_data_split = self.measurement_settings.seed_data_split,
+                left_out_dataset = self.measurement_settings.left_out_dataset,
 
                 length_df = len(dataset[TRAIN]),
 
@@ -65,6 +66,7 @@ class Grading_Model:
                 feature_engenearing_method = self.measurement_settings.feature_engenearing_method,
                 grading_model = self.measurement_settings.grading_model,
                 seed_data_split = self.measurement_settings.seed_data_split,
+                left_out_dataset = self.measurement_settings.left_out_dataset,
 
                 length_df = len(dataset[TEST]),
 
@@ -83,6 +85,7 @@ class Grading_Model:
                 feature_engenearing_method = self.measurement_settings.feature_engenearing_method,
                 grading_model = self.measurement_settings.grading_model,
                 seed_data_split = self.measurement_settings.seed_data_split,
+                left_out_dataset = self.measurement_settings.left_out_dataset,
 
                 length_df = len(dataset[VALIDATION]),
 

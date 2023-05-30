@@ -18,3 +18,7 @@ VALIDATION = "validation"
 # y_pred substituates
 FALSE_PREDICTION = 500
 FILL_PREDICTIONS = 1000
+
+# splits
+DATASETS = ["ASAP_sas", "beetle", "neural_course", "sciEntsBank", "texas"]
+DOMAINS = ["biology", "english_language_arts", "english", "neural_networks", "science"]

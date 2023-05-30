@@ -31,6 +31,8 @@ class Performance_Row:
             # duplicates handling
             settings_performance_tracking, # allows experiments with the same embedding_model_name, classification_model_name, dataset_name to be added to performance df without asking
 
+            left_out_dataset=None,
+
             shots=0,
             epochs=0,
 
@@ -65,6 +67,7 @@ class Performance_Row:
         self.grading_model = grading_model
         self.dataset_split = dataset_split
         self.seed_data_split = seed_data_split
+        self.left_out_dataset = left_out_dataset
         self.shots = shots
         self.epochs = epochs
 
@@ -161,6 +164,7 @@ class Performance_Row:
             'grading_model': self.grading_model,
             'dataset_split': self.dataset_split,
             'seed_data_split': self.seed_data_split,
+            'left_out_dataset': self.left_out_dataset,
             'shots': self.shots,
             'epochs': self.epochs,
             
@@ -202,6 +206,7 @@ class Performance_Row:
                 (self.past_performance['embedding_seperated'] == self.embedding_seperated) & 
                 (self.past_performance['dataset_split'] == self.dataset_split) &
                 (self.past_performance['seed_data_split'] == self.seed_data_split) &
+                (self.past_performance['left_out_dataset'] == self.left_out_dataset) &
                 (self.past_performance['sentence_embedding_method'] == self.sentence_embedding_method) &
                 (self.past_performance['feature_engenearing'] == self.feature_engenearing) &
                 (self.past_performance['shots'] == self.shots) &
@@ -274,27 +279,53 @@ class Performance_Row:
     # save past_performance table
     def save_past_predictions(self):
 
-        found, df_name, past_predictions = get_df(dir=self.past_pred_dict, file_name="past_predictions")
+        if self.left_out_dataset == None:
 
-        if found == False:
-            
-            # create pd with row_id as column with y_ped
-            past_predictions = pd.DataFrame({f"{self.row_id}": self.y_pred})
+            found, df_name, past_predictions = get_df(dir=self.past_pred_dict, file_name="past_predictions")
+
+            if found == False:
+                
+                # create pd with row_id as column with y_ped
+                past_predictions = pd.DataFrame({f"{self.row_id}": self.y_pred})
+
+            else:
+
+                # Check if lengths are the same
+                if past_predictions.shape[0] != len(self.y_pred):
+                    # Calculate how many elements need to be added
+                    missing_elements = past_predictions.shape[0] - len(self.y_pred)
+                    
+                    # Extend self.y_pred with the appropriate number of 1000s
+                    self.y_pred = np.append(self.y_pred, [FILL_PREDICTIONS] * missing_elements)
+
+                # replace values of row_id with latest predictions
+                past_predictions[f"{self.row_id}"] = self.y_pred
+
+            save(dir=self.past_pred_dict, file_name="past_predictions", df=past_predictions)
 
         else:
 
-            # Check if lengths are the same
-            if past_predictions.shape[0] != len(self.y_pred):
-                # Calculate how many elements need to be added
-                missing_elements = past_predictions.shape[0] - len(self.y_pred)
+            found, df_name, past_predictions = get_df(dir=f"{self.past_pred_dict}/{self.left_out_dataset}", file_name="past_predictions")
+
+            if found == False:
                 
-                # Extend self.y_pred with the appropriate number of 1000s
-                self.y_pred.extend([FILL_PREDICTIONS] * missing_elements)
+                # create pd with row_id as column with y_ped
+                past_predictions = pd.DataFrame({f"{self.row_id}": self.y_pred})
 
-            # replace values of row_id with latest predictions
-            past_predictions[f"{self.row_id}"] = self.y_pred
+            else:
 
-        save(dir=self.past_pred_dict, file_name="past_predictions", df=past_predictions)
+                # Check if lengths are the same
+                if past_predictions.shape[0] != len(self.y_pred):
+                    # Calculate how many elements need to be added
+                    missing_elements = past_predictions.shape[0] - len(self.y_pred)
+                    
+                    # Extend self.y_pred with the appropriate number of 1000s
+                    self.y_pred = np.append(self.y_pred, [FILL_PREDICTIONS] * missing_elements)
+
+                # replace values of row_id with latest predictions
+                past_predictions[f"{self.row_id}"] = self.y_pred
+
+            save(dir=f"{self.past_pred_dict}/{self.left_out_dataset}", file_name="past_predictions", df=past_predictions)
 
     # only do when saving, than the performance df will only be loaded into memory to add the row
     def fetch_saved_performance(self):
@@ -342,7 +373,7 @@ class Performance_Row:
             # create new df with class column names
             column_names = [
                 # id'ing experiment
-                'row_id', 'embedding_seperated', 'embedding_model_name', 'sentence_embedding_method', 'feature_engenearing', 'grading_model', 'dataset_name', 'dataset_split', 'seed_data_split',
+                'row_id', 'embedding_seperated', 'embedding_model_name', 'sentence_embedding_method', 'feature_engenearing', 'grading_model', 'dataset_name', 'dataset_split', 'seed_data_split', 'left_out_dataset',
                 'shots','epochs',
 
                 "finished_pred",
@@ -375,6 +406,7 @@ class Performance_Row:
             (row['embedding_seperated'] == self.embedding_seperated) and \
             (row['dataset_split'] == self.dataset_split) and \
             (row['seed_data_split'] == self.seed_data_split) and \
+            (row['left_out_dataset'] == self.left_out_dataset) and \
             (row['sentence_embedding_method'] == self.sentence_embedding_method) and \
             (row['feature_engenearing'] == self.feature_engenearing) and \
             (row['shots'] == self.shots):
@@ -396,6 +428,7 @@ class Performance_Row:
             (self.past_performance['embedding_seperated'] == self.embedding_seperated) & 
             (self.past_performance['dataset_split'] == self.dataset_split) &
             (self.past_performance['seed_data_split'] == self.seed_data_split) &
+            (self.past_performance['left_out_dataset'] == self.left_out_dataset) &
             (self.past_performance['sentence_embedding_method'] == self.sentence_embedding_method) &
             (self.past_performance['feature_engenearing'] == self.feature_engenearing) &
             (self.past_performance['shots'] == self.shots) &

@@ -18,7 +18,9 @@ class Measurement_Settings:
         
         # save settings
         settings_performance_tracking: int,
-        save_performance: bool
+        save_performance: bool,
+
+        left_out_dataset = None,
     
     ) -> None:
         """
@@ -67,6 +69,8 @@ class Measurement_Settings:
         # save settings
         self.settings_performance_tracking = settings_performance_tracking
         self.save_performance = save_performance
+
+        self.left_out_dataset = left_out_dataset
 
     def __getitem__(self, key):
         return getattr(self, key)
