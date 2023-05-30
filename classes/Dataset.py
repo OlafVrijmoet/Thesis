@@ -202,7 +202,7 @@ class Dataset:
             for column_name, column_values in conlumn_to_add.items():
 
                 if self.save_new_colums_as_torch == True:
-
+                    print(f"{self.datasets[self.model_name]['save_location']}/{self.df_name}.pth")
                     torch.save(column_values, f"{self.datasets[self.model_name]['save_location']}/{self.df_name}.pth")
         
                 else:
