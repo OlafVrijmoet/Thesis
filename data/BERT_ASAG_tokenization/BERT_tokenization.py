@@ -84,7 +84,7 @@ def BERT_tokenization():
                 ),
                 dataset_name: Dataset_Settings(
                     df=None,
-                    df_name="gensim_embedding",
+                    df_name=dataset_name,
                     base_dir=base_dir,
 
                     may_run_now=True,
