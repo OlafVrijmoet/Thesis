@@ -150,7 +150,8 @@ class Openai_Grading(Grading_Model):
     if numbers:                
         predicted_points = int(round(float(numbers[0])))
     else:
-        print(f"Not valid input!: {content}")
+        print(f"\nNot valid input!: {content}\n")
+        print(f"Sent messages:\n: {messages}\n")
         predicted_points = FALSE_PREDICTION
 
     return predicted_points

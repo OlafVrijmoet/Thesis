@@ -57,7 +57,7 @@ def api():
                             print_classification=True,
                             
                             # save settings
-                            settings_performance_tracking=REPLACE,
+                            settings_performance_tracking=NO_PROMPT_NO_REPEAT,
                             save_performance=True
                         ),
 
@@ -110,7 +110,7 @@ def api():
                                 print_classification=True,
                                 
                                 # save settings
-                                settings_performance_tracking=REPLACE,
+                                settings_performance_tracking=NO_PROMPT_NO_REPEAT,
                                 save_performance=True
                             ),
 

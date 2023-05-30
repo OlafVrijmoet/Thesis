@@ -11,6 +11,7 @@ from performance_tracking.classes.Performance_Row import Performance_Row
 
 # constants
 from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION, FALSE_PREDICTION
+from performance_tracking.constants import NO_SAVING, NO_PROMPT_NO_REPEAT
 
 class Grading_Model:
 
@@ -136,6 +137,22 @@ class Grading_Model:
         - dataset_split: str
           The dataset split to measure performance on.
         """
+
+        # ***
+
+        # don't run if you don't want to save it (for example to prevent repeat) - quick fix
+        
+        # check if experiement is done before
+        experiement_done_before = self.performance_tracking[dataset_split].check_for_duplicates()
+        
+        # to be able to re-use settings in class and run user selected settings with one var
+        running_settings = self.performance_tracking[dataset_split].settings_performance_tracking
+        # user responds no saving or general settings no saving, than skip it!
+        if running_settings == NO_SAVING or (experiement_done_before == True and running_settings == NO_PROMPT_NO_REPEAT):
+            print("Experiement will not be saved, so will not be done!")
+            return None
+        
+        # ***
 
         # print model info settings ask to print performance
         if self.measurement_settings.print_regression == True or self.measurement_settings.print_classification == True:
