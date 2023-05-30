@@ -19,6 +19,8 @@ def main():
     # create datasets splits, example: based on domains
     run_phase(SPLIT_DATA)
 
+    run_phase(SPELLING_CORRECTED)
+
     run_phase(EMBED_WORDS)
 
     run_phase(EMBED_SENTENCES)

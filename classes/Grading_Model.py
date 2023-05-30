@@ -51,6 +51,7 @@ class Grading_Model:
                 left_out_dataset = self.measurement_settings.left_out_dataset,
 
                 length_df = len(dataset[TRAIN]),
+                y_true = dataset[TRAIN]["assigned_points"],
 
                 dataset_split=TRAIN,
 
@@ -70,6 +71,7 @@ class Grading_Model:
                 left_out_dataset = self.measurement_settings.left_out_dataset,
 
                 length_df = len(dataset[TEST]),
+                y_true = dataset[TEST]["assigned_points"],
 
                 dataset_split=TEST,
 
@@ -89,6 +91,7 @@ class Grading_Model:
                 left_out_dataset = self.measurement_settings.left_out_dataset,
 
                 length_df = len(dataset[VALIDATION]),
+                y_true = dataset[VALIDATION]["assigned_points"],
 
                 dataset_split=VALIDATION,
 
@@ -164,11 +167,9 @@ class Grading_Model:
 
             y_pred = self.make_predictions(dataset_split)
 
-            # update FALSE_PREDICTION to value 0
-            y_pred = np.where(y_pred == FALSE_PREDICTION, 0, y_pred)
-
-            self.performance_tracking[dataset_split]["shots"] = self.shots
-            self.performance_tracking[dataset_split]["epochs"] = self.epochs
+            # scale prediction from normalized value back to the original points
+            if self.y_normalized == True:
+                y_pred = y_pred * self.dataset[dataset_split]["max_points"]
 
         if self.measurement_settings.print_regression == True or self.measurement_settings.save_performance == True:
 
@@ -240,14 +241,8 @@ class Grading_Model:
         #!!!!!! sqrt means no mead for ** 2 of avg_max_points !!!!!!!!
         # FOR MSE: rmse = np.sqrt(mean_squared_error(y_true, y_pred)) * (avg_max_points ** 2)
 
-        # the error (distance between normalized pred and normalized actual value) is squared for rmse, so the avg_max_points also has to be squared to get the correct non-normalized rmse
-        if self.y_normalized == True:
-
-            rmse = np.sqrt(mean_squared_error(y_true, y_pred)) * avg_max_points
-
-        else:
-            
-            rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+        # y_pred already normalized
+        rmse = np.sqrt(mean_squared_error(y_true, y_pred))
 
         # save rmse for experiement
         self.performance_tracking[dataset_split]['rmse'] = rmse
@@ -270,14 +265,8 @@ class Grading_Model:
         # add predictions to the df as a column
         self.dataset[dataset_split]["y_pred"] = y_pred
 
-        # scale prediction from normalized value back to the original points
-        if self.y_normalized == True:
-            self.dataset[dataset_split]["pred_points"] = self.dataset[dataset_split]["y_pred"] * self.dataset[dataset_split]["max_points"]
-        else:
-            self.dataset[dataset_split]["pred_points"] = self.dataset[dataset_split]["y_pred"]
-
         # round to closest round number and convert from float to int
-        self.dataset[dataset_split]["pred_points"] = self.dataset[dataset_split]["pred_points"].round()
+        self.dataset[dataset_split]["pred_points"] = self.dataset[dataset_split]["y_pred"].round()
         self.dataset[dataset_split]["pred_points"] = self.dataset[dataset_split]["pred_points"].astype(int)
 
         # Calculate accuracy

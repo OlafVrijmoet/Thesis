@@ -17,8 +17,8 @@ class Dataset_Torch(Dataset):
         # get df
         found, df_name, dataset = get_df(dir=dir, file_name=file_name, know_type="csv")
         found_pth, df_name_pth, dataset_pth = get_df(dir=dir, file_name=file_name, know_type="pth")
-
-        if dataset == None or dataset_pth == None:
+        
+        if dataset is None or dataset_pth is None:
 
             return None
     

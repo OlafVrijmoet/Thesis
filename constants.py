@@ -4,6 +4,7 @@ from data.raw.all_to_csv import all_to_csv
 from data.standardized.standardize import standardize
 from data.processed.process_text import process_text
 from data.splits.split_data import split_data
+from data.spelling_corrected.spelling_corrected import spelling_corrected
 
 from data.embed_words.embed_words import embed_words
 from data.embed_sentences.embed_sentences import embed_sentences
@@ -48,6 +49,12 @@ SPLIT_DATA = Phase_Settings(
     run=False
 )
 
+SPELLING_CORRECTED = Phase_Settings(
+    name="spelling Corrected",
+    function=spelling_corrected,
+    run=False
+)
+
 EMBED_WORDS = Phase_Settings(
     name="Embed words", 
     function=embed_words,
@@ -63,7 +70,7 @@ EMBED_SENTENCES = Phase_Settings(
 BERT_TOKENIZATION_ASAG = Phase_Settings(
     name="BERT tokenization for ASAG", 
     function=BERT_tokenization,
-    run=True
+    run=False
 )
 
 FEATURE_ENGENERING = Phase_Settings(
@@ -75,7 +82,7 @@ FEATURE_ENGENERING = Phase_Settings(
 REGRESSION = Phase_Settings(
     name="regression", 
     function=regression,
-    run=False
+    run=True
 )
 
 API = Phase_Settings(

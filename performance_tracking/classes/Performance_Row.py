@@ -27,6 +27,7 @@ class Performance_Row:
             seed_data_split,
 
             length_df,
+            y_true,
 
             # duplicates handling
             settings_performance_tracking, # allows experiments with the same embedding_model_name, classification_model_name, dataset_name to be added to performance df without asking
@@ -74,6 +75,7 @@ class Performance_Row:
         self.finishing_previous_experiement = False
         self.finished_pred = False
         self.y_pred = np.full(length_df, np.nan)
+        self.y_true = y_true
         self.last_pred_index = 0
         self.length_df = length_df
         self.past_pred_dict = f"performance_tracking/data/{dataset_name}"
@@ -267,26 +269,29 @@ class Performance_Row:
 
     def get_past_predictions(self):
 
-        found, df_name, past_predictions = get_df(dir=self.past_pred_dict, file_name="past_predictions")
+        found, df_name, past_predictions = get_df(dir=self.past_pred_dict, file_name=self.row_id)
 
         if found == False:
 
             return False
         
         # update y_pred with the 
-        self.y_pred = past_predictions[f"{self.row_id}"].values
+        self.y_pred = past_predictions["y_pred"].values
     
     # save past_performance table
     def save_past_predictions(self):
 
         if self.left_out_dataset == None:
 
-            found, df_name, past_predictions = get_df(dir=self.past_pred_dict, file_name="past_predictions")
+            found, df_name, past_predictions = get_df(dir=self.past_pred_dict, file_name=self.row_id)
 
             if found == False:
                 
                 # create pd with row_id as column with y_ped
-                past_predictions = pd.DataFrame({f"{self.row_id}": self.y_pred})
+                past_predictions = pd.DataFrame({
+                    "y_pred": self.y_pred,
+                    "y_true": self.y_true
+                })
 
             else:
 
@@ -299,18 +304,21 @@ class Performance_Row:
                     self.y_pred = np.append(self.y_pred, [FILL_PREDICTIONS] * missing_elements)
 
                 # replace values of row_id with latest predictions
-                past_predictions[f"{self.row_id}"] = self.y_pred
+                past_predictions["y_pred"] = self.y_pred
 
-            save(dir=self.past_pred_dict, file_name="past_predictions", df=past_predictions)
+            save(dir=self.past_pred_dict, file_name=self.row_id, df=past_predictions)
 
         else:
 
-            found, df_name, past_predictions = get_df(dir=f"{self.past_pred_dict}/{self.left_out_dataset}", file_name="past_predictions")
+            found, df_name, past_predictions = get_df(dir=f"{self.past_pred_dict}/{self.left_out_dataset}", file_name=self.row_id)
 
             if found == False:
                 
                 # create pd with row_id as column with y_ped
-                past_predictions = pd.DataFrame({f"{self.row_id}": self.y_pred})
+                past_predictions = pd.DataFrame({
+                    "y_pred": self.y_pred,
+                    "y_true": self.y_true
+                })
 
             else:
 
@@ -323,9 +331,9 @@ class Performance_Row:
                     self.y_pred = np.append(self.y_pred, [FILL_PREDICTIONS] * missing_elements)
 
                 # replace values of row_id with latest predictions
-                past_predictions[f"{self.row_id}"] = self.y_pred
+                past_predictions["y_pred"] = self.y_pred
 
-            save(dir=f"{self.past_pred_dict}/{self.left_out_dataset}", file_name="past_predictions", df=past_predictions)
+            save(dir=f"{self.past_pred_dict}/{self.left_out_dataset}", file_name=self.row_id, df=past_predictions)
 
     # only do when saving, than the performance df will only be loaded into memory to add the row
     def fetch_saved_performance(self):

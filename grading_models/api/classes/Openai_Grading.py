@@ -14,7 +14,6 @@ from services.save import save
 
 # classes
 from classes.Grading_Model import Grading_Model
-from performance_tracking.classes.Performance_Row import Performance_Row
 
 # constants
 from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION, FALSE_PREDICTION

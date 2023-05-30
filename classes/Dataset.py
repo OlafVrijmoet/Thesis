@@ -203,8 +203,14 @@ class Dataset:
 
                 if self.save_new_colums_as_torch == True:
                     print(f"{self.datasets[self.model_name]['save_location']}/{self.df_name}.pth")
-                    torch.save(column_values, f"{self.datasets[self.model_name]['save_location']}/{self.df_name}.pth")
-        
+                    
+                    save(
+                        dir=self.datasets[self.model_name]['save_location'],
+                        file_name=self.df_name,
+                        df=column_values,
+                        file_type="pth"
+                    )
+
                 else:
                     # add column to dataset
                     self.datasets[name_dataset_to_add_column]["df"][column_name] = column_values

@@ -18,7 +18,7 @@ def get_df(dir, file_name, know_type=None): # can get rid of parquet
 
         elif os.path.exists(f"{dir}/{file_name}.pth") and know_type == "pth":
 
-            get_pth(dir, file_name)
+            return get_pth(dir, file_name)
         
         else:
 
@@ -26,7 +26,7 @@ def get_df(dir, file_name, know_type=None): # can get rid of parquet
 
             # return info on existance
             return False, file_name, None
-
+    
     # check if parquet file exsits
     if os.path.exists(f"{dir}/{file_name}.parquet"):
 
@@ -39,7 +39,7 @@ def get_df(dir, file_name, know_type=None): # can get rid of parquet
     
     elif os.path.exists(f"{dir}/{file_name}.pth"):
 
-        get_pth(dir, file_name)
+        return get_pth(dir, file_name)
     
     else:
 

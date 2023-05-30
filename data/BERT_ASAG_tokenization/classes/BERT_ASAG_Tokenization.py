@@ -31,10 +31,6 @@ class BERT_ASAG_Tokenization(Dataset):
         if self.datasets[self.model_name]["may_run_now"] == True and self.datasets[self.model_name]["done"] == False:
 
             if self.model_name == "BERT_tokens_spelling_corrected":
-
-                # correct spelleing
-                row_dict[self.model_name]["student_answer"] = self.correctSpelling(row_dict["row"]["student_answer"])
-                row_dict[self.model_name]["reference_answer"] = self.correctSpelling(row_dict["row"]["reference_answer"])
                 
                 # tokenize
                 self.columns_to_add[self.model_name]["tokenized_for_BERT"].append(self.encode_sentence_pair(row_dict[self.model_name]["student_answer"], row_dict[self.model_name]["reference_answer"]))
