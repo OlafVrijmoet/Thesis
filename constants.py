@@ -8,6 +8,7 @@ from data.splits.split_data import split_data
 from data.embed_words.embed_words import embed_words
 from data.embed_sentences.embed_sentences import embed_sentences
 from data.feature_engenearing.feature_engenearing import feature_engenearing
+from data.BERT_ASAG_tokenization.BERT_tokenization import BERT_tokenization
 
 # grading
 from grading_models.regression.regression import regression
@@ -59,6 +60,12 @@ EMBED_SENTENCES = Phase_Settings(
     run=False
 )
 
+BERT_TOKENIZATION_ASAG = Phase_Settings(
+    name="BERT tokenization for ASAG", 
+    function=BERT_tokenization,
+    run=True
+)
+
 FEATURE_ENGENERING = Phase_Settings(
     name="feature engenearing", 
     function=feature_engenearing,
@@ -74,7 +81,7 @@ REGRESSION = Phase_Settings(
 API = Phase_Settings(
     name="api", 
     function=api,
-    run=True
+    run=False
 )
 
 # # delete

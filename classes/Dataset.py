@@ -2,6 +2,9 @@
 # libaries
 import os
 import pandas as pd
+from tqdm import tqdm
+
+import string
 
 # libaries
 import nltk
@@ -10,9 +13,8 @@ from nltk.stem import WordNetLemmatizer
 
 from nltk.stem.snowball import SnowballStemmer
 from spellchecker import SpellChecker
-import string
 
-from tqdm import tqdm
+import torch
 
 # services
 from services.import_csvs_from_dir import import_csvs_from_dir
@@ -30,7 +32,7 @@ from constants_dir.path_constants import BASIC_PROCCESSED, DATA_STAGES
 # dataset porcessing
 class Dataset:
 
-    def __init__(self, df_name, model_name, datasets, language, columns_to_add={}) -> None:
+    def __init__(self, df_name, model_name, datasets, language, columns_to_add={}, save_new_colums_as_torch=False) -> None:
 
         self.df_name = df_name
         self.model_name = model_name
@@ -42,6 +44,7 @@ class Dataset:
         self.language = language
 
         self.columns_to_add = columns_to_add # structure {dataset_name: {column_name: [values]}}
+        self.save_new_colums_as_torch = save_new_colums_as_torch
 
         self.spell = SpellChecker()
         self.stop_words = set(stopwords.words(language))
@@ -133,7 +136,7 @@ class Dataset:
                 # process row
                 processed_row_dict = self.process_row(row)
                 for key, processed_row in processed_row_dict.items():
-                    if key is not "row":
+                    if key != "row":
                         self.datasets[key]["df"].loc[index] = processed_row
             
     def any_datasets_should_run(self):
@@ -198,8 +201,13 @@ class Dataset:
 
             for column_name, column_values in conlumn_to_add.items():
 
-                # add column to dataset
-                self.datasets[name_dataset_to_add_column]["df"][column_name] = column_values
+                if self.save_new_colums_as_torch == True:
+
+                    torch.save(column_values, f"{self.datasets[self.model_name]['save_location']}/{self.df_name}.pth")
+        
+                else:
+                    # add column to dataset
+                    self.datasets[name_dataset_to_add_column]["df"][column_name] = column_values
 
     def dataset_splits(self, seed, x_column_name, y_column_name):
 
@@ -215,7 +223,7 @@ class Dataset:
 
     # save basic processed
     def save(self):
-        
+
         for key, dataset in self.datasets.items():
 
             # skip the base df

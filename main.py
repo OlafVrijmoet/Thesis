@@ -23,6 +23,8 @@ def main():
 
     run_phase(EMBED_SENTENCES)
 
+    run_phase(BERT_TOKENIZATION_ASAG)
+
     run_phase(FEATURE_ENGENERING)
 
     run_phase(REGRESSION)
