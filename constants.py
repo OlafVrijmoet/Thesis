@@ -88,7 +88,7 @@ REGRESSION = Phase_Settings(
 API = Phase_Settings(
     name="api", 
     function=api,
-    run=False
+    run=True
 )
 
 # # delete

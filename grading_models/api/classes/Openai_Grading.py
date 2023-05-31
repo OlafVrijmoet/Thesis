@@ -98,7 +98,7 @@ class Openai_Grading(Grading_Model):
         },
     ]
 
-    for i in range(1, self.performance_tracking[dataset_split].shots + 1):
+    for i in range(1, self.shots + 1):
         messages.append({
             "role": "system",
             "content": f"""

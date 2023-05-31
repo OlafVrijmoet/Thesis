@@ -167,6 +167,11 @@ class Grading_Model:
 
             y_pred = self.make_predictions(dataset_split)
 
+            y_pred_original = y_pred.copy()
+
+            # update FALSE_PREDICTION to value 0
+            y_pred = np.where(y_pred == FALSE_PREDICTION, 0, y_pred)
+
             # scale prediction from normalized value back to the original points
             if self.y_normalized == True:
                 y_pred = y_pred * self.dataset[dataset_split]["max_points"]
@@ -195,7 +200,7 @@ class Grading_Model:
             # save predictions only for validation
             if dataset_split == "validation":
 
-                self.performance_tracking["validation"]["y_pred"] = y_pred
+                self.performance_tracking["validation"]["y_pred"] = y_pred_original
                 
             # run saving
             self.performance_tracking[dataset_split].save()

@@ -32,6 +32,7 @@ class Performance_Row:
             # duplicates handling
             settings_performance_tracking, # allows experiments with the same embedding_model_name, classification_model_name, dataset_name to be added to performance df without asking
 
+            y_pred = None,
             left_out_dataset=None,
 
             shots=0,
@@ -74,7 +75,7 @@ class Performance_Row:
 
         self.finishing_previous_experiement = False
         self.finished_pred = False
-        self.y_pred = np.full(length_df, np.nan)
+        self.y_pred = np.full(length_df, np.nan) if y_pred == None else y_pred
         self.y_true = y_true
         self.last_pred_index = 0
         self.length_df = length_df
