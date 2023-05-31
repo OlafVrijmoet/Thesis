@@ -1,4 +1,6 @@
 
+# does not work better!
+
 from tqdm import tqdm
 
 import time
@@ -18,7 +20,7 @@ from classes.Grading_Model import Grading_Model
 # constants
 from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION, FALSE_PREDICTION
 
-class Openai_Grading(Grading_Model):
+class Openai_Grading_Norm(Grading_Model):
 
   def __init__(self,
     # parent
@@ -74,7 +76,11 @@ class Openai_Grading(Grading_Model):
     for index, row in tqdm(self.dataset[dataset_split].iloc[start_index:].iterrows(), total=self.dataset[dataset_split].iloc[start_index:].shape[0]):
         
         # Get the predicted points using the grade_student_answer function
-        predicted_points = self.grade_student_answer(row=row, model=self.model, dataset_split=dataset_split, index=index)
+        predicted_fraction = self.grade_student_answer(row=row, model=self.model, dataset_split=dataset_split, index=index)
+        
+        # !!!!!! Implement handeling wrong predictions !!!!!
+
+        predicted_points = predicted_fraction * row["max_points"]
 
         # save predicted_points in self.y_pred at index row
         self.y_pred.append(predicted_points)
@@ -89,12 +95,12 @@ class Openai_Grading(Grading_Model):
     k = 2
     max_attempts = 5
 
-    instruction_line = "Grade the following Student answer based on the Reference answer. The grade should be a howl number."
+    instruction_line = "Grade the following Student answer based on the Reference answer. Return a number between 0 and 1."
 
     messages = [
         {
             "role": "system",
-            "content": "You are an AI trained to grade student answers based on a reference answer. Please return a single hwol number."
+            "content": "You are an AI model trained to grade student answers based on a reference answer. Return a number between 0 and 1."
         },
     ]
 
@@ -105,7 +111,7 @@ class Openai_Grading(Grading_Model):
                 {instruction_line}
                 Student answer: {row[f'student_answer_{i}']}\n
                 Reference answer: {row[f'reference_answer_{i}']}\n
-                Grade out of {row['max_points']}: {row[f'assigned_points_{i}']}\n\n
+                Fraction of correctness: {row[f'assigned_points_{i}']/row[f'max_points_{i}']}\n\n
             """
         })
 
@@ -115,7 +121,7 @@ class Openai_Grading(Grading_Model):
             {instruction_line}
             Student answer: {row['student_answer']}\n
             Reference answer: {row['reference_answer']}\n
-            Grade out of {row['max_points']}: 
+            Fraction of correctness: 
         """
     })
 
@@ -140,17 +146,19 @@ class Openai_Grading(Grading_Model):
             # Sleep before next attempt
             time.sleep(X + (attempt ** k))
   
+    # !!!!!! Implement Float !!!!!
+
     content = response.choices[0].message['content'].strip()
 
     # This regex pattern finds float numbers in a string
     float_number_pattern = r"[-+]?[0-9]*\.?[0-9]+"
     numbers = re.findall(float_number_pattern, content)
     
-    if numbers:
-      predicted_points = float(numbers[0])
+    if numbers:                
+        predicted_points = int(round(float(numbers[0])))
     else:
-      print(f"\nNot valid input!: {content}\n")
-      print(f"Sent messages:\n: {messages}\n")
-      predicted_points = FALSE_PREDICTION
+        print(f"\nNot valid input!: {content}\n")
+        print(f"Sent messages:\n: {messages}\n")
+        predicted_points = FALSE_PREDICTION
 
     return predicted_points

@@ -32,6 +32,8 @@ class Performance_Row:
             # duplicates handling
             settings_performance_tracking, # allows experiments with the same embedding_model_name, classification_model_name, dataset_name to be added to performance df without asking
 
+            description="",
+
             y_pred = None,
             left_out_dataset=None,
 
@@ -72,6 +74,7 @@ class Performance_Row:
         self.left_out_dataset = left_out_dataset
         self.shots = shots
         self.epochs = epochs
+        self.description = description
 
         self.finishing_previous_experiement = False
         self.finished_pred = False
@@ -170,6 +173,7 @@ class Performance_Row:
             'left_out_dataset': self.left_out_dataset,
             'shots': self.shots,
             'epochs': self.epochs,
+            'description': self.description,
             
             "finished_pred": self.finished_pred,
             "last_pred_index": self.last_pred_index,
@@ -213,7 +217,8 @@ class Performance_Row:
                 (self.past_performance['sentence_embedding_method'] == self.sentence_embedding_method) &
                 (self.past_performance['feature_engenearing'] == self.feature_engenearing) &
                 (self.past_performance['shots'] == self.shots) &
-                (self.past_performance['epochs'] == self.epochs)
+                (self.past_performance['epochs'] == self.epochs) &
+                (self.past_performance['description'] == self.description)
             ].index
 
             # Convert the time_stamp column to datetime format
@@ -382,7 +387,7 @@ class Performance_Row:
             # create new df with class column names
             column_names = [
                 # id'ing experiment
-                'row_id', 'embedding_seperated', 'embedding_model_name', 'sentence_embedding_method', 'feature_engenearing', 'grading_model', 'dataset_name', 'dataset_split', 'seed_data_split', 'left_out_dataset',
+                'row_id', 'embedding_seperated', 'embedding_model_name', 'sentence_embedding_method', 'feature_engenearing', 'grading_model', 'dataset_name', 'dataset_split', 'seed_data_split', 'left_out_dataset', 'description',
                 'shots','epochs',
 
                 "finished_pred",
@@ -418,6 +423,7 @@ class Performance_Row:
             (row['left_out_dataset'] == self.left_out_dataset) and \
             (row['sentence_embedding_method'] == self.sentence_embedding_method) and \
             (row['feature_engenearing'] == self.feature_engenearing) and \
+            (row['description'] == self.description) and \
             (row['shots'] == self.shots):
             return True
         else:
@@ -441,6 +447,7 @@ class Performance_Row:
             (self.past_performance['sentence_embedding_method'] == self.sentence_embedding_method) &
             (self.past_performance['feature_engenearing'] == self.feature_engenearing) &
             (self.past_performance['shots'] == self.shots) &
+            (self.past_performance['description'] == self.description) &
             (self.past_performance['epochs'] == self.epochs)
         ]
 

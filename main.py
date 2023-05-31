@@ -33,6 +33,8 @@ def main():
 
     run_phase(API)
 
+    run_phase(BERT)
+
     # updated:
 
     # # embed words

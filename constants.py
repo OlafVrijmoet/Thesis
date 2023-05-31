@@ -14,6 +14,7 @@ from data.BERT_ASAG_tokenization.BERT_tokenization import BERT_tokenization
 # grading
 from grading_models.regression.regression import regression
 from grading_models.api.api import api
+from grading_models.BERT.BERT import bert
 
 # data processing for models
 # from run_models.gensim.gensim import gensim
@@ -82,12 +83,18 @@ FEATURE_ENGENERING = Phase_Settings(
 REGRESSION = Phase_Settings(
     name="regression", 
     function=regression,
-    run=True
+    run=False
 )
 
 API = Phase_Settings(
     name="api", 
     function=api,
+    run=False
+)
+
+BERT = Phase_Settings(
+    name="bert", 
+    function=bert,
     run=True
 )
 

@@ -10,7 +10,7 @@ from sklearn.metrics import confusion_matrix, precision_recall_fscore_support, a
 from performance_tracking.classes.Performance_Row import Performance_Row
 
 # constants
-from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION, FALSE_PREDICTION
+from performance_tracking.constants import ALL, TRAIN, TEST, VALIDATION, FALSE_PREDICTION, FILL_PREDICTIONS
 from performance_tracking.constants import NO_SAVING, NO_PROMPT_NO_REPEAT
 
 class Grading_Model:
@@ -49,6 +49,7 @@ class Grading_Model:
                 grading_model = self.measurement_settings.grading_model,
                 seed_data_split = self.measurement_settings.seed_data_split,
                 left_out_dataset = self.measurement_settings.left_out_dataset,
+                description = self.measurement_settings.description,
 
                 length_df = len(dataset[TRAIN]),
                 y_true = dataset[TRAIN]["assigned_points"],
@@ -69,6 +70,7 @@ class Grading_Model:
                 grading_model = self.measurement_settings.grading_model,
                 seed_data_split = self.measurement_settings.seed_data_split,
                 left_out_dataset = self.measurement_settings.left_out_dataset,
+                description = self.measurement_settings.description,
 
                 length_df = len(dataset[TEST]),
                 y_true = dataset[TEST]["assigned_points"],
@@ -89,6 +91,7 @@ class Grading_Model:
                 grading_model = self.measurement_settings.grading_model,
                 seed_data_split = self.measurement_settings.seed_data_split,
                 left_out_dataset = self.measurement_settings.left_out_dataset,
+                description = self.measurement_settings.description,
 
                 length_df = len(dataset[VALIDATION]),
                 y_true = dataset[VALIDATION]["assigned_points"],
@@ -170,7 +173,8 @@ class Grading_Model:
             y_pred_original = y_pred.copy()
 
             # update FALSE_PREDICTION to value 0
-            y_pred = np.where(y_pred == FALSE_PREDICTION, 0, y_pred)
+            y_pred = np.where(y_pred == FALSE_PREDICTION, 0.0, y_pred)
+            y_pred = np.where(y_pred == FILL_PREDICTIONS, 0.0, y_pred)
 
             # scale prediction from normalized value back to the original points
             if self.y_normalized == True:

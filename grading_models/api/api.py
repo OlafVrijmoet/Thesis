@@ -7,6 +7,7 @@ from performance_tracking.classes.Dataset_api import Dataset_api
 
 # classes local
 from grading_models.api.classes.Openai_Grading import Openai_Grading
+from grading_models.api.classes.Openai_Grading_Norm import Openai_Grading_Norm
 
 # services
 from services.get_df import get_df
@@ -14,6 +15,7 @@ from services.get_df import get_df
 # constants
 from experiements.constants import SEEDS, SHOTS
 from performance_tracking.constants import *
+from constants_dir.path_constants import DATASETS_TO_SKIP
 
 def api():
 
@@ -26,6 +28,9 @@ def api():
 
                 # get file name without file type for get_df
                 file_name, _ = os.path.splitext(file_name)
+
+                if file_name in DATASETS_TO_SKIP:
+                    continue
 
                 if file_name is not "concatenated_domains":
 

@@ -49,7 +49,8 @@ class Dataset_api(Dataset):
                 df.at[nan_index, f'student_answer_{i_extra+1}'] = row['student_answer']
                 df.at[nan_index, f'reference_answer_{i_extra+1}'] = row['reference_answer']
                 df.at[nan_index, f'assigned_points_{i_extra+1}'] = row['assigned_points']
-        
+                df.at[nan_index, f'max_points_{i_extra+1}'] = row['max_points']
+
         return df
 
     def generate_rows(self, group):
@@ -72,6 +73,7 @@ class Dataset_api(Dataset):
             result[f'student_answer_{i+1}'] = row['student_answer']
             result[f'reference_answer_{i+1}'] = row['reference_answer']
             result[f'assigned_points_{i+1}'] = row['assigned_points']
+            result[f'max_points_{i+1}'] = row['max_points']
 
         if len(group) < self.shots:
 
@@ -93,6 +95,7 @@ class Dataset_api(Dataset):
                 result[f'student_answer_{i+i_extra+start_value}'] = row['student_answer']
                 result[f'reference_answer_{i+i_extra+start_value}'] = row['reference_answer']
                 result[f'assigned_points_{i+i_extra+start_value}'] = row['assigned_points']
+                result[f'max_points_{i+i_extra+start_value}'] = row['max_points']
 
         # Change result into a single-row DataFrame and return
         result_df = pd.DataFrame([result])

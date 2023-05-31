@@ -40,9 +40,9 @@ class Dataset_Torch(Dataset_local):
         test_dataset = ASAGDataset(self.test)
         validation_dataset = ASAGDataset(self.validation)
 
-        self.train_dataloader = DataLoader(train_dataset, batch_size=self.batch_size, shuffle=True)
-        self.test_dataloader = DataLoader(test_dataset, batch_size=self.batch_size, shuffle=False)
-        self.validation_dataloader = DataLoader(validation_dataset, batch_size=self.batch_size, shuffle=False)
+        self.train_dataloader = DataLoader(train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=9, pin_memory=True)
+        self.test_dataloader = DataLoader(test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=9, pin_memory=True)
+        self.validation_dataloader = DataLoader(validation_dataset, batch_size=self.batch_size, shuffle=False, num_workers=9, pin_memory=True)
 
 class ASAGDataset(Dataset):
     def __init__(self, data):

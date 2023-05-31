@@ -68,6 +68,14 @@ class Py_Torch(Grading_Model):
 
             print("No previously saved model found. Using initial model.")
         
+        # Freeze all layers in the pre-trained model
+        for param in self.model.parameters():
+            param.requires_grad = True
+
+        # # Unfreeze the top 3 layer(s)
+        # for i, param in enumerate(self.model.base_model.encoder.layer[-3:].parameters()):
+        #     param.requires_grad = True
+
         self.model.to(self.device)
     
     def saving_model(self):
@@ -148,6 +156,7 @@ class Py_Torch(Grading_Model):
             
             print(f"Epoch {epoch + 1}/{self.epochs_to_run} - Train loss: {train_loss / len(self.dataset['train'])}")
 
+            print("TRAINING:")
             # print out performance metrics
             self.print_intermediat_metrics(epoch, ground_truth, predictions, num_correct_predictions, total_predictions)
 
@@ -189,6 +198,7 @@ class Py_Torch(Grading_Model):
                             total_predictions=total_predictions
                         )
 
+                print("TEST:")
                 # print out performance metrics
                 self.print_intermediat_metrics(epoch, ground_truth, predictions, num_correct_predictions, total_predictions)
 
@@ -226,6 +236,8 @@ class Py_Torch(Grading_Model):
                             num_correct_predictions=num_correct_predictions,
                             total_predictions=total_predictions
                         )
+
+                print("VALIDATION:")
 
                 # print out performance metrics
                 self.print_intermediat_metrics(epoch, ground_truth, predictions, num_correct_predictions, total_predictions)
@@ -267,6 +279,8 @@ class Py_Torch(Grading_Model):
                             total_predictions=total_predictions
                         )
 
+                print("TEST:")
+
                 # print out performance metrics
                 self.print_intermediat_metrics(epoch, ground_truth, predictions, num_correct_predictions, total_predictions)
 
@@ -274,7 +288,7 @@ class Py_Torch(Grading_Model):
 
         if epoch == None:
 
-            return self.starting_epoch + self.performance_tracking["train"]["epochs"]
+            return self.performance_tracking["train"]["epochs"]
 
         return self.starting_epoch + epoch + 1
 

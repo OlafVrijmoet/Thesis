@@ -20,6 +20,8 @@ class Measurement_Settings:
         settings_performance_tracking: int,
         save_performance: bool,
 
+        description: str = "",
+
         left_out_dataset = None,
     
     ) -> None:
@@ -61,6 +63,8 @@ class Measurement_Settings:
         self.feature_engenearing_method = feature_engenearing_method
         self.grading_model = grading_model
         self.seed_data_split = seed_data_split
+
+        self.description = description
 
         # inform user settings
         self.print_regression = print_regression
