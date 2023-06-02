@@ -23,7 +23,7 @@ from constants_dir.path_constants import DATASETS_TO_SKIP
 
 def bert():
 
-    model_name = "bert-base-cased"
+    model_name = "distilbert-base-cased"
     
     base_dir = f"data/BERT_ASAG_tokenization/data/{model_name}/data/spelling_corrected/BERT_tokens/data"
     
@@ -42,6 +42,12 @@ def bert():
                 if df_name in DATASETS_TO_SKIP:
                         continue
                 
+                frozen_layers_count = None
+                description = "seplling_corrected_sample_2000"
+                if frozen_layers_count is not None:
+                    description = f"{description}_forzen_layers_{frozen_layers_count}"
+                saved_model_dir = f"grading_models/BERT/saved_models/{model_name}/{description}/{dataset['name']}"
+
                 if df_name is not "concatenated_domains":
 
                     print(f"Running {model_name} on {df_name}")
@@ -51,7 +57,9 @@ def bert():
                         dir = base_dir,
                         file_name = df_name,
                         seed = SEED,
-                        batch_size=128
+                        batch_size=128,
+                        sample_size=2000,
+                        sampling_group="dataset_name"
                     )
 
                     dataset.split_datasets()
@@ -72,7 +80,7 @@ def bert():
                             
                             seed_data_split=42,
 
-                            description = "seplling_corrected",
+                            description = description,
 
                             # inform user settings
                             print_regression=True,
@@ -89,8 +97,10 @@ def bert():
                         y_normalized=False, # idd not normalized because measurments are doen on non normalized values!
 
                         lr = 2e-5,
-                        saved_model_dir = f"grading_models/BERT/saved_models/{model_name}/{dataset['name']}",
-                        epochs_to_run = 20,
+                        saved_model_dir = saved_model_dir,
+                        epochs_to_run = 11,
+
+                        frozen_layers_count=frozen_layers_count
 
                     )
 
@@ -99,8 +109,10 @@ def bert():
 
                 if df_name == "concatenated_domains" or df_name == "concatenated_datasets":
 
+                    sampling_group = "dataset_name"
                     datasets = DATASETS
                     if df_name == "concatenated_domains":
+                        sampling_group = "domain"
                         datasets = DOMAINS
 
                     for dataset_name_to_split in datasets:
@@ -111,6 +123,8 @@ def bert():
                             file_name = df_name,
                             seed = SEED,
                             batch_size=128,
+                            sample_size=2000,
+                            sampling_group=sampling_group,
                             left_out_dataset=dataset_name_to_split
                         )
 
@@ -132,7 +146,7 @@ def bert():
                                 
                                 seed_data_split=42,
 
-                                description = "seplling_corrected",
+                                description = description,
 
                                 # inform user settings
                                 print_regression=True,
@@ -149,8 +163,10 @@ def bert():
                             y_normalized=False, # idd not normalized because measurments are doen on non normalized values!
 
                             lr = 2e-5,
-                            saved_model_dir = f"grading_models/BERT/saved_models/{model_name}/{dataset['name']}",
-                            epochs_to_run = 20,
+                            saved_model_dir = saved_model_dir,
+                            epochs_to_run = 11,
+
+                            frozen_layers_count=frozen_layers_count
 
                         )
 

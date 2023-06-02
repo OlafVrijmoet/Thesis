@@ -71,7 +71,7 @@ EMBED_SENTENCES = Phase_Settings(
 BERT_TOKENIZATION_ASAG = Phase_Settings(
     name="BERT tokenization for ASAG", 
     function=BERT_tokenization,
-    run=False
+    run=True
 )
 
 FEATURE_ENGENERING = Phase_Settings(
@@ -95,7 +95,7 @@ API = Phase_Settings(
 BERT = Phase_Settings(
     name="bert", 
     function=bert,
-    run=True
+    run=False
 )
 
 # # delete

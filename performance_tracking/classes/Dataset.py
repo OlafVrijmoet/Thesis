@@ -15,7 +15,11 @@ class Dataset:
         # seed for splitting data
         seed,
 
-        left_out_dataset=None
+        left_out_dataset=None,
+
+        # sampling
+        sample_size=None,
+        sampling_group=None
 
     ) -> None:
         
@@ -24,7 +28,7 @@ class Dataset:
         
         # original dataset
         self.name = file_name
-        self.dataset = self.get_data(dir, file_name)
+        self.dataset = self.get_data(dir, file_name, sample_size, sampling_group)
 
         # places to save the splits
         self.train = None
@@ -33,8 +37,12 @@ class Dataset:
 
         self.left_out_dataset = left_out_dataset
 
+        # sampling
+        self.sample_size = sample_size
+        self.sampling_group = sampling_group
+
     # get data using dataset_dir
-    def get_data(self, dir, file_name):
+    def get_data(self, dir, file_name, sample_size=None, sampling_group=None):
 
         found, df_name, dataset = get_df(dir=dir, file_name=file_name)
 

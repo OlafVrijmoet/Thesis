@@ -31,6 +31,8 @@ class Py_Torch(Grading_Model):
         
         shots=0,
 
+        frozen_layers_count=None,
+
     ):
         
         super().__init__(model, dataset, measurement_settings, y_column, y_normalized, shots)
@@ -44,6 +46,8 @@ class Py_Torch(Grading_Model):
         self.starting_epoch = 0
         self.current_training_epoch = 0
         self.saved_model_dir = saved_model_dir
+
+        self.frozen_layers_count = frozen_layers_count
 
         self.device = "mps" if getattr(torch,'has_mps',False) \
             else "gpu" if torch.cuda.is_available() else "cpu"
@@ -68,13 +72,19 @@ class Py_Torch(Grading_Model):
 
             print("No previously saved model found. Using initial model.")
         
-        # Freeze all layers in the pre-trained model
+        # Unfreeze all layers in the pre-trained model
         for param in self.model.parameters():
             param.requires_grad = True
 
-        # # Unfreeze the top 3 layer(s)
-        # for i, param in enumerate(self.model.base_model.encoder.layer[-3:].parameters()):
-        #     param.requires_grad = True
+        if self.frozen_layers_count is not None:
+        
+            # freeze all layers in the pre-trained model
+            for param in self.model.parameters():
+                param.requires_grad = False
+
+            # Unfreeze the top 1 layer(s)
+            for i, param in enumerate(self.model.base_model.encoder.layer[-self.frozen_layers_count:].parameters()):
+                param.requires_grad = True
 
         self.model.to(self.device)
     

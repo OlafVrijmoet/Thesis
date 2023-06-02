@@ -9,7 +9,7 @@ from data.BERT_ASAG_tokenization.classes.BERT_ASAG_Tokenization import BERT_ASAG
 
 def BERT_tokenization():
 
-    PyTorch_pre_trained_model_names = ["bert-base-uncased", "bert-base-cased"]
+    PyTorch_pre_trained_model_names = ["bert-base-uncased", "bert-base-cased", "distilbert-base-uncased", "distilbert-base-cased"]
 
     for PyTorch_pre_trained_model_name in PyTorch_pre_trained_model_names:
         
@@ -47,9 +47,7 @@ def BERT_tokenization():
                         base_dir=base_dir,
 
                         may_run_now=True,
-                        required=True,
-
-                        force_run=True
+                        required=True
                     ),
                 },
 

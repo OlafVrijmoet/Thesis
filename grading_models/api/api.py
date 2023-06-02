@@ -29,8 +29,8 @@ def api():
                 # get file name without file type for get_df
                 file_name, _ = os.path.splitext(file_name)
 
-                if file_name in DATASETS_TO_SKIP:
-                    continue
+                # if file_name in DATASETS_TO_SKIP:
+                #     continue
 
                 if file_name is not "concatenated_domains":
 
@@ -62,7 +62,7 @@ def api():
                             print_classification=True,
                             
                             # save settings
-                            settings_performance_tracking=NO_PROMPT_NO_REPEAT,
+                            settings_performance_tracking=ADD,
                             save_performance=True
                         ),
 
