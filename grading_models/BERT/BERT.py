@@ -42,11 +42,10 @@ def bert():
                 if df_name in DATASETS_TO_SKIP:
                         continue
                 
-                frozen_layers_count = None
+                unfrozen_layers_count = None
                 description = "seplling_corrected_sample_2000"
-                if frozen_layers_count is not None:
-                    description = f"{description}_forzen_layers_{frozen_layers_count}"
-                saved_model_dir = f"grading_models/BERT/saved_models/{model_name}/{description}/{dataset['name']}"
+                if unfrozen_layers_count is not None:
+                    description = f"{description}_unforzen_layers_{unfrozen_layers_count}"
 
                 if df_name is not "concatenated_domains":
 
@@ -59,8 +58,9 @@ def bert():
                         seed = SEED,
                         batch_size=128,
                         sample_size=2000,
-                        sampling_group="dataset_name"
+                        sampling_group="dataset_name" if df_name is "concatenated_datasets" else None
                     )
+                    saved_model_dir = f"grading_models/BERT/saved_models/{model_name}/{description}/{dataset['name']}"
 
                     dataset.split_datasets()
                     dataset.init_dataloaders()
@@ -98,9 +98,9 @@ def bert():
 
                         lr = 2e-5,
                         saved_model_dir = saved_model_dir,
-                        epochs_to_run = 11,
+                        epochs_to_run = 6,
 
-                        frozen_layers_count=frozen_layers_count
+                        unfrozen_layers_count=unfrozen_layers_count
 
                     )
 
@@ -127,6 +127,7 @@ def bert():
                             sampling_group=sampling_group,
                             left_out_dataset=dataset_name_to_split
                         )
+                        saved_model_dir = f"grading_models/BERT/saved_models/{model_name}/{description}/{dataset['name']}"
 
                         dataset.split_datasets()
                         dataset.init_dataloaders()
@@ -164,9 +165,9 @@ def bert():
 
                             lr = 2e-5,
                             saved_model_dir = saved_model_dir,
-                            epochs_to_run = 11,
+                            epochs_to_run = 6,
 
-                            frozen_layers_count=frozen_layers_count
+                            unfrozen_layers_count=unfrozen_layers_count
 
                         )
 

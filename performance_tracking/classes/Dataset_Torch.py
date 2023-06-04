@@ -75,14 +75,14 @@ class ASAGDataset(Dataset):
         encoded = row["tokenized_for_BERT"]
         input_ids = encoded["input_ids"].squeeze()
         attention_mask = encoded["attention_mask"].squeeze()
-        token_type_ids = encoded.get("token_type_ids", None)
-        if token_type_ids is not None:
-            token_type_ids = token_type_ids.squeeze()
+        # token_type_ids = encoded.get("token_type_ids", None)
+        # if token_type_ids is not None:
+        #     token_type_ids = token_type_ids.squeeze()
 
         return {
             "input_ids": input_ids,
             "attention_mask": attention_mask,
-            "token_type_ids": token_type_ids,
+            # "token_type_ids": token_type_ids,
             "normalized_points": torch.tensor(normalized_points, dtype=torch.float32),
             "assigned_points": torch.tensor(row["assigned_points"], dtype=torch.float32),
             "max_points": torch.tensor(row["max_points"], dtype=torch.float32),

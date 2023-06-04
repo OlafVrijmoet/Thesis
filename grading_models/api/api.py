@@ -115,7 +115,7 @@ def api():
                                 print_classification=True,
                                 
                                 # save settings
-                                settings_performance_tracking=NO_PROMPT_NO_REPEAT,
+                                settings_performance_tracking=ADD,
                                 save_performance=True
                             ),
 

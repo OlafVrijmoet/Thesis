@@ -31,7 +31,7 @@ class Py_Torch(Grading_Model):
         
         shots=0,
 
-        frozen_layers_count=None,
+        unfrozen_layers_count=None,
 
     ):
         
@@ -47,7 +47,7 @@ class Py_Torch(Grading_Model):
         self.current_training_epoch = 0
         self.saved_model_dir = saved_model_dir
 
-        self.frozen_layers_count = frozen_layers_count
+        self.unfrozen_layers_count = unfrozen_layers_count
 
         self.device = "mps" if getattr(torch,'has_mps',False) \
             else "gpu" if torch.cuda.is_available() else "cpu"
@@ -76,14 +76,16 @@ class Py_Torch(Grading_Model):
         for param in self.model.parameters():
             param.requires_grad = True
 
-        if self.frozen_layers_count is not None:
+        if self.unfrozen_layers_count is not None:
+
+            print("\nFreezing layers\n")
         
             # freeze all layers in the pre-trained model
             for param in self.model.parameters():
                 param.requires_grad = False
 
             # Unfreeze the top 1 layer(s)
-            for i, param in enumerate(self.model.base_model.encoder.layer[-self.frozen_layers_count:].parameters()):
+            for i, param in enumerate(self.model.base_model.encoder.layer[-self.unfrozen_layers_count:].parameters()):
                 param.requires_grad = True
 
         self.model.to(self.device)
@@ -112,7 +114,6 @@ class Py_Torch(Grading_Model):
     
     def train(self):
 
-        # !!! TODO : add self.performance_tracking[dataset_split]["y_pred"] = y_pred and than call measure_performance !!! 
         # Training loop
         for epoch in range(self.epochs_to_run):
             

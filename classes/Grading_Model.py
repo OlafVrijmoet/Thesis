@@ -50,6 +50,7 @@ class Grading_Model:
                 seed_data_split = self.measurement_settings.seed_data_split,
                 left_out_dataset = self.measurement_settings.left_out_dataset,
                 description = self.measurement_settings.description,
+                shots = shots,
 
                 length_df = len(dataset[TRAIN]),
                 y_true = dataset[TRAIN]["assigned_points"],
@@ -71,6 +72,7 @@ class Grading_Model:
                 seed_data_split = self.measurement_settings.seed_data_split,
                 left_out_dataset = self.measurement_settings.left_out_dataset,
                 description = self.measurement_settings.description,
+                shots = shots,
 
                 length_df = len(dataset[TEST]),
                 y_true = dataset[TEST]["assigned_points"],
@@ -92,6 +94,7 @@ class Grading_Model:
                 seed_data_split = self.measurement_settings.seed_data_split,
                 left_out_dataset = self.measurement_settings.left_out_dataset,
                 description = self.measurement_settings.description,
+                shots = shots,
 
                 length_df = len(dataset[VALIDATION]),
                 y_true = dataset[VALIDATION]["assigned_points"],
