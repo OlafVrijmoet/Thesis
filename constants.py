@@ -95,7 +95,7 @@ API = Phase_Settings(
 BERT = Phase_Settings(
     name="bert", 
     function=bert,
-    run=False
+    run=True
 )
 
 # # delete

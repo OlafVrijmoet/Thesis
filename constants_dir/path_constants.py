@@ -25,5 +25,5 @@ STEMMED_DATASETS = f"{STEMMED}/datasets"
 STEMMED_DOMAIN = f"{STEMMED}/domain"
 
 # datasets to skip
-DATASETS_TO_SKIP = ["beetle", "biology", "english"]
+DATASETS_TO_SKIP = ["beetle", "biology", "english", "texas"]
 # "concatenated_domains", "concatenated_datasets"

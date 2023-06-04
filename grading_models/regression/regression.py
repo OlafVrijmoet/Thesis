@@ -121,7 +121,7 @@ def regression():
                             print_classification=False,
                             
                             # save settings
-                            settings_performance_tracking=REPLACE,
+                            settings_performance_tracking=ADD,
                             save_performance=True
                         ),
 
@@ -173,7 +173,7 @@ def regression():
                                 print_classification=False,
                                 
                                 # save settings
-                                settings_performance_tracking=REPLACE,
+                                settings_performance_tracking=ADD,
                                 save_performance=True
                             ),
 

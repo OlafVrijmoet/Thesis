@@ -127,7 +127,7 @@ def bert():
                             sampling_group=sampling_group,
                             left_out_dataset=dataset_name_to_split
                         )
-                        saved_model_dir = f"grading_models/BERT/saved_models/{model_name}/{description}/{dataset['name']}"
+                        saved_model_dir = f"grading_models/BERT/saved_models/{model_name}/{description}/{dataset_name_to_split}/{dataset['name']}"
 
                         dataset.split_datasets()
                         dataset.init_dataloaders()
