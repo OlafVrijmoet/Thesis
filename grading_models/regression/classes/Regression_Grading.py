@@ -47,6 +47,8 @@ class Regression_Grading(Grading_Model):
             self.model = self.model().fit(self.dataset["train"][self.x_column].values.reshape(-1, 1), self.dataset["train"][self.y_column])
             self.trained = True
 
+        print("\nTrained!\n")
+
         # Call the parent's train() function
         super().train()
 
@@ -84,7 +86,7 @@ class Regression_Grading(Grading_Model):
         """
         # get predictions
         y_pred = self.model.predict(self.dataset[dataset_split][self.x_column].values.reshape(-1, 1))
-        
+
         # to prevent errors if there are nan values in the predictions. !!! There might be something going wrong !!!
         y_pred = np.nan_to_num(y_pred, nan=0)
 

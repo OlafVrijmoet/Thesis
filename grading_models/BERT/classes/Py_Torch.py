@@ -167,7 +167,7 @@ class Py_Torch(Grading_Model):
             
             print(f"Epoch {epoch + 1}/{self.epochs_to_run} - Train loss: {train_loss / len(self.dataset['train'])}")
 
-            print("TRAINING:")
+            print("\nTRAINING:")
             # print out performance metrics
             self.print_intermediat_metrics(epoch, ground_truth, predictions, num_correct_predictions, total_predictions)
 
@@ -209,7 +209,7 @@ class Py_Torch(Grading_Model):
                             total_predictions=total_predictions
                         )
 
-                print("TEST:")
+                print("\nTEST:")
                 # print out performance metrics
                 self.print_intermediat_metrics(epoch, ground_truth, predictions, num_correct_predictions, total_predictions)
 
@@ -248,7 +248,7 @@ class Py_Torch(Grading_Model):
                             total_predictions=total_predictions
                         )
 
-                print("VALIDATION:")
+                print("\nVALIDATION:")
 
                 # print out performance metrics
                 self.print_intermediat_metrics(epoch, ground_truth, predictions, num_correct_predictions, total_predictions)
@@ -290,7 +290,7 @@ class Py_Torch(Grading_Model):
                             total_predictions=total_predictions
                         )
 
-                print("TEST:")
+                print("\nTEST:")
 
                 # print out performance metrics
                 self.print_intermediat_metrics(epoch, ground_truth, predictions, num_correct_predictions, total_predictions)

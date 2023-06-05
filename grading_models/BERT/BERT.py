@@ -106,7 +106,7 @@ def bert():
 
                         lr = 2e-5,
                         saved_model_dir = saved_model_dir,
-                        epochs_to_run = 6,
+                        epochs_to_run = 5,
 
                         unfrozen_layers_count=unfrozen_layers_count
 
@@ -173,7 +173,7 @@ def bert():
 
                             lr = 2e-5,
                             saved_model_dir = saved_model_dir,
-                            epochs_to_run = 6,
+                            epochs_to_run = 5,
 
                             unfrozen_layers_count=unfrozen_layers_count
 

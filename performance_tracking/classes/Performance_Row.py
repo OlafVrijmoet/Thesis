@@ -77,7 +77,7 @@ class Performance_Row:
         self.description = description
 
         self.finishing_previous_experiement = False
-        self.finished_pred = False
+        self.finished_pred = True
         self.y_pred = np.full(length_df, np.nan) if y_pred == None else y_pred
         self.y_true = y_true
         self.last_pred_index = 0
@@ -111,7 +111,7 @@ class Performance_Row:
 
     # severly alter!!!
     def save(self):
-
+        
         # check if all predictions have been made
         if np.isnan(self.y_pred).any():
 
@@ -123,8 +123,8 @@ class Performance_Row:
             self.last_pred_index = self.length_df - 1
             self.finished_pred = True
             
-        # # fetch / create df for performance, WHY!!!???!!
-        # self.fetch_saved_performance()
+        # fetch / create df for performance
+        self.fetch_saved_performance()
 
         # check if experiement is done before
         experiement_done_before = self.check_for_duplicates()

@@ -131,7 +131,6 @@ def regression():
                         y_normalized=True,
                         
                     )
-
                     model.train()
                     model.test()
                     model.validation()

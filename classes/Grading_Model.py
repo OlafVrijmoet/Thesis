@@ -204,10 +204,8 @@ class Grading_Model:
 
         if self.measurement_settings.save_performance == True:
             
-            # save predictions only for validation
-            if dataset_split == "validation":
-
-                self.performance_tracking["validation"]["y_pred"] = y_pred_original
+            # save predictions inside row class
+            self.performance_tracking[dataset_split]["y_pred"] = y_pred_original
                 
             # run saving
             self.performance_tracking[dataset_split].save()
