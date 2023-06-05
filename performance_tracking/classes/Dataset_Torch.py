@@ -31,7 +31,10 @@ class Dataset_Torch(Dataset_local):
     
         dataset["tokenized_for_BERT"] = dataset_pth
 
-        if sample_size is not None:
+        if sample_size is not None and len(dataset) > sample_size:
+
+            print("\n\n *** Sampling ***")
+            print(f"length full dataset: {len(dataset)}")
             
             # if each groups has to be sampled equally
             if sampling_group is not None:
@@ -47,6 +50,8 @@ class Dataset_Torch(Dataset_local):
 
                 # Sample a random subset of rows from the dataset without replacement
                 dataset = dataset.sample(n=sample_size, replace=False, random_state=self.seed)
+            
+            print(f"length sampled dataset: {len(dataset)}")
 
         return dataset
 

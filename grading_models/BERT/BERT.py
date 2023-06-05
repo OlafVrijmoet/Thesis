@@ -1,10 +1,11 @@
 
 import os
-from grading_models.BERT.classes.Py_Torch import Py_Torch
 from performance_tracking.classes.Measurement_Settings import Measurement_Settings
 from performance_tracking.constants import *
 
 from transformers import BertForSequenceClassification, AdamW, get_linear_schedule_with_warmup
+
+from datetime import datetime
 
 # classes
 from performance_tracking.classes.Measurement_Settings import Measurement_Settings
@@ -23,7 +24,7 @@ from constants_dir.path_constants import DATASETS_TO_SKIP
 
 def bert():
 
-    model_name = "distilbert-base-cased"
+    model_name = "bert-base-cased"
     
     base_dir = f"data/BERT_ASAG_tokenization/data/{model_name}/data/spelling_corrected/BERT_tokens/data"
     
@@ -31,24 +32,30 @@ def bert():
 
         # Use os.listdir to get a list of all files in the directory
         for filename in os.listdir(base_dir):
+
             # Concatenate the directory name with the filename to get the full path
             full_path = os.path.join(f"{base_dir}/", filename)
             
             # Check if the path is a file
             if os.path.isfile(full_path):
 
-                df_name = os.path.splitext(filename)[0]
+                df_name, file_extenstion = os.path.splitext(filename)
+                
+                # prevent from running every dataset twice
+                if file_extenstion == ".pth":
+                    continue
 
                 if df_name in DATASETS_TO_SKIP:
-                        continue
+                    continue
                 
                 unfrozen_layers_count = None
                 description = "seplling_corrected_sample_2000"
                 if unfrozen_layers_count is not None:
                     description = f"{description}_unforzen_layers_{unfrozen_layers_count}"
 
-                if df_name is not "concatenated_domains":
+                if df_name != "concatenated_domains":
 
+                    print(f"\n\n*** start time: {datetime.now()} ***")
                     print(f"Running {model_name} on {df_name}")
 
                     # Now you can do whatever you want with the file
@@ -58,11 +65,12 @@ def bert():
                         seed = SEED,
                         batch_size=128,
                         sample_size=2000,
-                        sampling_group="dataset_name" if df_name is "concatenated_datasets" else None
+                        sampling_group="dataset_name" if df_name == "concatenated_datasets" else None
                     )
                     saved_model_dir = f"grading_models/BERT/saved_models/{model_name}/{description}/{dataset['name']}"
-
+                    
                     dataset.split_datasets()
+                    print(f"length train: {len(dataset['train'])}")
                     dataset.init_dataloaders()
 
                     dataset_grading = Py_Torch(

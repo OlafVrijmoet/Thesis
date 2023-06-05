@@ -123,7 +123,7 @@ class Performance_Row:
             self.last_pred_index = self.length_df - 1
             self.finished_pred = True
             
-        # # fetch / create df for performance
+        # # fetch / create df for performance, WHY!!!???!!
         # self.fetch_saved_performance()
 
         # check if experiement is done before
