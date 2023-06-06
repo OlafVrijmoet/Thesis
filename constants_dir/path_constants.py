@@ -25,6 +25,6 @@ STEMMED_DATASETS = f"{STEMMED}/datasets"
 STEMMED_DOMAIN = f"{STEMMED}/domain"
 
 # datasets to skip
-DATASETS_TO_SKIP = ["beetle", "english"]
+DATASETS_TO_SKIP = ["beetle", "english", "texas", "biology", "ASAP_sas", "neural_course"]
 # distilbert-base-cased: "beetle", "biology", "english", "texas", "ASAP_sas", "neural_course"
 # "concatenated_domains", "concatenated_datasets"

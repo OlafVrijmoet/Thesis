@@ -59,6 +59,8 @@ class Dataset:
                 column_to_select_from = "domain"
 
             self.validation = self.dataset.query(f'{column_to_select_from} == "{self.left_out_dataset}"')
+            
+            print(f"\n\n***self.validation size: {len(self.validation)}, column_to_select_from: {column_to_select_from}***\n\n")
 
             # the remaining dataset
             remaining_data = self.dataset.query(f'{column_to_select_from} != "{self.left_out_dataset}"')
