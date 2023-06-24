@@ -1,4 +1,14 @@
 
+# ASAG Thesis - Olaf Vrijmoet
+## Usage
+In ./constants.py, users can run any phases within the program by assigning the value True to the 'run' variable within the respective phases and then executing python main.py. The different phases are interdependent, building on each other, and therefore must be run sequentially from top to bottom. All of them can be set to True, but keep in mind that this may considerably extend the program's execution time, as it involves training multiple models.
+
+## Code structure
+The code is structured into three main 'phases':
+- Data: This contains all the dataset standardization and text pre-processing for the different models
+- grading_models: This includes the construction of the models and the training, testing and validating of these models
+- performance_tracking: This contains all the predictions made on the validation set and the performance metrics measured for each model on each dataset.
+
 # data
 
 ## process
@@ -7,8 +17,6 @@
 - in ./data/all_to_csv.py : 
     - if xml file, create a new instantce of the Xml_Data_Info class for the dataset and add it to datasets. The data must have the same structure as that of beetle and sciEntsBank! Else, generalize existing function or create new custom one.
     - if tsv, no custom function built, just add it at the bottom.
-
-### adding datasets
 
 ## what happens in each folder
 ### raw
@@ -20,11 +28,11 @@ Make sure there are no Null values in columns that exist in the dataset and are 
 Here all raw csv datasets are standardized to contain the same columns. Best estimate for missing values are added in this phase for cirtial data for the models.
 
 ### processed
-The text of all the standardized datasets are pre-processed and saved at different staged for the experminets on text pre-processing. The stages are:
+The text of all the standardized datasets are pre-processed and saved at different staged for the experiments on text pre-processing. The stages are:
 - Raw text
 - Lower & tokenize & get rid of punctuation
 - Stem & lemitize
 
 ### potential structure todo
-- The pre-processing - cleaning data, plitting into applicable datasets & using models to make make embeddings and all the features
+- The pre-processing - cleaning data, plitting into applicable datasets & using models to make embeddings and all the features
 - Experiements - spliting datasets into train, test & validation sets, using models to make predictions, measuring the quality of the predictions and tracking the performance of the models on the different datasets

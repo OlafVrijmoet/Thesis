@@ -1,5 +1,6 @@
 
 import os
+from datetime import datetime
 
 # classes
 from performance_tracking.classes.Measurement_Settings import Measurement_Settings
@@ -15,7 +16,7 @@ from services.get_df import get_df
 # constants
 from experiements.constants import SEEDS, SHOTS
 from performance_tracking.constants import *
-from constants_dir.path_constants import DATASETS_TO_SKIP
+from constants_dir.path_constants import DATASETS_TO_SKIP, LEFT_OUT_DATASET_SKIP
 
 def api():
 
@@ -29,10 +30,22 @@ def api():
                 # get file name without file type for get_df
                 file_name, _ = os.path.splitext(file_name)
 
+                print(f"\n\n*** start time: {datetime.now()} ***")
+                print(f"Running gpt-3.5-turbo on {file_name}, shots: {SHOT}")
+
+                # description = "zero_shot_real"
+                description = None
+
                 # if file_name in DATASETS_TO_SKIP:
                 #     continue
+                
+                if file_name != "concatenated_domains":
 
-                if file_name is not "concatenated_domains":
+                    continue
+
+                    # # for re-runs because this one already ran
+                    # if file_name in ["concatenated_datasets"]:
+                    #     continue
 
                     dataset = Dataset_api(
                         dir="data/splits/data",
@@ -57,6 +70,8 @@ def api():
                             
                             seed_data_split=SEED,
 
+                            description = description,
+
                             # inform user settings
                             print_regression=True,
                             print_classification=True,
@@ -76,14 +91,26 @@ def api():
                     )
 
                     dataset_grading.validation()
+                
+                if file_name == "concatenated_datasets":
+                    
+                    continue
 
                 if file_name == "concatenated_domains" or file_name == "concatenated_datasets":
-
+                    
                     datasets = DATASETS
                     if file_name == "concatenated_domains":
                         datasets = DOMAINS
 
                     for dataset_name_to_split in datasets:
+
+                        if dataset_name_to_split in LEFT_OUT_DATASET_SKIP:
+                            continue
+                        
+                        print(f"\n\n*** start time: {datetime.now()} ***")
+                        print(f"Running gpt-3.5-turbo on {file_name}")
+                        
+                        print(f"Running left out dataset: {dataset_name_to_split}")
 
                         dataset = Dataset_api(
                             dir="data/splits/data",
@@ -109,6 +136,8 @@ def api():
                                 left_out_dataset=dataset_name_to_split,
                                 
                                 seed_data_split=SEED,
+
+                                description = description,
 
                                 # inform user settings
                                 print_regression=True,

@@ -94,7 +94,7 @@ class Openai_Grading(Grading_Model):
     messages = [
         {
             "role": "system",
-            "content": "You are an AI trained to grade student answers based on a reference answer. Please return a single hwol number."
+            "content": "You are an AI trained to grade student answers based on a reference answer. Please return a single howl number."
         },
     ]
 

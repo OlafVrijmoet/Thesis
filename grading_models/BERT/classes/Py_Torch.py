@@ -349,8 +349,9 @@ class Py_Torch(Grading_Model):
         # Check if the directory exists
         if os.path.isdir(self.saved_model_dir):
             # Get a list of all completed epoch directories and sort them 
-            epoch_dirs = sorted([int(d) for d in os.listdir(self.saved_model_dir) if os.path.isdir(os.path.join(self.saved_model_dir, d))])
-
+            epoch_dirs = sorted([int(d) for d in os.listdir(self.saved_model_dir) 
+                                    if os.path.isdir(os.path.join(self.saved_model_dir, d)) and d.isdigit()])
+            
             # Check if there are any directories in the list
             if epoch_dirs:
                 # Get the last completed epoch

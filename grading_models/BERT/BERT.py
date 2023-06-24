@@ -20,7 +20,7 @@ from services.get_df import get_df
 # constants
 from experiements.constants import SEEDS, SHOTS
 from performance_tracking.constants import *
-from constants_dir.path_constants import DATASETS_TO_SKIP
+from constants_dir.path_constants import DATASETS_TO_SKIP, LEFT_OUT_DATASET_SKIP
 
 def bert():
 
@@ -45,15 +45,25 @@ def bert():
                 if file_extenstion == ".pth":
                     continue
 
-                if df_name in DATASETS_TO_SKIP:
-                    continue
+                # if df_name in DATASETS_TO_SKIP:
+                #     continue
                 
                 unfrozen_layers_count = None
                 description = "seplling_corrected_sample_2000"
                 if unfrozen_layers_count is not None:
                     description = f"{description}_unforzen_layers_{unfrozen_layers_count}"
 
-                if df_name != "concatenated_domains":
+                # if df_name != "concatenated_datasets":
+
+                #     continue
+
+                # if df_name != "concatenated_domains":
+
+                if df_name == "concatenated_domains":
+                    
+                    # for re-runs because this one already ran
+                    # if df_name in ["concatenated_datasets"]:
+                    #     continue
 
                     print(f"\n\n*** start time: {datetime.now()} ***")
                     print(f"Running {model_name} on {df_name}")
@@ -115,6 +125,8 @@ def bert():
                     dataset_grading.model_init()
                     dataset_grading.train()
 
+                continue
+
                 if df_name == "concatenated_domains" or df_name == "concatenated_datasets":
 
                     sampling_group = "dataset_name"
@@ -124,6 +136,16 @@ def bert():
                         datasets = DOMAINS
 
                     for dataset_name_to_split in datasets:
+
+                        if dataset_name_to_split in LEFT_OUT_DATASET_SKIP:
+
+                            print(f"{dataset_name_to_split} inside left out dataset!")
+                            continue
+                            
+                        print(f"\n\n*** start time: {datetime.now()} ***")
+                        print(f"Running {model_name} on {df_name}")
+                        
+                        print(f"Running left out dataset: {dataset_name_to_split}")
 
                         # Now you can do whatever you want with the file
                         dataset = Dataset_Torch(
