@@ -5,7 +5,7 @@ import time
 import re
 
 import openai
-openai.api_key = "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"
+openai.api_key = "api_key" # revoked!
 
 import numpy as np
 
